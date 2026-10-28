@@ -262,9 +262,30 @@ function progressSection() {
         el('div', { class: 'meter', role: 'progressbar', 'aria-valuemin': 0, 'aria-valuemax': pool.length, 'aria-valuenow': ready },
           el('span', { style: `width:${pool.length ? (ready / pool.length) * 100 : 0}%` })),
         el('p', { class: 'muted' },
-          `下一個解鎖：${next.map(unitLabel).join('、')}。已解鎖的字全部達到 3 級就會開放，還差 ${below} 個字。`),
+          `下一個解鎖：${next.map(unitLabel).join('、')}。下面這些字都「記住」後就會開放，還差 ${below} 個字。`),
+        levelChips(pool.filter((it) => srs.readLevel(state, it.id) < srs.UNLOCK_LEVEL)),
+        el('details', { class: 'level-help' },
+          el('summary', {}, '怎樣才算「記住」？'),
+          el('p', {}, '每個字有 0～5 級。答對而且夠快（選擇題 2.5 秒、打字 4 秒內）就升一級，但同一個字一天最多升一級；答錯會掉回 1 級。'),
+          el('p', {}, '升到 3 級就算記住，也就是在不同的 3 天都答對。字下面的格子表示目前到第幾級。'),
+        ),
       )
       : el('p', { class: 'muted' }, '所有單位都解鎖了！'),
+  );
+}
+
+// 還沒記住的字，下面用 3 格表示目前等級（滿 3 格就算記住）
+function levelChips(items) {
+  if (!items.length) return null;
+  return el('ul', { class: 'level-chips' },
+    items.map((it) => {
+      const level = srs.readLevel(state, it.id);
+      return el('li', { title: `${it.romaji}：${level} 級` },
+        el('span', { class: 'k', lang: 'ja' }, it.kana),
+        el('span', { class: 'pips', 'aria-label': `${level} 級` },
+          [1, 2, 3].map((n) => el('i', { class: n <= level ? 'on' : '' }))),
+      );
+    }),
   );
 }
 
@@ -684,7 +705,7 @@ function renderSettings() {
           onchange: (e) => { state.settings.syncScripts = e.target.checked; saved(); renderSettings(); },
         }),
       ),
-      el('p', { class: 'muted' }, '正常情況下，已解鎖的字全部達到 3 級才會開放下一個單位。已經學過的話，可以手動解鎖。'),
+      el('p', { class: 'muted' }, '每個字要在不同天答對幾次（大約 3 天）才算記住；目前這些字全部記住後，就會自動開放下一行。以前已經學過的話，可以直接手動解鎖。'),
       el('button', {
         class: 'btn',
         disabled: !next,

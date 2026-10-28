@@ -178,6 +178,26 @@ body.in-practice .view { padding-bottom: calc(24px + env(safe-area-inset-bottom)
 .meter { height: 8px; border-radius: 4px; background: var(--grid-faint); border: 1px solid var(--grid); overflow: hidden; margin: 8px 0 4px; }
 .meter > span { display: block; height: 100%; background: var(--blue); }
 
+.level-chips { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.level-chips li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 46px;
+  padding: 4px 6px 6px;
+  border: 1.5px solid var(--grid);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+}
+.level-chips .k { font-size: 1.4rem; line-height: 1.2; }
+.pips { display: flex; gap: 3px; margin-top: 3px; }
+.pips i { width: 9px; height: 9px; border: 1.5px solid var(--blue); border-radius: 2px; }
+.pips i.on { background: var(--blue); }
+
+.level-help { margin-top: 12px; color: var(--ink-soft); font-size: .92rem; }
+.level-help summary { cursor: pointer; color: var(--blue); min-height: 32px; }
+.level-help p { margin: 6px 0 0; }
+
 .done-note { text-align: center; margin: 4px 0 14px; color: var(--ink-soft); }
 
 /* ---------- 練習畫面 ---------- */
