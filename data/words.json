@@ -1,0 +1,956 @@
+{
+ "version": 1,
+ "note": "長音拼法以雙母音為標準答案(koohii)；判分時另接受 ō/ou/ū 等寫法，見 SPEC.md",
+ "words": [
+  {
+   "word": "いぬ",
+   "romaji": "inu",
+   "meaning": "狗",
+   "script": "hira",
+   "requires": [
+    "h-i",
+    "h-nu"
+   ],
+   "accept": [
+    "inu"
+   ]
+  },
+  {
+   "word": "ねこ",
+   "romaji": "neko",
+   "meaning": "貓",
+   "script": "hira",
+   "requires": [
+    "h-ko",
+    "h-ne"
+   ],
+   "accept": [
+    "neko"
+   ]
+  },
+  {
+   "word": "あめ",
+   "romaji": "ame",
+   "meaning": "雨",
+   "script": "hira",
+   "requires": [
+    "h-a",
+    "h-me"
+   ],
+   "accept": [
+    "ame"
+   ]
+  },
+  {
+   "word": "うみ",
+   "romaji": "umi",
+   "meaning": "海",
+   "script": "hira",
+   "requires": [
+    "h-mi",
+    "h-u"
+   ],
+   "accept": [
+    "umi"
+   ]
+  },
+  {
+   "word": "そら",
+   "romaji": "sora",
+   "meaning": "天空",
+   "script": "hira",
+   "requires": [
+    "h-ra",
+    "h-so"
+   ],
+   "accept": [
+    "sora"
+   ]
+  },
+  {
+   "word": "やま",
+   "romaji": "yama",
+   "meaning": "山",
+   "script": "hira",
+   "requires": [
+    "h-ma",
+    "h-ya"
+   ],
+   "accept": [
+    "yama"
+   ]
+  },
+  {
+   "word": "かわ",
+   "romaji": "kawa",
+   "meaning": "河川",
+   "script": "hira",
+   "requires": [
+    "h-ka",
+    "h-wa"
+   ],
+   "accept": [
+    "kawa"
+   ]
+  },
+  {
+   "word": "はな",
+   "romaji": "hana",
+   "meaning": "花",
+   "script": "hira",
+   "requires": [
+    "h-ha",
+    "h-na"
+   ],
+   "accept": [
+    "hana"
+   ]
+  },
+  {
+   "word": "ゆき",
+   "romaji": "yuki",
+   "meaning": "雪",
+   "script": "hira",
+   "requires": [
+    "h-ki",
+    "h-yu"
+   ],
+   "accept": [
+    "yuki"
+   ]
+  },
+  {
+   "word": "ほし",
+   "romaji": "hoshi",
+   "meaning": "星星",
+   "script": "hira",
+   "requires": [
+    "h-ho",
+    "h-shi"
+   ],
+   "accept": [
+    "hoshi"
+   ]
+  },
+  {
+   "word": "つき",
+   "romaji": "tsuki",
+   "meaning": "月亮",
+   "script": "hira",
+   "requires": [
+    "h-ki",
+    "h-tsu"
+   ],
+   "accept": [
+    "tsuki"
+   ]
+  },
+  {
+   "word": "ひと",
+   "romaji": "hito",
+   "meaning": "人",
+   "script": "hira",
+   "requires": [
+    "h-hi",
+    "h-to"
+   ],
+   "accept": [
+    "hito"
+   ]
+  },
+  {
+   "word": "さくら",
+   "romaji": "sakura",
+   "meaning": "櫻花",
+   "script": "hira",
+   "requires": [
+    "h-ku",
+    "h-ra",
+    "h-sa"
+   ],
+   "accept": [
+    "sakura"
+   ]
+  },
+  {
+   "word": "すし",
+   "romaji": "sushi",
+   "meaning": "壽司",
+   "script": "hira",
+   "requires": [
+    "h-shi",
+    "h-su"
+   ],
+   "accept": [
+    "sushi"
+   ]
+  },
+  {
+   "word": "みみ",
+   "romaji": "mimi",
+   "meaning": "耳朵",
+   "script": "hira",
+   "requires": [
+    "h-mi"
+   ],
+   "accept": [
+    "mimi"
+   ]
+  },
+  {
+   "word": "くも",
+   "romaji": "kumo",
+   "meaning": "雲",
+   "script": "hira",
+   "requires": [
+    "h-ku",
+    "h-mo"
+   ],
+   "accept": [
+    "kumo"
+   ]
+  },
+  {
+   "word": "いえ",
+   "romaji": "ie",
+   "meaning": "家",
+   "script": "hira",
+   "requires": [
+    "h-e",
+    "h-i"
+   ],
+   "accept": [
+    "ie"
+   ]
+  },
+  {
+   "word": "あお",
+   "romaji": "ao",
+   "meaning": "藍色",
+   "script": "hira",
+   "requires": [
+    "h-a",
+    "h-o"
+   ],
+   "accept": [
+    "ao"
+   ]
+  },
+  {
+   "word": "たまご",
+   "romaji": "tamago",
+   "meaning": "蛋",
+   "script": "hira",
+   "requires": [
+    "h-go",
+    "h-ma",
+    "h-ta"
+   ],
+   "accept": [
+    "tamago"
+   ]
+  },
+  {
+   "word": "みず",
+   "romaji": "mizu",
+   "meaning": "水",
+   "script": "hira",
+   "requires": [
+    "h-mi",
+    "h-zu"
+   ],
+   "accept": [
+    "mizu"
+   ]
+  },
+  {
+   "word": "かぜ",
+   "romaji": "kaze",
+   "meaning": "風",
+   "script": "hira",
+   "requires": [
+    "h-ka",
+    "h-ze"
+   ],
+   "accept": [
+    "kaze"
+   ]
+  },
+  {
+   "word": "ねずみ",
+   "romaji": "nezumi",
+   "meaning": "老鼠",
+   "script": "hira",
+   "requires": [
+    "h-mi",
+    "h-ne",
+    "h-zu"
+   ],
+   "accept": [
+    "nezumi"
+   ]
+  },
+  {
+   "word": "めがね",
+   "romaji": "megane",
+   "meaning": "眼鏡",
+   "script": "hira",
+   "requires": [
+    "h-ga",
+    "h-me",
+    "h-ne"
+   ],
+   "accept": [
+    "megane"
+   ]
+  },
+  {
+   "word": "ふね",
+   "romaji": "fune",
+   "meaning": "船",
+   "script": "hira",
+   "requires": [
+    "h-fu",
+    "h-ne"
+   ],
+   "accept": [
+    "fune"
+   ]
+  },
+  {
+   "word": "ほん",
+   "romaji": "hon",
+   "meaning": "書",
+   "script": "hira",
+   "requires": [
+    "h-ho",
+    "h-n"
+   ],
+   "accept": [
+    "hon"
+   ]
+  },
+  {
+   "word": "くるま",
+   "romaji": "kuruma",
+   "meaning": "車子",
+   "script": "hira",
+   "requires": [
+    "h-ku",
+    "h-ma",
+    "h-ru"
+   ],
+   "accept": [
+    "kuruma"
+   ]
+  },
+  {
+   "word": "わたし",
+   "romaji": "watashi",
+   "meaning": "我",
+   "script": "hira",
+   "requires": [
+    "h-shi",
+    "h-ta",
+    "h-wa"
+   ],
+   "accept": [
+    "watashi"
+   ]
+  },
+  {
+   "word": "なまえ",
+   "romaji": "namae",
+   "meaning": "名字",
+   "script": "hira",
+   "requires": [
+    "h-e",
+    "h-ma",
+    "h-na"
+   ],
+   "accept": [
+    "namae"
+   ]
+  },
+  {
+   "word": "りんご",
+   "romaji": "ringo",
+   "meaning": "蘋果",
+   "script": "hira",
+   "requires": [
+    "h-go",
+    "h-n",
+    "h-ri"
+   ],
+   "accept": [
+    "ringo"
+   ]
+  },
+  {
+   "word": "にほん",
+   "romaji": "nihon",
+   "meaning": "日本",
+   "script": "hira",
+   "requires": [
+    "h-ho",
+    "h-n",
+    "h-ni"
+   ],
+   "accept": [
+    "nihon"
+   ]
+  },
+  {
+   "word": "ぬいぐるみ",
+   "romaji": "nuigurumi",
+   "meaning": "布偶",
+   "script": "hira",
+   "requires": [
+    "h-gu",
+    "h-i",
+    "h-mi",
+    "h-nu",
+    "h-ru"
+   ],
+   "accept": [
+    "nuigurumi"
+   ]
+  },
+  {
+   "word": "ろうそく",
+   "romaji": "rousoku",
+   "meaning": "蠟燭",
+   "script": "hira",
+   "requires": [
+    "h-ku",
+    "h-ro",
+    "h-so",
+    "h-u"
+   ],
+   "accept": [
+    "rousoku"
+   ]
+  },
+  {
+   "word": "ひらがな",
+   "romaji": "hiragana",
+   "meaning": "平假名",
+   "script": "hira",
+   "requires": [
+    "h-ga",
+    "h-hi",
+    "h-na",
+    "h-ra"
+   ],
+   "accept": [
+    "hiragana"
+   ]
+  },
+  {
+   "word": "おちゃ",
+   "romaji": "ocha",
+   "meaning": "茶",
+   "script": "hira",
+   "requires": [
+    "h-cha",
+    "h-o"
+   ],
+   "accept": [
+    "ocha"
+   ]
+  },
+  {
+   "word": "でんしゃ",
+   "romaji": "densha",
+   "meaning": "電車",
+   "script": "hira",
+   "requires": [
+    "h-de",
+    "h-n",
+    "h-sha"
+   ],
+   "accept": [
+    "densha"
+   ]
+  },
+  {
+   "word": "きょう",
+   "romaji": "kyou",
+   "meaning": "今天",
+   "script": "hira",
+   "requires": [
+    "h-kyo",
+    "h-u"
+   ],
+   "accept": [
+    "kyou"
+   ]
+  },
+  {
+   "word": "しゅくだい",
+   "romaji": "shukudai",
+   "meaning": "作業",
+   "script": "hira",
+   "requires": [
+    "h-da",
+    "h-i",
+    "h-ku",
+    "h-shu"
+   ],
+   "accept": [
+    "shukudai"
+   ]
+  },
+  {
+   "word": "がっこう",
+   "romaji": "gakkou",
+   "meaning": "學校",
+   "script": "hira",
+   "requires": [
+    "h-ga",
+    "h-ko",
+    "h-sokuon",
+    "h-u"
+   ],
+   "accept": [
+    "gakkou"
+   ]
+  },
+  {
+   "word": "きって",
+   "romaji": "kitte",
+   "meaning": "郵票",
+   "script": "hira",
+   "requires": [
+    "h-ki",
+    "h-sokuon",
+    "h-te"
+   ],
+   "accept": [
+    "kitte"
+   ]
+  },
+  {
+   "word": "ちず",
+   "romaji": "chizu",
+   "meaning": "地圖",
+   "script": "hira",
+   "requires": [
+    "h-chi",
+    "h-zu"
+   ],
+   "accept": [
+    "chizu"
+   ]
+  },
+  {
+   "word": "テレビ",
+   "romaji": "terebi",
+   "meaning": "電視",
+   "script": "kata",
+   "requires": [
+    "k-bi",
+    "k-re",
+    "k-te"
+   ],
+   "accept": [
+    "terebi"
+   ]
+  },
+  {
+   "word": "パン",
+   "romaji": "pan",
+   "meaning": "麵包",
+   "script": "kata",
+   "requires": [
+    "k-n",
+    "k-pa"
+   ],
+   "accept": [
+    "pan"
+   ]
+  },
+  {
+   "word": "カメラ",
+   "romaji": "kamera",
+   "meaning": "相機",
+   "script": "kata",
+   "requires": [
+    "k-ka",
+    "k-me",
+    "k-ra"
+   ],
+   "accept": [
+    "kamera"
+   ]
+  },
+  {
+   "word": "ホテル",
+   "romaji": "hoteru",
+   "meaning": "飯店",
+   "script": "kata",
+   "requires": [
+    "k-ho",
+    "k-ru",
+    "k-te"
+   ],
+   "accept": [
+    "hoteru"
+   ]
+  },
+  {
+   "word": "アイス",
+   "romaji": "aisu",
+   "meaning": "冰淇淋",
+   "script": "kata",
+   "requires": [
+    "k-a",
+    "k-i",
+    "k-su"
+   ],
+   "accept": [
+    "aisu"
+   ]
+  },
+  {
+   "word": "ペン",
+   "romaji": "pen",
+   "meaning": "筆",
+   "script": "kata",
+   "requires": [
+    "k-n",
+    "k-pe"
+   ],
+   "accept": [
+    "pen"
+   ]
+  },
+  {
+   "word": "メロン",
+   "romaji": "meron",
+   "meaning": "哈密瓜",
+   "script": "kata",
+   "requires": [
+    "k-me",
+    "k-n",
+    "k-ro"
+   ],
+   "accept": [
+    "meron"
+   ]
+  },
+  {
+   "word": "トマト",
+   "romaji": "tomato",
+   "meaning": "番茄",
+   "script": "kata",
+   "requires": [
+    "k-ma",
+    "k-to"
+   ],
+   "accept": [
+    "tomato"
+   ]
+  },
+  {
+   "word": "バス",
+   "romaji": "basu",
+   "meaning": "公車",
+   "script": "kata",
+   "requires": [
+    "k-ba",
+    "k-su"
+   ],
+   "accept": [
+    "basu"
+   ]
+  },
+  {
+   "word": "ピアノ",
+   "romaji": "piano",
+   "meaning": "鋼琴",
+   "script": "kata",
+   "requires": [
+    "k-a",
+    "k-no",
+    "k-pi"
+   ],
+   "accept": [
+    "piano"
+   ]
+  },
+  {
+   "word": "ネクタイ",
+   "romaji": "nekutai",
+   "meaning": "領帶",
+   "script": "kata",
+   "requires": [
+    "k-i",
+    "k-ku",
+    "k-ne",
+    "k-ta"
+   ],
+   "accept": [
+    "nekutai"
+   ]
+  },
+  {
+   "word": "ミルク",
+   "romaji": "miruku",
+   "meaning": "牛奶",
+   "script": "kata",
+   "requires": [
+    "k-ku",
+    "k-mi",
+    "k-ru"
+   ],
+   "accept": [
+    "miruku"
+   ]
+  },
+  {
+   "word": "アニメ",
+   "romaji": "anime",
+   "meaning": "動畫",
+   "script": "kata",
+   "requires": [
+    "k-a",
+    "k-me",
+    "k-ni"
+   ],
+   "accept": [
+    "anime"
+   ]
+  },
+  {
+   "word": "タオル",
+   "romaji": "taoru",
+   "meaning": "毛巾",
+   "script": "kata",
+   "requires": [
+    "k-o",
+    "k-ru",
+    "k-ta"
+   ],
+   "accept": [
+    "taoru"
+   ]
+  },
+  {
+   "word": "カタカナ",
+   "romaji": "katakana",
+   "meaning": "片假名",
+   "script": "kata",
+   "requires": [
+    "k-ka",
+    "k-na",
+    "k-ta"
+   ],
+   "accept": [
+    "katakana"
+   ]
+  },
+  {
+   "word": "スマホ",
+   "romaji": "sumaho",
+   "meaning": "智慧型手機",
+   "script": "kata",
+   "requires": [
+    "k-ho",
+    "k-ma",
+    "k-su"
+   ],
+   "accept": [
+    "sumaho"
+   ]
+  },
+  {
+   "word": "コンビニ",
+   "romaji": "konbini",
+   "meaning": "便利商店",
+   "script": "kata",
+   "requires": [
+    "k-bi",
+    "k-ko",
+    "k-n",
+    "k-ni"
+   ],
+   "accept": [
+    "konbini"
+   ]
+  },
+  {
+   "word": "シャツ",
+   "romaji": "shatsu",
+   "meaning": "襯衫",
+   "script": "kata",
+   "requires": [
+    "k-sha",
+    "k-tsu"
+   ],
+   "accept": [
+    "shatsu"
+   ]
+  },
+  {
+   "word": "メニュー",
+   "romaji": "menyuu",
+   "meaning": "菜單",
+   "script": "kata",
+   "requires": [
+    "k-chouon",
+    "k-me",
+    "k-nyu"
+   ],
+   "accept": [
+    "menyuu"
+   ]
+  },
+  {
+   "word": "ジュース",
+   "romaji": "juusu",
+   "meaning": "果汁",
+   "script": "kata",
+   "requires": [
+    "k-chouon",
+    "k-ju",
+    "k-su"
+   ],
+   "accept": [
+    "juusu"
+   ]
+  },
+  {
+   "word": "コーヒー",
+   "romaji": "koohii",
+   "meaning": "咖啡",
+   "script": "kata",
+   "requires": [
+    "k-chouon",
+    "k-hi",
+    "k-ko"
+   ],
+   "accept": [
+    "koohii"
+   ]
+  },
+  {
+   "word": "ケーキ",
+   "romaji": "keeki",
+   "meaning": "蛋糕",
+   "script": "kata",
+   "requires": [
+    "k-chouon",
+    "k-ke",
+    "k-ki"
+   ],
+   "accept": [
+    "keeki"
+   ]
+  },
+  {
+   "word": "ノート",
+   "romaji": "nooto",
+   "meaning": "筆記本",
+   "script": "kata",
+   "requires": [
+    "k-chouon",
+    "k-no",
+    "k-to"
+   ],
+   "accept": [
+    "nooto"
+   ]
+  },
+  {
+   "word": "ラーメン",
+   "romaji": "raamen",
+   "meaning": "拉麵",
+   "script": "kata",
+   "requires": [
+    "k-chouon",
+    "k-me",
+    "k-n",
+    "k-ra"
+   ],
+   "accept": [
+    "raamen"
+   ]
+  },
+  {
+   "word": "タクシー",
+   "romaji": "takushii",
+   "meaning": "計程車",
+   "script": "kata",
+   "requires": [
+    "k-chouon",
+    "k-ku",
+    "k-shi",
+    "k-ta"
+   ],
+   "accept": [
+    "takushii"
+   ]
+  },
+  {
+   "word": "ゲーム",
+   "romaji": "geemu",
+   "meaning": "遊戲",
+   "script": "kata",
+   "requires": [
+    "k-chouon",
+    "k-ge",
+    "k-mu"
+   ],
+   "accept": [
+    "geemu"
+   ]
+  },
+  {
+   "word": "ロボット",
+   "romaji": "robotto",
+   "meaning": "機器人",
+   "script": "kata",
+   "requires": [
+    "k-bo",
+    "k-ro",
+    "k-sokuon",
+    "k-to"
+   ],
+   "accept": [
+    "robotto"
+   ]
+  },
+  {
+   "word": "サッカー",
+   "romaji": "sakkaa",
+   "meaning": "足球",
+   "script": "kata",
+   "requires": [
+    "k-chouon",
+    "k-ka",
+    "k-sa",
+    "k-sokuon"
+   ],
+   "accept": [
+    "sakkaa"
+   ]
+  },
+  {
+   "word": "チョコレート",
+   "romaji": "chokoreeto",
+   "meaning": "巧克力",
+   "script": "kata",
+   "requires": [
+    "k-cho",
+    "k-chouon",
+    "k-ko",
+    "k-re",
+    "k-to"
+   ],
+   "accept": [
+    "chokoreeto"
+   ]
+  }
+ ]
+}

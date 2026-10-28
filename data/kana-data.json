@@ -1,0 +1,6234 @@
+{
+ "version": 1,
+ "units": [
+  {
+   "unit": "hira-a",
+   "script": "hira",
+   "type": "seion",
+   "rows": [
+    "a"
+   ]
+  },
+  {
+   "unit": "hira-ka",
+   "script": "hira",
+   "type": "seion",
+   "rows": [
+    "ka"
+   ]
+  },
+  {
+   "unit": "hira-sa",
+   "script": "hira",
+   "type": "seion",
+   "rows": [
+    "sa"
+   ]
+  },
+  {
+   "unit": "hira-ta",
+   "script": "hira",
+   "type": "seion",
+   "rows": [
+    "ta"
+   ]
+  },
+  {
+   "unit": "hira-na",
+   "script": "hira",
+   "type": "seion",
+   "rows": [
+    "na"
+   ]
+  },
+  {
+   "unit": "hira-ha",
+   "script": "hira",
+   "type": "seion",
+   "rows": [
+    "ha"
+   ]
+  },
+  {
+   "unit": "hira-ma",
+   "script": "hira",
+   "type": "seion",
+   "rows": [
+    "ma"
+   ]
+  },
+  {
+   "unit": "hira-ya",
+   "script": "hira",
+   "type": "seion",
+   "rows": [
+    "ya"
+   ]
+  },
+  {
+   "unit": "hira-ra",
+   "script": "hira",
+   "type": "seion",
+   "rows": [
+    "ra"
+   ]
+  },
+  {
+   "unit": "hira-wa",
+   "script": "hira",
+   "type": "seion",
+   "rows": [
+    "wa"
+   ]
+  },
+  {
+   "unit": "kata-a",
+   "script": "kata",
+   "type": "seion",
+   "rows": [
+    "a"
+   ]
+  },
+  {
+   "unit": "kata-ka",
+   "script": "kata",
+   "type": "seion",
+   "rows": [
+    "ka"
+   ]
+  },
+  {
+   "unit": "kata-sa",
+   "script": "kata",
+   "type": "seion",
+   "rows": [
+    "sa"
+   ]
+  },
+  {
+   "unit": "kata-ta",
+   "script": "kata",
+   "type": "seion",
+   "rows": [
+    "ta"
+   ]
+  },
+  {
+   "unit": "kata-na",
+   "script": "kata",
+   "type": "seion",
+   "rows": [
+    "na"
+   ]
+  },
+  {
+   "unit": "kata-ha",
+   "script": "kata",
+   "type": "seion",
+   "rows": [
+    "ha"
+   ]
+  },
+  {
+   "unit": "kata-ma",
+   "script": "kata",
+   "type": "seion",
+   "rows": [
+    "ma"
+   ]
+  },
+  {
+   "unit": "kata-ya",
+   "script": "kata",
+   "type": "seion",
+   "rows": [
+    "ya"
+   ]
+  },
+  {
+   "unit": "kata-ra",
+   "script": "kata",
+   "type": "seion",
+   "rows": [
+    "ra"
+   ]
+  },
+  {
+   "unit": "kata-wa",
+   "script": "kata",
+   "type": "seion",
+   "rows": [
+    "wa"
+   ]
+  },
+  {
+   "unit": "hira-dakuon",
+   "script": "hira",
+   "type": "dakuon/handakuon",
+   "rows": [
+    "ga",
+    "za",
+    "da",
+    "ba",
+    "pa"
+   ]
+  },
+  {
+   "unit": "kata-dakuon",
+   "script": "kata",
+   "type": "dakuon/handakuon",
+   "rows": [
+    "ga",
+    "za",
+    "da",
+    "ba",
+    "pa"
+   ]
+  },
+  {
+   "unit": "hira-yoon",
+   "script": "hira",
+   "type": "yoon",
+   "rows": [
+    "yoon-ki",
+    "yoon-shi",
+    "yoon-chi",
+    "yoon-ni",
+    "yoon-hi",
+    "yoon-mi",
+    "yoon-ri",
+    "yoon-gi",
+    "yoon-ji",
+    "yoon-bi",
+    "yoon-pi"
+   ]
+  },
+  {
+   "unit": "kata-yoon",
+   "script": "kata",
+   "type": "yoon",
+   "rows": [
+    "yoon-ki",
+    "yoon-shi",
+    "yoon-chi",
+    "yoon-ni",
+    "yoon-hi",
+    "yoon-mi",
+    "yoon-ri",
+    "yoon-gi",
+    "yoon-ji",
+    "yoon-bi",
+    "yoon-pi"
+   ]
+  },
+  {
+   "unit": "special",
+   "script": "both",
+   "type": "sokuon/chouon",
+   "rows": [
+    "special"
+   ]
+  }
+ ],
+ "items": [
+  {
+   "id": "h-a",
+   "kana": "あ",
+   "script": "hira",
+   "romaji": "a",
+   "accept": [
+    "a"
+   ],
+   "row": "a",
+   "type": "seion",
+   "pair": "k-a",
+   "order": 1,
+   "confusables": [
+    {
+     "kana": "お",
+     "romaji": "o"
+    },
+    {
+     "kana": "め",
+     "romaji": "me"
+    },
+    {
+     "kana": "ぬ",
+     "romaji": "nu"
+    }
+   ],
+   "unit": "hira-a"
+  },
+  {
+   "id": "k-a",
+   "kana": "ア",
+   "script": "kata",
+   "romaji": "a",
+   "accept": [
+    "a"
+   ],
+   "row": "a",
+   "type": "seion",
+   "pair": "h-a",
+   "order": 1,
+   "confusables": [
+    {
+     "kana": "マ",
+     "romaji": "ma"
+    },
+    {
+     "kana": "ヤ",
+     "romaji": "ya"
+    },
+    {
+     "kana": "フ",
+     "romaji": "fu"
+    }
+   ],
+   "unit": "kata-a"
+  },
+  {
+   "id": "h-i",
+   "kana": "い",
+   "script": "hira",
+   "romaji": "i",
+   "accept": [
+    "i"
+   ],
+   "row": "a",
+   "type": "seion",
+   "pair": "k-i",
+   "order": 2,
+   "confusables": [
+    {
+     "kana": "こ",
+     "romaji": "ko"
+    },
+    {
+     "kana": "り",
+     "romaji": "ri"
+    }
+   ],
+   "unit": "hira-a"
+  },
+  {
+   "id": "k-i",
+   "kana": "イ",
+   "script": "kata",
+   "romaji": "i",
+   "accept": [
+    "i"
+   ],
+   "row": "a",
+   "type": "seion",
+   "pair": "h-i",
+   "order": 2,
+   "confusables": [
+    {
+     "kana": "ト",
+     "romaji": "to"
+    },
+    {
+     "kana": "ノ",
+     "romaji": "no"
+    }
+   ],
+   "unit": "kata-a"
+  },
+  {
+   "id": "h-u",
+   "kana": "う",
+   "script": "hira",
+   "romaji": "u",
+   "accept": [
+    "u"
+   ],
+   "row": "a",
+   "type": "seion",
+   "pair": "k-u",
+   "order": 3,
+   "confusables": [
+    {
+     "kana": "ら",
+     "romaji": "ra"
+    },
+    {
+     "kana": "つ",
+     "romaji": "tsu"
+    },
+    {
+     "kana": "ろ",
+     "romaji": "ro"
+    }
+   ],
+   "unit": "hira-a"
+  },
+  {
+   "id": "k-u",
+   "kana": "ウ",
+   "script": "kata",
+   "romaji": "u",
+   "accept": [
+    "u"
+   ],
+   "row": "a",
+   "type": "seion",
+   "pair": "h-u",
+   "order": 3,
+   "confusables": [
+    {
+     "kana": "ワ",
+     "romaji": "wa"
+    },
+    {
+     "kana": "フ",
+     "romaji": "fu"
+    },
+    {
+     "kana": "ラ",
+     "romaji": "ra"
+    }
+   ],
+   "unit": "kata-a"
+  },
+  {
+   "id": "h-e",
+   "kana": "え",
+   "script": "hira",
+   "romaji": "e",
+   "accept": [
+    "e"
+   ],
+   "row": "a",
+   "type": "seion",
+   "pair": "k-e",
+   "order": 4,
+   "confusables": [
+    {
+     "kana": "ん",
+     "romaji": "n"
+    },
+    {
+     "kana": "そ",
+     "romaji": "so"
+    }
+   ],
+   "unit": "hira-a"
+  },
+  {
+   "id": "k-e",
+   "kana": "エ",
+   "script": "kata",
+   "romaji": "e",
+   "accept": [
+    "e"
+   ],
+   "row": "a",
+   "type": "seion",
+   "pair": "h-e",
+   "order": 4,
+   "confusables": [
+    {
+     "kana": "コ",
+     "romaji": "ko"
+    },
+    {
+     "kana": "ユ",
+     "romaji": "yu"
+    }
+   ],
+   "unit": "kata-a"
+  },
+  {
+   "id": "h-o",
+   "kana": "お",
+   "script": "hira",
+   "romaji": "o",
+   "accept": [
+    "o"
+   ],
+   "row": "a",
+   "type": "seion",
+   "pair": "k-o",
+   "order": 5,
+   "confusables": [
+    {
+     "kana": "あ",
+     "romaji": "a"
+    },
+    {
+     "kana": "む",
+     "romaji": "mu"
+    },
+    {
+     "kana": "す",
+     "romaji": "su"
+    }
+   ],
+   "unit": "hira-a"
+  },
+  {
+   "id": "k-o",
+   "kana": "オ",
+   "script": "kata",
+   "romaji": "o",
+   "accept": [
+    "o"
+   ],
+   "row": "a",
+   "type": "seion",
+   "pair": "h-o",
+   "order": 5,
+   "confusables": [
+    {
+     "kana": "ホ",
+     "romaji": "ho"
+    },
+    {
+     "kana": "ネ",
+     "romaji": "ne"
+    }
+   ],
+   "unit": "kata-a"
+  },
+  {
+   "id": "h-ka",
+   "kana": "か",
+   "script": "hira",
+   "romaji": "ka",
+   "accept": [
+    "ka"
+   ],
+   "row": "ka",
+   "type": "seion",
+   "pair": "k-ka",
+   "order": 6,
+   "confusables": [
+    {
+     "kana": "や",
+     "romaji": "ya"
+    },
+    {
+     "kana": "わ",
+     "romaji": "wa"
+    }
+   ],
+   "unit": "hira-ka"
+  },
+  {
+   "id": "k-ka",
+   "kana": "カ",
+   "script": "kata",
+   "romaji": "ka",
+   "accept": [
+    "ka"
+   ],
+   "row": "ka",
+   "type": "seion",
+   "pair": "h-ka",
+   "order": 6,
+   "confusables": [
+    {
+     "kana": "ヤ",
+     "romaji": "ya"
+    },
+    {
+     "kana": "ナ",
+     "romaji": "na"
+    },
+    {
+     "kana": "ク",
+     "romaji": "ku"
+    }
+   ],
+   "unit": "kata-ka"
+  },
+  {
+   "id": "h-ki",
+   "kana": "き",
+   "script": "hira",
+   "romaji": "ki",
+   "accept": [
+    "ki"
+   ],
+   "row": "ka",
+   "type": "seion",
+   "pair": "k-ki",
+   "order": 7,
+   "confusables": [
+    {
+     "kana": "さ",
+     "romaji": "sa"
+    },
+    {
+     "kana": "ち",
+     "romaji": "chi"
+    },
+    {
+     "kana": "ま",
+     "romaji": "ma"
+    }
+   ],
+   "unit": "hira-ka"
+  },
+  {
+   "id": "k-ki",
+   "kana": "キ",
+   "script": "kata",
+   "romaji": "ki",
+   "accept": [
+    "ki"
+   ],
+   "row": "ka",
+   "type": "seion",
+   "pair": "h-ki",
+   "order": 7,
+   "confusables": [
+    {
+     "kana": "チ",
+     "romaji": "chi"
+    },
+    {
+     "kana": "サ",
+     "romaji": "sa"
+    },
+    {
+     "kana": "モ",
+     "romaji": "mo"
+    }
+   ],
+   "unit": "kata-ka"
+  },
+  {
+   "id": "h-ku",
+   "kana": "く",
+   "script": "hira",
+   "romaji": "ku",
+   "accept": [
+    "ku"
+   ],
+   "row": "ka",
+   "type": "seion",
+   "pair": "k-ku",
+   "order": 8,
+   "confusables": [
+    {
+     "kana": "へ",
+     "romaji": "he"
+    },
+    {
+     "kana": "し",
+     "romaji": "shi"
+    }
+   ],
+   "unit": "hira-ka"
+  },
+  {
+   "id": "k-ku",
+   "kana": "ク",
+   "script": "kata",
+   "romaji": "ku",
+   "accept": [
+    "ku"
+   ],
+   "row": "ka",
+   "type": "seion",
+   "pair": "h-ku",
+   "order": 8,
+   "confusables": [
+    {
+     "kana": "ワ",
+     "romaji": "wa"
+    },
+    {
+     "kana": "ケ",
+     "romaji": "ke"
+    },
+    {
+     "kana": "タ",
+     "romaji": "ta"
+    }
+   ],
+   "unit": "kata-ka"
+  },
+  {
+   "id": "h-ke",
+   "kana": "け",
+   "script": "hira",
+   "romaji": "ke",
+   "accept": [
+    "ke"
+   ],
+   "row": "ka",
+   "type": "seion",
+   "pair": "k-ke",
+   "order": 9,
+   "confusables": [
+    {
+     "kana": "は",
+     "romaji": "ha"
+    },
+    {
+     "kana": "ほ",
+     "romaji": "ho"
+    },
+    {
+     "kana": "に",
+     "romaji": "ni"
+    }
+   ],
+   "unit": "hira-ka"
+  },
+  {
+   "id": "k-ke",
+   "kana": "ケ",
+   "script": "kata",
+   "romaji": "ke",
+   "accept": [
+    "ke"
+   ],
+   "row": "ka",
+   "type": "seion",
+   "pair": "h-ke",
+   "order": 9,
+   "confusables": [
+    {
+     "kana": "ク",
+     "romaji": "ku"
+    },
+    {
+     "kana": "タ",
+     "romaji": "ta"
+    },
+    {
+     "kana": "ナ",
+     "romaji": "na"
+    }
+   ],
+   "unit": "kata-ka"
+  },
+  {
+   "id": "h-ko",
+   "kana": "こ",
+   "script": "hira",
+   "romaji": "ko",
+   "accept": [
+    "ko"
+   ],
+   "row": "ka",
+   "type": "seion",
+   "pair": "k-ko",
+   "order": 10,
+   "confusables": [
+    {
+     "kana": "い",
+     "romaji": "i"
+    },
+    {
+     "kana": "に",
+     "romaji": "ni"
+    },
+    {
+     "kana": "て",
+     "romaji": "te"
+    }
+   ],
+   "unit": "hira-ka"
+  },
+  {
+   "id": "k-ko",
+   "kana": "コ",
+   "script": "kata",
+   "romaji": "ko",
+   "accept": [
+    "ko"
+   ],
+   "row": "ka",
+   "type": "seion",
+   "pair": "h-ko",
+   "order": 10,
+   "confusables": [
+    {
+     "kana": "ユ",
+     "romaji": "yu"
+    },
+    {
+     "kana": "ロ",
+     "romaji": "ro"
+    },
+    {
+     "kana": "エ",
+     "romaji": "e"
+    }
+   ],
+   "unit": "kata-ka"
+  },
+  {
+   "id": "h-sa",
+   "kana": "さ",
+   "script": "hira",
+   "romaji": "sa",
+   "accept": [
+    "sa"
+   ],
+   "row": "sa",
+   "type": "seion",
+   "pair": "k-sa",
+   "order": 11,
+   "confusables": [
+    {
+     "kana": "ち",
+     "romaji": "chi"
+    },
+    {
+     "kana": "き",
+     "romaji": "ki"
+    },
+    {
+     "kana": "ら",
+     "romaji": "ra"
+    }
+   ],
+   "unit": "hira-sa"
+  },
+  {
+   "id": "k-sa",
+   "kana": "サ",
+   "script": "kata",
+   "romaji": "sa",
+   "accept": [
+    "sa"
+   ],
+   "row": "sa",
+   "type": "seion",
+   "pair": "h-sa",
+   "order": 11,
+   "confusables": [
+    {
+     "kana": "セ",
+     "romaji": "se"
+    },
+    {
+     "kana": "キ",
+     "romaji": "ki"
+    },
+    {
+     "kana": "チ",
+     "romaji": "chi"
+    }
+   ],
+   "unit": "kata-sa"
+  },
+  {
+   "id": "h-shi",
+   "kana": "し",
+   "script": "hira",
+   "romaji": "shi",
+   "accept": [
+    "shi",
+    "si"
+   ],
+   "row": "sa",
+   "type": "seion",
+   "pair": "k-shi",
+   "order": 12,
+   "confusables": [
+    {
+     "kana": "つ",
+     "romaji": "tsu"
+    },
+    {
+     "kana": "も",
+     "romaji": "mo"
+    },
+    {
+     "kana": "ん",
+     "romaji": "n"
+    }
+   ],
+   "unit": "hira-sa"
+  },
+  {
+   "id": "k-shi",
+   "kana": "シ",
+   "script": "kata",
+   "romaji": "shi",
+   "accept": [
+    "shi",
+    "si"
+   ],
+   "row": "sa",
+   "type": "seion",
+   "pair": "h-shi",
+   "order": 12,
+   "confusables": [
+    {
+     "kana": "ツ",
+     "romaji": "tsu"
+    },
+    {
+     "kana": "ン",
+     "romaji": "n"
+    },
+    {
+     "kana": "ミ",
+     "romaji": "mi"
+    }
+   ],
+   "unit": "kata-sa"
+  },
+  {
+   "id": "h-su",
+   "kana": "す",
+   "script": "hira",
+   "romaji": "su",
+   "accept": [
+    "su"
+   ],
+   "row": "sa",
+   "type": "seion",
+   "pair": "k-su",
+   "order": 13,
+   "confusables": [
+    {
+     "kana": "む",
+     "romaji": "mu"
+    },
+    {
+     "kana": "お",
+     "romaji": "o"
+    },
+    {
+     "kana": "ぬ",
+     "romaji": "nu"
+    }
+   ],
+   "unit": "hira-sa"
+  },
+  {
+   "id": "k-su",
+   "kana": "ス",
+   "script": "kata",
+   "romaji": "su",
+   "accept": [
+    "su"
+   ],
+   "row": "sa",
+   "type": "seion",
+   "pair": "h-su",
+   "order": 13,
+   "confusables": [
+    {
+     "kana": "ヌ",
+     "romaji": "nu"
+    },
+    {
+     "kana": "ヲ",
+     "romaji": "wo"
+    },
+    {
+     "kana": "フ",
+     "romaji": "fu"
+    }
+   ],
+   "unit": "kata-sa"
+  },
+  {
+   "id": "h-se",
+   "kana": "せ",
+   "script": "hira",
+   "romaji": "se",
+   "accept": [
+    "se"
+   ],
+   "row": "sa",
+   "type": "seion",
+   "pair": "k-se",
+   "order": 14,
+   "confusables": [
+    {
+     "kana": "さ",
+     "romaji": "sa"
+    },
+    {
+     "kana": "や",
+     "romaji": "ya"
+    },
+    {
+     "kana": "も",
+     "romaji": "mo"
+    }
+   ],
+   "unit": "hira-sa"
+  },
+  {
+   "id": "k-se",
+   "kana": "セ",
+   "script": "kata",
+   "romaji": "se",
+   "accept": [
+    "se"
+   ],
+   "row": "sa",
+   "type": "seion",
+   "pair": "h-se",
+   "order": 14,
+   "confusables": [
+    {
+     "kana": "サ",
+     "romaji": "sa"
+    },
+    {
+     "kana": "ヤ",
+     "romaji": "ya"
+    },
+    {
+     "kana": "モ",
+     "romaji": "mo"
+    }
+   ],
+   "unit": "kata-sa"
+  },
+  {
+   "id": "h-so",
+   "kana": "そ",
+   "script": "hira",
+   "romaji": "so",
+   "accept": [
+    "so"
+   ],
+   "row": "sa",
+   "type": "seion",
+   "pair": "k-so",
+   "order": 15,
+   "confusables": [
+    {
+     "kana": "て",
+     "romaji": "te"
+    },
+    {
+     "kana": "ろ",
+     "romaji": "ro"
+    },
+    {
+     "kana": "る",
+     "romaji": "ru"
+    }
+   ],
+   "unit": "hira-sa"
+  },
+  {
+   "id": "k-so",
+   "kana": "ソ",
+   "script": "kata",
+   "romaji": "so",
+   "accept": [
+    "so"
+   ],
+   "row": "sa",
+   "type": "seion",
+   "pair": "h-so",
+   "order": 15,
+   "confusables": [
+    {
+     "kana": "ン",
+     "romaji": "n"
+    },
+    {
+     "kana": "リ",
+     "romaji": "ri"
+    },
+    {
+     "kana": "ツ",
+     "romaji": "tsu"
+    }
+   ],
+   "unit": "kata-sa"
+  },
+  {
+   "id": "h-ta",
+   "kana": "た",
+   "script": "hira",
+   "romaji": "ta",
+   "accept": [
+    "ta"
+   ],
+   "row": "ta",
+   "type": "seion",
+   "pair": "k-ta",
+   "order": 16,
+   "confusables": [
+    {
+     "kana": "な",
+     "romaji": "na"
+    },
+    {
+     "kana": "に",
+     "romaji": "ni"
+    }
+   ],
+   "unit": "hira-ta"
+  },
+  {
+   "id": "k-ta",
+   "kana": "タ",
+   "script": "kata",
+   "romaji": "ta",
+   "accept": [
+    "ta"
+   ],
+   "row": "ta",
+   "type": "seion",
+   "pair": "h-ta",
+   "order": 16,
+   "confusables": [
+    {
+     "kana": "ク",
+     "romaji": "ku"
+    },
+    {
+     "kana": "ケ",
+     "romaji": "ke"
+    },
+    {
+     "kana": "ヌ",
+     "romaji": "nu"
+    }
+   ],
+   "unit": "kata-ta"
+  },
+  {
+   "id": "h-chi",
+   "kana": "ち",
+   "script": "hira",
+   "romaji": "chi",
+   "accept": [
+    "chi",
+    "ti"
+   ],
+   "row": "ta",
+   "type": "seion",
+   "pair": "k-chi",
+   "order": 17,
+   "confusables": [
+    {
+     "kana": "さ",
+     "romaji": "sa"
+    },
+    {
+     "kana": "ら",
+     "romaji": "ra"
+    },
+    {
+     "kana": "ろ",
+     "romaji": "ro"
+    }
+   ],
+   "unit": "hira-ta"
+  },
+  {
+   "id": "k-chi",
+   "kana": "チ",
+   "script": "kata",
+   "romaji": "chi",
+   "accept": [
+    "chi",
+    "ti"
+   ],
+   "row": "ta",
+   "type": "seion",
+   "pair": "h-chi",
+   "order": 17,
+   "confusables": [
+    {
+     "kana": "テ",
+     "romaji": "te"
+    },
+    {
+     "kana": "キ",
+     "romaji": "ki"
+    },
+    {
+     "kana": "ナ",
+     "romaji": "na"
+    }
+   ],
+   "unit": "kata-ta"
+  },
+  {
+   "id": "h-tsu",
+   "kana": "つ",
+   "script": "hira",
+   "romaji": "tsu",
+   "accept": [
+    "tsu",
+    "tu"
+   ],
+   "row": "ta",
+   "type": "seion",
+   "pair": "k-tsu",
+   "order": 18,
+   "confusables": [
+    {
+     "kana": "し",
+     "romaji": "shi"
+    },
+    {
+     "kana": "う",
+     "romaji": "u"
+    },
+    {
+     "kana": "て",
+     "romaji": "te"
+    }
+   ],
+   "unit": "hira-ta"
+  },
+  {
+   "id": "k-tsu",
+   "kana": "ツ",
+   "script": "kata",
+   "romaji": "tsu",
+   "accept": [
+    "tsu",
+    "tu"
+   ],
+   "row": "ta",
+   "type": "seion",
+   "pair": "h-tsu",
+   "order": 18,
+   "confusables": [
+    {
+     "kana": "シ",
+     "romaji": "shi"
+    },
+    {
+     "kana": "ソ",
+     "romaji": "so"
+    },
+    {
+     "kana": "ン",
+     "romaji": "n"
+    }
+   ],
+   "unit": "kata-ta"
+  },
+  {
+   "id": "h-te",
+   "kana": "て",
+   "script": "hira",
+   "romaji": "te",
+   "accept": [
+    "te"
+   ],
+   "row": "ta",
+   "type": "seion",
+   "pair": "k-te",
+   "order": 19,
+   "confusables": [
+    {
+     "kana": "こ",
+     "romaji": "ko"
+    },
+    {
+     "kana": "つ",
+     "romaji": "tsu"
+    },
+    {
+     "kana": "そ",
+     "romaji": "so"
+    }
+   ],
+   "unit": "hira-ta"
+  },
+  {
+   "id": "k-te",
+   "kana": "テ",
+   "script": "kata",
+   "romaji": "te",
+   "accept": [
+    "te"
+   ],
+   "row": "ta",
+   "type": "seion",
+   "pair": "h-te",
+   "order": 19,
+   "confusables": [
+    {
+     "kana": "チ",
+     "romaji": "chi"
+    },
+    {
+     "kana": "ラ",
+     "romaji": "ra"
+    },
+    {
+     "kana": "ヲ",
+     "romaji": "wo"
+    }
+   ],
+   "unit": "kata-ta"
+  },
+  {
+   "id": "h-to",
+   "kana": "と",
+   "script": "hira",
+   "romaji": "to",
+   "accept": [
+    "to"
+   ],
+   "row": "ta",
+   "type": "seion",
+   "pair": "k-to",
+   "order": 20,
+   "confusables": [
+    {
+     "kana": "て",
+     "romaji": "te"
+    },
+    {
+     "kana": "こ",
+     "romaji": "ko"
+    }
+   ],
+   "unit": "hira-ta"
+  },
+  {
+   "id": "k-to",
+   "kana": "ト",
+   "script": "kata",
+   "romaji": "to",
+   "accept": [
+    "to"
+   ],
+   "row": "ta",
+   "type": "seion",
+   "pair": "h-to",
+   "order": 20,
+   "confusables": [
+    {
+     "kana": "イ",
+     "romaji": "i"
+    },
+    {
+     "kana": "ヒ",
+     "romaji": "hi"
+    }
+   ],
+   "unit": "kata-ta"
+  },
+  {
+   "id": "h-na",
+   "kana": "な",
+   "script": "hira",
+   "romaji": "na",
+   "accept": [
+    "na"
+   ],
+   "row": "na",
+   "type": "seion",
+   "pair": "k-na",
+   "order": 21,
+   "confusables": [
+    {
+     "kana": "た",
+     "romaji": "ta"
+    },
+    {
+     "kana": "よ",
+     "romaji": "yo"
+    },
+    {
+     "kana": "ま",
+     "romaji": "ma"
+    }
+   ],
+   "unit": "hira-na"
+  },
+  {
+   "id": "k-na",
+   "kana": "ナ",
+   "script": "kata",
+   "romaji": "na",
+   "accept": [
+    "na"
+   ],
+   "row": "na",
+   "type": "seion",
+   "pair": "h-na",
+   "order": 21,
+   "confusables": [
+    {
+     "kana": "メ",
+     "romaji": "me"
+    },
+    {
+     "kana": "チ",
+     "romaji": "chi"
+    },
+    {
+     "kana": "カ",
+     "romaji": "ka"
+    }
+   ],
+   "unit": "kata-na"
+  },
+  {
+   "id": "h-ni",
+   "kana": "に",
+   "script": "hira",
+   "romaji": "ni",
+   "accept": [
+    "ni"
+   ],
+   "row": "na",
+   "type": "seion",
+   "pair": "k-ni",
+   "order": 22,
+   "confusables": [
+    {
+     "kana": "こ",
+     "romaji": "ko"
+    },
+    {
+     "kana": "た",
+     "romaji": "ta"
+    },
+    {
+     "kana": "け",
+     "romaji": "ke"
+    }
+   ],
+   "unit": "hira-na"
+  },
+  {
+   "id": "k-ni",
+   "kana": "ニ",
+   "script": "kata",
+   "romaji": "ni",
+   "accept": [
+    "ni"
+   ],
+   "row": "na",
+   "type": "seion",
+   "pair": "h-ni",
+   "order": 22,
+   "confusables": [
+    {
+     "kana": "コ",
+     "romaji": "ko"
+    },
+    {
+     "kana": "ミ",
+     "romaji": "mi"
+    },
+    {
+     "kana": "エ",
+     "romaji": "e"
+    }
+   ],
+   "unit": "kata-na"
+  },
+  {
+   "id": "h-nu",
+   "kana": "ぬ",
+   "script": "hira",
+   "romaji": "nu",
+   "accept": [
+    "nu"
+   ],
+   "row": "na",
+   "type": "seion",
+   "pair": "k-nu",
+   "order": 23,
+   "confusables": [
+    {
+     "kana": "め",
+     "romaji": "me"
+    },
+    {
+     "kana": "ね",
+     "romaji": "ne"
+    },
+    {
+     "kana": "あ",
+     "romaji": "a"
+    }
+   ],
+   "unit": "hira-na"
+  },
+  {
+   "id": "k-nu",
+   "kana": "ヌ",
+   "script": "kata",
+   "romaji": "nu",
+   "accept": [
+    "nu"
+   ],
+   "row": "na",
+   "type": "seion",
+   "pair": "h-nu",
+   "order": 23,
+   "confusables": [
+    {
+     "kana": "ス",
+     "romaji": "su"
+    },
+    {
+     "kana": "メ",
+     "romaji": "me"
+    },
+    {
+     "kana": "ヲ",
+     "romaji": "wo"
+    }
+   ],
+   "unit": "kata-na"
+  },
+  {
+   "id": "h-ne",
+   "kana": "ね",
+   "script": "hira",
+   "romaji": "ne",
+   "accept": [
+    "ne"
+   ],
+   "row": "na",
+   "type": "seion",
+   "pair": "k-ne",
+   "order": 24,
+   "confusables": [
+    {
+     "kana": "れ",
+     "romaji": "re"
+    },
+    {
+     "kana": "わ",
+     "romaji": "wa"
+    },
+    {
+     "kana": "ぬ",
+     "romaji": "nu"
+    }
+   ],
+   "unit": "hira-na"
+  },
+  {
+   "id": "k-ne",
+   "kana": "ネ",
+   "script": "kata",
+   "romaji": "ne",
+   "accept": [
+    "ne"
+   ],
+   "row": "na",
+   "type": "seion",
+   "pair": "h-ne",
+   "order": 24,
+   "confusables": [
+    {
+     "kana": "ホ",
+     "romaji": "ho"
+    },
+    {
+     "kana": "オ",
+     "romaji": "o"
+    }
+   ],
+   "unit": "kata-na"
+  },
+  {
+   "id": "h-no",
+   "kana": "の",
+   "script": "hira",
+   "romaji": "no",
+   "accept": [
+    "no"
+   ],
+   "row": "na",
+   "type": "seion",
+   "pair": "k-no",
+   "order": 25,
+   "confusables": [
+    {
+     "kana": "め",
+     "romaji": "me"
+    },
+    {
+     "kana": "ぬ",
+     "romaji": "nu"
+    },
+    {
+     "kana": "あ",
+     "romaji": "a"
+    }
+   ],
+   "unit": "hira-na"
+  },
+  {
+   "id": "k-no",
+   "kana": "ノ",
+   "script": "kata",
+   "romaji": "no",
+   "accept": [
+    "no"
+   ],
+   "row": "na",
+   "type": "seion",
+   "pair": "h-no",
+   "order": 25,
+   "confusables": [
+    {
+     "kana": "メ",
+     "romaji": "me"
+    },
+    {
+     "kana": "ソ",
+     "romaji": "so"
+    },
+    {
+     "kana": "イ",
+     "romaji": "i"
+    }
+   ],
+   "unit": "kata-na"
+  },
+  {
+   "id": "h-ha",
+   "kana": "は",
+   "script": "hira",
+   "romaji": "ha",
+   "accept": [
+    "ha"
+   ],
+   "row": "ha",
+   "type": "seion",
+   "pair": "k-ha",
+   "order": 26,
+   "confusables": [
+    {
+     "kana": "ほ",
+     "romaji": "ho"
+    },
+    {
+     "kana": "け",
+     "romaji": "ke"
+    },
+    {
+     "kana": "よ",
+     "romaji": "yo"
+    }
+   ],
+   "note": "當助詞時讀作 wa，學習階段先記 ha",
+   "unit": "hira-ha"
+  },
+  {
+   "id": "k-ha",
+   "kana": "ハ",
+   "script": "kata",
+   "romaji": "ha",
+   "accept": [
+    "ha"
+   ],
+   "row": "ha",
+   "type": "seion",
+   "pair": "h-ha",
+   "order": 26,
+   "confusables": [
+    {
+     "kana": "ル",
+     "romaji": "ru"
+    },
+    {
+     "kana": "ヘ",
+     "romaji": "he"
+    },
+    {
+     "kana": "ソ",
+     "romaji": "so"
+    }
+   ],
+   "unit": "kata-ha"
+  },
+  {
+   "id": "h-hi",
+   "kana": "ひ",
+   "script": "hira",
+   "romaji": "hi",
+   "accept": [
+    "hi"
+   ],
+   "row": "ha",
+   "type": "seion",
+   "pair": "k-hi",
+   "order": 27,
+   "confusables": [
+    {
+     "kana": "い",
+     "romaji": "i"
+    },
+    {
+     "kana": "し",
+     "romaji": "shi"
+    }
+   ],
+   "unit": "hira-ha"
+  },
+  {
+   "id": "k-hi",
+   "kana": "ヒ",
+   "script": "kata",
+   "romaji": "hi",
+   "accept": [
+    "hi"
+   ],
+   "row": "ha",
+   "type": "seion",
+   "pair": "h-hi",
+   "order": 27,
+   "confusables": [
+    {
+     "kana": "ト",
+     "romaji": "to"
+    },
+    {
+     "kana": "セ",
+     "romaji": "se"
+    }
+   ],
+   "unit": "kata-ha"
+  },
+  {
+   "id": "h-fu",
+   "kana": "ふ",
+   "script": "hira",
+   "romaji": "fu",
+   "accept": [
+    "fu",
+    "hu"
+   ],
+   "row": "ha",
+   "type": "seion",
+   "pair": "k-fu",
+   "order": 28,
+   "confusables": [
+    {
+     "kana": "る",
+     "romaji": "ru"
+    },
+    {
+     "kana": "ら",
+     "romaji": "ra"
+    }
+   ],
+   "unit": "hira-ha"
+  },
+  {
+   "id": "k-fu",
+   "kana": "フ",
+   "script": "kata",
+   "romaji": "fu",
+   "accept": [
+    "fu",
+    "hu"
+   ],
+   "row": "ha",
+   "type": "seion",
+   "pair": "h-fu",
+   "order": 28,
+   "confusables": [
+    {
+     "kana": "ヲ",
+     "romaji": "wo"
+    },
+    {
+     "kana": "ラ",
+     "romaji": "ra"
+    },
+    {
+     "kana": "ワ",
+     "romaji": "wa"
+    }
+   ],
+   "unit": "kata-ha"
+  },
+  {
+   "id": "h-he",
+   "kana": "へ",
+   "script": "hira",
+   "romaji": "he",
+   "accept": [
+    "he"
+   ],
+   "row": "ha",
+   "type": "seion",
+   "pair": "k-he",
+   "order": 29,
+   "confusables": [
+    {
+     "kana": "く",
+     "romaji": "ku"
+    },
+    {
+     "kana": "つ",
+     "romaji": "tsu"
+    }
+   ],
+   "unit": "hira-ha"
+  },
+  {
+   "id": "k-he",
+   "kana": "ヘ",
+   "script": "kata",
+   "romaji": "he",
+   "accept": [
+    "he"
+   ],
+   "row": "ha",
+   "type": "seion",
+   "pair": "h-he",
+   "order": 29,
+   "confusables": [
+    {
+     "kana": "ハ",
+     "romaji": "ha"
+    },
+    {
+     "kana": "フ",
+     "romaji": "fu"
+    }
+   ],
+   "unit": "kata-ha"
+  },
+  {
+   "id": "h-ho",
+   "kana": "ほ",
+   "script": "hira",
+   "romaji": "ho",
+   "accept": [
+    "ho"
+   ],
+   "row": "ha",
+   "type": "seion",
+   "pair": "k-ho",
+   "order": 30,
+   "confusables": [
+    {
+     "kana": "は",
+     "romaji": "ha"
+    },
+    {
+     "kana": "ま",
+     "romaji": "ma"
+    },
+    {
+     "kana": "け",
+     "romaji": "ke"
+    }
+   ],
+   "unit": "hira-ha"
+  },
+  {
+   "id": "k-ho",
+   "kana": "ホ",
+   "script": "kata",
+   "romaji": "ho",
+   "accept": [
+    "ho"
+   ],
+   "row": "ha",
+   "type": "seion",
+   "pair": "h-ho",
+   "order": 30,
+   "confusables": [
+    {
+     "kana": "オ",
+     "romaji": "o"
+    },
+    {
+     "kana": "ネ",
+     "romaji": "ne"
+    }
+   ],
+   "unit": "kata-ha"
+  },
+  {
+   "id": "h-ma",
+   "kana": "ま",
+   "script": "hira",
+   "romaji": "ma",
+   "accept": [
+    "ma"
+   ],
+   "row": "ma",
+   "type": "seion",
+   "pair": "k-ma",
+   "order": 31,
+   "confusables": [
+    {
+     "kana": "も",
+     "romaji": "mo"
+    },
+    {
+     "kana": "ほ",
+     "romaji": "ho"
+    },
+    {
+     "kana": "よ",
+     "romaji": "yo"
+    }
+   ],
+   "unit": "hira-ma"
+  },
+  {
+   "id": "k-ma",
+   "kana": "マ",
+   "script": "kata",
+   "romaji": "ma",
+   "accept": [
+    "ma"
+   ],
+   "row": "ma",
+   "type": "seion",
+   "pair": "h-ma",
+   "order": 31,
+   "confusables": [
+    {
+     "kana": "ア",
+     "romaji": "a"
+    },
+    {
+     "kana": "ム",
+     "romaji": "mu"
+    },
+    {
+     "kana": "ヤ",
+     "romaji": "ya"
+    }
+   ],
+   "unit": "kata-ma"
+  },
+  {
+   "id": "h-mi",
+   "kana": "み",
+   "script": "hira",
+   "romaji": "mi",
+   "accept": [
+    "mi"
+   ],
+   "row": "ma",
+   "type": "seion",
+   "pair": "k-mi",
+   "order": 32,
+   "confusables": [
+    {
+     "kana": "め",
+     "romaji": "me"
+    },
+    {
+     "kana": "ゆ",
+     "romaji": "yu"
+    }
+   ],
+   "unit": "hira-ma"
+  },
+  {
+   "id": "k-mi",
+   "kana": "ミ",
+   "script": "kata",
+   "romaji": "mi",
+   "accept": [
+    "mi"
+   ],
+   "row": "ma",
+   "type": "seion",
+   "pair": "h-mi",
+   "order": 32,
+   "confusables": [
+    {
+     "kana": "シ",
+     "romaji": "shi"
+    },
+    {
+     "kana": "ニ",
+     "romaji": "ni"
+    },
+    {
+     "kana": "ツ",
+     "romaji": "tsu"
+    }
+   ],
+   "unit": "kata-ma"
+  },
+  {
+   "id": "h-mu",
+   "kana": "む",
+   "script": "hira",
+   "romaji": "mu",
+   "accept": [
+    "mu"
+   ],
+   "row": "ma",
+   "type": "seion",
+   "pair": "k-mu",
+   "order": 33,
+   "confusables": [
+    {
+     "kana": "す",
+     "romaji": "su"
+    },
+    {
+     "kana": "お",
+     "romaji": "o"
+    },
+    {
+     "kana": "ま",
+     "romaji": "ma"
+    }
+   ],
+   "unit": "hira-ma"
+  },
+  {
+   "id": "k-mu",
+   "kana": "ム",
+   "script": "kata",
+   "romaji": "mu",
+   "accept": [
+    "mu"
+   ],
+   "row": "ma",
+   "type": "seion",
+   "pair": "h-mu",
+   "order": 33,
+   "confusables": [
+    {
+     "kana": "マ",
+     "romaji": "ma"
+    },
+    {
+     "kana": "ス",
+     "romaji": "su"
+    },
+    {
+     "kana": "ヌ",
+     "romaji": "nu"
+    }
+   ],
+   "unit": "kata-ma"
+  },
+  {
+   "id": "h-me",
+   "kana": "め",
+   "script": "hira",
+   "romaji": "me",
+   "accept": [
+    "me"
+   ],
+   "row": "ma",
+   "type": "seion",
+   "pair": "k-me",
+   "order": 34,
+   "confusables": [
+    {
+     "kana": "ぬ",
+     "romaji": "nu"
+    },
+    {
+     "kana": "あ",
+     "romaji": "a"
+    },
+    {
+     "kana": "の",
+     "romaji": "no"
+    }
+   ],
+   "unit": "hira-ma"
+  },
+  {
+   "id": "k-me",
+   "kana": "メ",
+   "script": "kata",
+   "romaji": "me",
+   "accept": [
+    "me"
+   ],
+   "row": "ma",
+   "type": "seion",
+   "pair": "h-me",
+   "order": 34,
+   "confusables": [
+    {
+     "kana": "ヌ",
+     "romaji": "nu"
+    },
+    {
+     "kana": "ナ",
+     "romaji": "na"
+    },
+    {
+     "kana": "ノ",
+     "romaji": "no"
+    }
+   ],
+   "unit": "kata-ma"
+  },
+  {
+   "id": "h-mo",
+   "kana": "も",
+   "script": "hira",
+   "romaji": "mo",
+   "accept": [
+    "mo"
+   ],
+   "row": "ma",
+   "type": "seion",
+   "pair": "k-mo",
+   "order": 35,
+   "confusables": [
+    {
+     "kana": "ま",
+     "romaji": "ma"
+    },
+    {
+     "kana": "し",
+     "romaji": "shi"
+    },
+    {
+     "kana": "せ",
+     "romaji": "se"
+    }
+   ],
+   "unit": "hira-ma"
+  },
+  {
+   "id": "k-mo",
+   "kana": "モ",
+   "script": "kata",
+   "romaji": "mo",
+   "accept": [
+    "mo"
+   ],
+   "row": "ma",
+   "type": "seion",
+   "pair": "h-mo",
+   "order": 35,
+   "confusables": [
+    {
+     "kana": "キ",
+     "romaji": "ki"
+    },
+    {
+     "kana": "セ",
+     "romaji": "se"
+    },
+    {
+     "kana": "チ",
+     "romaji": "chi"
+    }
+   ],
+   "unit": "kata-ma"
+  },
+  {
+   "id": "h-ya",
+   "kana": "や",
+   "script": "hira",
+   "romaji": "ya",
+   "accept": [
+    "ya"
+   ],
+   "row": "ya",
+   "type": "seion",
+   "pair": "k-ya",
+   "order": 36,
+   "confusables": [
+    {
+     "kana": "か",
+     "romaji": "ka"
+    },
+    {
+     "kana": "せ",
+     "romaji": "se"
+    },
+    {
+     "kana": "ゆ",
+     "romaji": "yu"
+    }
+   ],
+   "unit": "hira-ya"
+  },
+  {
+   "id": "k-ya",
+   "kana": "ヤ",
+   "script": "kata",
+   "romaji": "ya",
+   "accept": [
+    "ya"
+   ],
+   "row": "ya",
+   "type": "seion",
+   "pair": "h-ya",
+   "order": 36,
+   "confusables": [
+    {
+     "kana": "セ",
+     "romaji": "se"
+    },
+    {
+     "kana": "カ",
+     "romaji": "ka"
+    },
+    {
+     "kana": "マ",
+     "romaji": "ma"
+    }
+   ],
+   "unit": "kata-ya"
+  },
+  {
+   "id": "h-yu",
+   "kana": "ゆ",
+   "script": "hira",
+   "romaji": "yu",
+   "accept": [
+    "yu"
+   ],
+   "row": "ya",
+   "type": "seion",
+   "pair": "k-yu",
+   "order": 37,
+   "confusables": [
+    {
+     "kana": "よ",
+     "romaji": "yo"
+    },
+    {
+     "kana": "ぬ",
+     "romaji": "nu"
+    },
+    {
+     "kana": "や",
+     "romaji": "ya"
+    }
+   ],
+   "unit": "hira-ya"
+  },
+  {
+   "id": "k-yu",
+   "kana": "ユ",
+   "script": "kata",
+   "romaji": "yu",
+   "accept": [
+    "yu"
+   ],
+   "row": "ya",
+   "type": "seion",
+   "pair": "h-yu",
+   "order": 37,
+   "confusables": [
+    {
+     "kana": "コ",
+     "romaji": "ko"
+    },
+    {
+     "kana": "ヨ",
+     "romaji": "yo"
+    },
+    {
+     "kana": "エ",
+     "romaji": "e"
+    }
+   ],
+   "unit": "kata-ya"
+  },
+  {
+   "id": "h-yo",
+   "kana": "よ",
+   "script": "hira",
+   "romaji": "yo",
+   "accept": [
+    "yo"
+   ],
+   "row": "ya",
+   "type": "seion",
+   "pair": "k-yo",
+   "order": 38,
+   "confusables": [
+    {
+     "kana": "ま",
+     "romaji": "ma"
+    },
+    {
+     "kana": "は",
+     "romaji": "ha"
+    },
+    {
+     "kana": "ゆ",
+     "romaji": "yu"
+    }
+   ],
+   "unit": "hira-ya"
+  },
+  {
+   "id": "k-yo",
+   "kana": "ヨ",
+   "script": "kata",
+   "romaji": "yo",
+   "accept": [
+    "yo"
+   ],
+   "row": "ya",
+   "type": "seion",
+   "pair": "h-yo",
+   "order": 38,
+   "confusables": [
+    {
+     "kana": "ユ",
+     "romaji": "yu"
+    },
+    {
+     "kana": "ヲ",
+     "romaji": "wo"
+    },
+    {
+     "kana": "コ",
+     "romaji": "ko"
+    }
+   ],
+   "unit": "kata-ya"
+  },
+  {
+   "id": "h-ra",
+   "kana": "ら",
+   "script": "hira",
+   "romaji": "ra",
+   "accept": [
+    "ra"
+   ],
+   "row": "ra",
+   "type": "seion",
+   "pair": "k-ra",
+   "order": 39,
+   "confusables": [
+    {
+     "kana": "ち",
+     "romaji": "chi"
+    },
+    {
+     "kana": "う",
+     "romaji": "u"
+    },
+    {
+     "kana": "さ",
+     "romaji": "sa"
+    }
+   ],
+   "unit": "hira-ra"
+  },
+  {
+   "id": "k-ra",
+   "kana": "ラ",
+   "script": "kata",
+   "romaji": "ra",
+   "accept": [
+    "ra"
+   ],
+   "row": "ra",
+   "type": "seion",
+   "pair": "h-ra",
+   "order": 39,
+   "confusables": [
+    {
+     "kana": "フ",
+     "romaji": "fu"
+    },
+    {
+     "kana": "ヲ",
+     "romaji": "wo"
+    },
+    {
+     "kana": "ウ",
+     "romaji": "u"
+    }
+   ],
+   "unit": "kata-ra"
+  },
+  {
+   "id": "h-ri",
+   "kana": "り",
+   "script": "hira",
+   "romaji": "ri",
+   "accept": [
+    "ri"
+   ],
+   "row": "ra",
+   "type": "seion",
+   "pair": "k-ri",
+   "order": 40,
+   "confusables": [
+    {
+     "kana": "い",
+     "romaji": "i"
+    },
+    {
+     "kana": "こ",
+     "romaji": "ko"
+    }
+   ],
+   "unit": "hira-ra"
+  },
+  {
+   "id": "k-ri",
+   "kana": "リ",
+   "script": "kata",
+   "romaji": "ri",
+   "accept": [
+    "ri"
+   ],
+   "row": "ra",
+   "type": "seion",
+   "pair": "h-ri",
+   "order": 40,
+   "confusables": [
+    {
+     "kana": "ソ",
+     "romaji": "so"
+    },
+    {
+     "kana": "ノ",
+     "romaji": "no"
+    },
+    {
+     "kana": "ル",
+     "romaji": "ru"
+    }
+   ],
+   "unit": "kata-ra"
+  },
+  {
+   "id": "h-ru",
+   "kana": "る",
+   "script": "hira",
+   "romaji": "ru",
+   "accept": [
+    "ru"
+   ],
+   "row": "ra",
+   "type": "seion",
+   "pair": "k-ru",
+   "order": 41,
+   "confusables": [
+    {
+     "kana": "ろ",
+     "romaji": "ro"
+    },
+    {
+     "kana": "ら",
+     "romaji": "ra"
+    },
+    {
+     "kana": "そ",
+     "romaji": "so"
+    }
+   ],
+   "unit": "hira-ra"
+  },
+  {
+   "id": "k-ru",
+   "kana": "ル",
+   "script": "kata",
+   "romaji": "ru",
+   "accept": [
+    "ru"
+   ],
+   "row": "ra",
+   "type": "seion",
+   "pair": "h-ru",
+   "order": 41,
+   "confusables": [
+    {
+     "kana": "レ",
+     "romaji": "re"
+    },
+    {
+     "kana": "ハ",
+     "romaji": "ha"
+    },
+    {
+     "kana": "リ",
+     "romaji": "ri"
+    }
+   ],
+   "unit": "kata-ra"
+  },
+  {
+   "id": "h-re",
+   "kana": "れ",
+   "script": "hira",
+   "romaji": "re",
+   "accept": [
+    "re"
+   ],
+   "row": "ra",
+   "type": "seion",
+   "pair": "k-re",
+   "order": 42,
+   "confusables": [
+    {
+     "kana": "ね",
+     "romaji": "ne"
+    },
+    {
+     "kana": "わ",
+     "romaji": "wa"
+    }
+   ],
+   "unit": "hira-ra"
+  },
+  {
+   "id": "k-re",
+   "kana": "レ",
+   "script": "kata",
+   "romaji": "re",
+   "accept": [
+    "re"
+   ],
+   "row": "ra",
+   "type": "seion",
+   "pair": "h-re",
+   "order": 42,
+   "confusables": [
+    {
+     "kana": "ル",
+     "romaji": "ru"
+    },
+    {
+     "kana": "ム",
+     "romaji": "mu"
+    }
+   ],
+   "unit": "kata-ra"
+  },
+  {
+   "id": "h-ro",
+   "kana": "ろ",
+   "script": "hira",
+   "romaji": "ro",
+   "accept": [
+    "ro"
+   ],
+   "row": "ra",
+   "type": "seion",
+   "pair": "k-ro",
+   "order": 43,
+   "confusables": [
+    {
+     "kana": "る",
+     "romaji": "ru"
+    },
+    {
+     "kana": "う",
+     "romaji": "u"
+    },
+    {
+     "kana": "ち",
+     "romaji": "chi"
+    }
+   ],
+   "unit": "hira-ra"
+  },
+  {
+   "id": "k-ro",
+   "kana": "ロ",
+   "script": "kata",
+   "romaji": "ro",
+   "accept": [
+    "ro"
+   ],
+   "row": "ra",
+   "type": "seion",
+   "pair": "h-ro",
+   "order": 43,
+   "confusables": [
+    {
+     "kana": "コ",
+     "romaji": "ko"
+    },
+    {
+     "kana": "ヨ",
+     "romaji": "yo"
+    },
+    {
+     "kana": "ユ",
+     "romaji": "yu"
+    }
+   ],
+   "unit": "kata-ra"
+  },
+  {
+   "id": "h-wa",
+   "kana": "わ",
+   "script": "hira",
+   "romaji": "wa",
+   "accept": [
+    "wa"
+   ],
+   "row": "wa",
+   "type": "seion",
+   "pair": "k-wa",
+   "order": 44,
+   "confusables": [
+    {
+     "kana": "れ",
+     "romaji": "re"
+    },
+    {
+     "kana": "ね",
+     "romaji": "ne"
+    },
+    {
+     "kana": "ぬ",
+     "romaji": "nu"
+    }
+   ],
+   "unit": "hira-wa"
+  },
+  {
+   "id": "k-wa",
+   "kana": "ワ",
+   "script": "kata",
+   "romaji": "wa",
+   "accept": [
+    "wa"
+   ],
+   "row": "wa",
+   "type": "seion",
+   "pair": "h-wa",
+   "order": 44,
+   "confusables": [
+    {
+     "kana": "ウ",
+     "romaji": "u"
+    },
+    {
+     "kana": "フ",
+     "romaji": "fu"
+    },
+    {
+     "kana": "ク",
+     "romaji": "ku"
+    }
+   ],
+   "unit": "kata-wa"
+  },
+  {
+   "id": "h-wo",
+   "kana": "を",
+   "script": "hira",
+   "romaji": "wo",
+   "accept": [
+    "wo",
+    "o"
+   ],
+   "row": "wa",
+   "type": "seion",
+   "pair": "k-wo",
+   "order": 45,
+   "confusables": [
+    {
+     "kana": "と",
+     "romaji": "to"
+    },
+    {
+     "kana": "お",
+     "romaji": "o"
+    }
+   ],
+   "note": "助詞讀作 o",
+   "unit": "hira-wa"
+  },
+  {
+   "id": "k-wo",
+   "kana": "ヲ",
+   "script": "kata",
+   "romaji": "wo",
+   "accept": [
+    "wo",
+    "o"
+   ],
+   "row": "wa",
+   "type": "seion",
+   "pair": "h-wo",
+   "order": 45,
+   "confusables": [
+    {
+     "kana": "フ",
+     "romaji": "fu"
+    },
+    {
+     "kana": "ヨ",
+     "romaji": "yo"
+    },
+    {
+     "kana": "ス",
+     "romaji": "su"
+    }
+   ],
+   "unit": "kata-wa"
+  },
+  {
+   "id": "h-n",
+   "kana": "ん",
+   "script": "hira",
+   "romaji": "n",
+   "accept": [
+    "n",
+    "nn"
+   ],
+   "row": "wa",
+   "type": "seion",
+   "pair": "k-n",
+   "order": 46,
+   "confusables": [
+    {
+     "kana": "え",
+     "romaji": "e"
+    },
+    {
+     "kana": "そ",
+     "romaji": "so"
+    },
+    {
+     "kana": "し",
+     "romaji": "shi"
+    }
+   ],
+   "unit": "hira-wa"
+  },
+  {
+   "id": "k-n",
+   "kana": "ン",
+   "script": "kata",
+   "romaji": "n",
+   "accept": [
+    "n",
+    "nn"
+   ],
+   "row": "wa",
+   "type": "seion",
+   "pair": "h-n",
+   "order": 46,
+   "confusables": [
+    {
+     "kana": "ソ",
+     "romaji": "so"
+    },
+    {
+     "kana": "シ",
+     "romaji": "shi"
+    },
+    {
+     "kana": "ツ",
+     "romaji": "tsu"
+    }
+   ],
+   "unit": "kata-wa"
+  },
+  {
+   "id": "h-ga",
+   "kana": "が",
+   "script": "hira",
+   "romaji": "ga",
+   "accept": [
+    "ga"
+   ],
+   "row": "ga",
+   "type": "dakuon",
+   "pair": "k-ga",
+   "order": 47,
+   "confusables": [
+    {
+     "kana": "か",
+     "romaji": "ka"
+    },
+    {
+     "kana": "ぎ",
+     "romaji": "gi"
+    },
+    {
+     "kana": "ぐ",
+     "romaji": "gu"
+    }
+   ],
+   "unit": "hira-dakuon"
+  },
+  {
+   "id": "k-ga",
+   "kana": "ガ",
+   "script": "kata",
+   "romaji": "ga",
+   "accept": [
+    "ga"
+   ],
+   "row": "ga",
+   "type": "dakuon",
+   "pair": "h-ga",
+   "order": 47,
+   "confusables": [
+    {
+     "kana": "カ",
+     "romaji": "ka"
+    },
+    {
+     "kana": "ギ",
+     "romaji": "gi"
+    },
+    {
+     "kana": "グ",
+     "romaji": "gu"
+    }
+   ],
+   "unit": "kata-dakuon"
+  },
+  {
+   "id": "h-gi",
+   "kana": "ぎ",
+   "script": "hira",
+   "romaji": "gi",
+   "accept": [
+    "gi"
+   ],
+   "row": "ga",
+   "type": "dakuon",
+   "pair": "k-gi",
+   "order": 48,
+   "confusables": [
+    {
+     "kana": "き",
+     "romaji": "ki"
+    },
+    {
+     "kana": "が",
+     "romaji": "ga"
+    },
+    {
+     "kana": "ぐ",
+     "romaji": "gu"
+    }
+   ],
+   "unit": "hira-dakuon"
+  },
+  {
+   "id": "k-gi",
+   "kana": "ギ",
+   "script": "kata",
+   "romaji": "gi",
+   "accept": [
+    "gi"
+   ],
+   "row": "ga",
+   "type": "dakuon",
+   "pair": "h-gi",
+   "order": 48,
+   "confusables": [
+    {
+     "kana": "キ",
+     "romaji": "ki"
+    },
+    {
+     "kana": "ガ",
+     "romaji": "ga"
+    },
+    {
+     "kana": "グ",
+     "romaji": "gu"
+    }
+   ],
+   "unit": "kata-dakuon"
+  },
+  {
+   "id": "h-gu",
+   "kana": "ぐ",
+   "script": "hira",
+   "romaji": "gu",
+   "accept": [
+    "gu"
+   ],
+   "row": "ga",
+   "type": "dakuon",
+   "pair": "k-gu",
+   "order": 49,
+   "confusables": [
+    {
+     "kana": "く",
+     "romaji": "ku"
+    },
+    {
+     "kana": "が",
+     "romaji": "ga"
+    },
+    {
+     "kana": "ぎ",
+     "romaji": "gi"
+    }
+   ],
+   "unit": "hira-dakuon"
+  },
+  {
+   "id": "k-gu",
+   "kana": "グ",
+   "script": "kata",
+   "romaji": "gu",
+   "accept": [
+    "gu"
+   ],
+   "row": "ga",
+   "type": "dakuon",
+   "pair": "h-gu",
+   "order": 49,
+   "confusables": [
+    {
+     "kana": "ク",
+     "romaji": "ku"
+    },
+    {
+     "kana": "ガ",
+     "romaji": "ga"
+    },
+    {
+     "kana": "ギ",
+     "romaji": "gi"
+    }
+   ],
+   "unit": "kata-dakuon"
+  },
+  {
+   "id": "h-ge",
+   "kana": "げ",
+   "script": "hira",
+   "romaji": "ge",
+   "accept": [
+    "ge"
+   ],
+   "row": "ga",
+   "type": "dakuon",
+   "pair": "k-ge",
+   "order": 50,
+   "confusables": [
+    {
+     "kana": "け",
+     "romaji": "ke"
+    },
+    {
+     "kana": "が",
+     "romaji": "ga"
+    },
+    {
+     "kana": "ぎ",
+     "romaji": "gi"
+    }
+   ],
+   "unit": "hira-dakuon"
+  },
+  {
+   "id": "k-ge",
+   "kana": "ゲ",
+   "script": "kata",
+   "romaji": "ge",
+   "accept": [
+    "ge"
+   ],
+   "row": "ga",
+   "type": "dakuon",
+   "pair": "h-ge",
+   "order": 50,
+   "confusables": [
+    {
+     "kana": "ケ",
+     "romaji": "ke"
+    },
+    {
+     "kana": "ガ",
+     "romaji": "ga"
+    },
+    {
+     "kana": "ギ",
+     "romaji": "gi"
+    }
+   ],
+   "unit": "kata-dakuon"
+  },
+  {
+   "id": "h-go",
+   "kana": "ご",
+   "script": "hira",
+   "romaji": "go",
+   "accept": [
+    "go"
+   ],
+   "row": "ga",
+   "type": "dakuon",
+   "pair": "k-go",
+   "order": 51,
+   "confusables": [
+    {
+     "kana": "こ",
+     "romaji": "ko"
+    },
+    {
+     "kana": "が",
+     "romaji": "ga"
+    },
+    {
+     "kana": "ぎ",
+     "romaji": "gi"
+    }
+   ],
+   "unit": "hira-dakuon"
+  },
+  {
+   "id": "k-go",
+   "kana": "ゴ",
+   "script": "kata",
+   "romaji": "go",
+   "accept": [
+    "go"
+   ],
+   "row": "ga",
+   "type": "dakuon",
+   "pair": "h-go",
+   "order": 51,
+   "confusables": [
+    {
+     "kana": "コ",
+     "romaji": "ko"
+    },
+    {
+     "kana": "ガ",
+     "romaji": "ga"
+    },
+    {
+     "kana": "ギ",
+     "romaji": "gi"
+    }
+   ],
+   "unit": "kata-dakuon"
+  },
+  {
+   "id": "h-za",
+   "kana": "ざ",
+   "script": "hira",
+   "romaji": "za",
+   "accept": [
+    "za"
+   ],
+   "row": "za",
+   "type": "dakuon",
+   "pair": "k-za",
+   "order": 52,
+   "confusables": [
+    {
+     "kana": "さ",
+     "romaji": "sa"
+    },
+    {
+     "kana": "じ",
+     "romaji": "ji"
+    },
+    {
+     "kana": "ず",
+     "romaji": "zu"
+    }
+   ],
+   "unit": "hira-dakuon"
+  },
+  {
+   "id": "k-za",
+   "kana": "ザ",
+   "script": "kata",
+   "romaji": "za",
+   "accept": [
+    "za"
+   ],
+   "row": "za",
+   "type": "dakuon",
+   "pair": "h-za",
+   "order": 52,
+   "confusables": [
+    {
+     "kana": "サ",
+     "romaji": "sa"
+    },
+    {
+     "kana": "ジ",
+     "romaji": "ji"
+    },
+    {
+     "kana": "ズ",
+     "romaji": "zu"
+    }
+   ],
+   "unit": "kata-dakuon"
+  },
+  {
+   "id": "h-ji",
+   "kana": "じ",
+   "script": "hira",
+   "romaji": "ji",
+   "accept": [
+    "ji",
+    "zi"
+   ],
+   "row": "za",
+   "type": "dakuon",
+   "pair": "k-ji",
+   "order": 53,
+   "confusables": [
+    {
+     "kana": "し",
+     "romaji": "shi"
+    },
+    {
+     "kana": "ざ",
+     "romaji": "za"
+    },
+    {
+     "kana": "ず",
+     "romaji": "zu"
+    }
+   ],
+   "unit": "hira-dakuon"
+  },
+  {
+   "id": "k-ji",
+   "kana": "ジ",
+   "script": "kata",
+   "romaji": "ji",
+   "accept": [
+    "ji",
+    "zi"
+   ],
+   "row": "za",
+   "type": "dakuon",
+   "pair": "h-ji",
+   "order": 53,
+   "confusables": [
+    {
+     "kana": "シ",
+     "romaji": "shi"
+    },
+    {
+     "kana": "ザ",
+     "romaji": "za"
+    },
+    {
+     "kana": "ズ",
+     "romaji": "zu"
+    }
+   ],
+   "unit": "kata-dakuon"
+  },
+  {
+   "id": "h-zu",
+   "kana": "ず",
+   "script": "hira",
+   "romaji": "zu",
+   "accept": [
+    "zu",
+    "du"
+   ],
+   "row": "za",
+   "type": "dakuon",
+   "pair": "k-zu",
+   "order": 54,
+   "confusables": [
+    {
+     "kana": "す",
+     "romaji": "su"
+    },
+    {
+     "kana": "ざ",
+     "romaji": "za"
+    },
+    {
+     "kana": "じ",
+     "romaji": "ji"
+    }
+   ],
+   "unit": "hira-dakuon"
+  },
+  {
+   "id": "k-zu",
+   "kana": "ズ",
+   "script": "kata",
+   "romaji": "zu",
+   "accept": [
+    "zu",
+    "du"
+   ],
+   "row": "za",
+   "type": "dakuon",
+   "pair": "h-zu",
+   "order": 54,
+   "confusables": [
+    {
+     "kana": "ス",
+     "romaji": "su"
+    },
+    {
+     "kana": "ザ",
+     "romaji": "za"
+    },
+    {
+     "kana": "ジ",
+     "romaji": "ji"
+    }
+   ],
+   "unit": "kata-dakuon"
+  },
+  {
+   "id": "h-ze",
+   "kana": "ぜ",
+   "script": "hira",
+   "romaji": "ze",
+   "accept": [
+    "ze"
+   ],
+   "row": "za",
+   "type": "dakuon",
+   "pair": "k-ze",
+   "order": 55,
+   "confusables": [
+    {
+     "kana": "せ",
+     "romaji": "se"
+    },
+    {
+     "kana": "ざ",
+     "romaji": "za"
+    },
+    {
+     "kana": "じ",
+     "romaji": "ji"
+    }
+   ],
+   "unit": "hira-dakuon"
+  },
+  {
+   "id": "k-ze",
+   "kana": "ゼ",
+   "script": "kata",
+   "romaji": "ze",
+   "accept": [
+    "ze"
+   ],
+   "row": "za",
+   "type": "dakuon",
+   "pair": "h-ze",
+   "order": 55,
+   "confusables": [
+    {
+     "kana": "セ",
+     "romaji": "se"
+    },
+    {
+     "kana": "ザ",
+     "romaji": "za"
+    },
+    {
+     "kana": "ジ",
+     "romaji": "ji"
+    }
+   ],
+   "unit": "kata-dakuon"
+  },
+  {
+   "id": "h-zo",
+   "kana": "ぞ",
+   "script": "hira",
+   "romaji": "zo",
+   "accept": [
+    "zo"
+   ],
+   "row": "za",
+   "type": "dakuon",
+   "pair": "k-zo",
+   "order": 56,
+   "confusables": [
+    {
+     "kana": "そ",
+     "romaji": "so"
+    },
+    {
+     "kana": "ざ",
+     "romaji": "za"
+    },
+    {
+     "kana": "じ",
+     "romaji": "ji"
+    }
+   ],
+   "unit": "hira-dakuon"
+  },
+  {
+   "id": "k-zo",
+   "kana": "ゾ",
+   "script": "kata",
+   "romaji": "zo",
+   "accept": [
+    "zo"
+   ],
+   "row": "za",
+   "type": "dakuon",
+   "pair": "h-zo",
+   "order": 56,
+   "confusables": [
+    {
+     "kana": "ソ",
+     "romaji": "so"
+    },
+    {
+     "kana": "ザ",
+     "romaji": "za"
+    },
+    {
+     "kana": "ジ",
+     "romaji": "ji"
+    }
+   ],
+   "unit": "kata-dakuon"
+  },
+  {
+   "id": "h-da",
+   "kana": "だ",
+   "script": "hira",
+   "romaji": "da",
+   "accept": [
+    "da"
+   ],
+   "row": "da",
+   "type": "dakuon",
+   "pair": "k-da",
+   "order": 57,
+   "confusables": [
+    {
+     "kana": "た",
+     "romaji": "ta"
+    },
+    {
+     "kana": "ぢ",
+     "romaji": "ji"
+    },
+    {
+     "kana": "づ",
+     "romaji": "zu"
+    }
+   ],
+   "unit": "hira-dakuon"
+  },
+  {
+   "id": "k-da",
+   "kana": "ダ",
+   "script": "kata",
+   "romaji": "da",
+   "accept": [
+    "da"
+   ],
+   "row": "da",
+   "type": "dakuon",
+   "pair": "h-da",
+   "order": 57,
+   "confusables": [
+    {
+     "kana": "タ",
+     "romaji": "ta"
+    },
+    {
+     "kana": "ヂ",
+     "romaji": "ji"
+    },
+    {
+     "kana": "ヅ",
+     "romaji": "zu"
+    }
+   ],
+   "unit": "kata-dakuon"
+  },
+  {
+   "id": "h-dji",
+   "kana": "ぢ",
+   "script": "hira",
+   "romaji": "ji",
+   "accept": [
+    "ji",
+    "zi"
+   ],
+   "row": "da",
+   "type": "dakuon",
+   "pair": "k-dji",
+   "order": 58,
+   "confusables": [
+    {
+     "kana": "ち",
+     "romaji": "chi"
+    },
+    {
+     "kana": "だ",
+     "romaji": "da"
+    },
+    {
+     "kana": "づ",
+     "romaji": "zu"
+    }
+   ],
+   "note": "讀音與 じ 相同，現代較少用；『看拼音選假名』題型不出此字",
+   "unit": "hira-dakuon"
+  },
+  {
+   "id": "k-dji",
+   "kana": "ヂ",
+   "script": "kata",
+   "romaji": "ji",
+   "accept": [
+    "ji",
+    "zi"
+   ],
+   "row": "da",
+   "type": "dakuon",
+   "pair": "h-dji",
+   "order": 58,
+   "confusables": [
+    {
+     "kana": "チ",
+     "romaji": "chi"
+    },
+    {
+     "kana": "ダ",
+     "romaji": "da"
+    },
+    {
+     "kana": "ヅ",
+     "romaji": "zu"
+    }
+   ],
+   "note": "讀音與 じ 相同，現代較少用；『看拼音選假名』題型不出此字",
+   "unit": "kata-dakuon"
+  },
+  {
+   "id": "h-dzu",
+   "kana": "づ",
+   "script": "hira",
+   "romaji": "zu",
+   "accept": [
+    "zu",
+    "du"
+   ],
+   "row": "da",
+   "type": "dakuon",
+   "pair": "k-dzu",
+   "order": 59,
+   "confusables": [
+    {
+     "kana": "つ",
+     "romaji": "tsu"
+    },
+    {
+     "kana": "だ",
+     "romaji": "da"
+    },
+    {
+     "kana": "ぢ",
+     "romaji": "ji"
+    }
+   ],
+   "note": "讀音與 ず 相同，現代較少用；『看拼音選假名』題型不出此字",
+   "unit": "hira-dakuon"
+  },
+  {
+   "id": "k-dzu",
+   "kana": "ヅ",
+   "script": "kata",
+   "romaji": "zu",
+   "accept": [
+    "zu",
+    "du"
+   ],
+   "row": "da",
+   "type": "dakuon",
+   "pair": "h-dzu",
+   "order": 59,
+   "confusables": [
+    {
+     "kana": "ツ",
+     "romaji": "tsu"
+    },
+    {
+     "kana": "ダ",
+     "romaji": "da"
+    },
+    {
+     "kana": "ヂ",
+     "romaji": "ji"
+    }
+   ],
+   "note": "讀音與 ず 相同，現代較少用；『看拼音選假名』題型不出此字",
+   "unit": "kata-dakuon"
+  },
+  {
+   "id": "h-de",
+   "kana": "で",
+   "script": "hira",
+   "romaji": "de",
+   "accept": [
+    "de"
+   ],
+   "row": "da",
+   "type": "dakuon",
+   "pair": "k-de",
+   "order": 60,
+   "confusables": [
+    {
+     "kana": "て",
+     "romaji": "te"
+    },
+    {
+     "kana": "だ",
+     "romaji": "da"
+    },
+    {
+     "kana": "ぢ",
+     "romaji": "ji"
+    }
+   ],
+   "unit": "hira-dakuon"
+  },
+  {
+   "id": "k-de",
+   "kana": "デ",
+   "script": "kata",
+   "romaji": "de",
+   "accept": [
+    "de"
+   ],
+   "row": "da",
+   "type": "dakuon",
+   "pair": "h-de",
+   "order": 60,
+   "confusables": [
+    {
+     "kana": "テ",
+     "romaji": "te"
+    },
+    {
+     "kana": "ダ",
+     "romaji": "da"
+    },
+    {
+     "kana": "ヂ",
+     "romaji": "ji"
+    }
+   ],
+   "unit": "kata-dakuon"
+  },
+  {
+   "id": "h-do",
+   "kana": "ど",
+   "script": "hira",
+   "romaji": "do",
+   "accept": [
+    "do"
+   ],
+   "row": "da",
+   "type": "dakuon",
+   "pair": "k-do",
+   "order": 61,
+   "confusables": [
+    {
+     "kana": "と",
+     "romaji": "to"
+    },
+    {
+     "kana": "だ",
+     "romaji": "da"
+    },
+    {
+     "kana": "ぢ",
+     "romaji": "ji"
+    }
+   ],
+   "unit": "hira-dakuon"
+  },
+  {
+   "id": "k-do",
+   "kana": "ド",
+   "script": "kata",
+   "romaji": "do",
+   "accept": [
+    "do"
+   ],
+   "row": "da",
+   "type": "dakuon",
+   "pair": "h-do",
+   "order": 61,
+   "confusables": [
+    {
+     "kana": "ト",
+     "romaji": "to"
+    },
+    {
+     "kana": "ダ",
+     "romaji": "da"
+    },
+    {
+     "kana": "ヂ",
+     "romaji": "ji"
+    }
+   ],
+   "unit": "kata-dakuon"
+  },
+  {
+   "id": "h-ba",
+   "kana": "ば",
+   "script": "hira",
+   "romaji": "ba",
+   "accept": [
+    "ba"
+   ],
+   "row": "ba",
+   "type": "dakuon",
+   "pair": "k-ba",
+   "order": 62,
+   "confusables": [
+    {
+     "kana": "は",
+     "romaji": "ha"
+    },
+    {
+     "kana": "ぱ",
+     "romaji": "pa"
+    },
+    {
+     "kana": "び",
+     "romaji": "bi"
+    },
+    {
+     "kana": "ぶ",
+     "romaji": "bu"
+    }
+   ],
+   "unit": "hira-dakuon"
+  },
+  {
+   "id": "k-ba",
+   "kana": "バ",
+   "script": "kata",
+   "romaji": "ba",
+   "accept": [
+    "ba"
+   ],
+   "row": "ba",
+   "type": "dakuon",
+   "pair": "h-ba",
+   "order": 62,
+   "confusables": [
+    {
+     "kana": "ハ",
+     "romaji": "ha"
+    },
+    {
+     "kana": "パ",
+     "romaji": "pa"
+    },
+    {
+     "kana": "ビ",
+     "romaji": "bi"
+    },
+    {
+     "kana": "ブ",
+     "romaji": "bu"
+    }
+   ],
+   "unit": "kata-dakuon"
+  },
+  {
+   "id": "h-bi",
+   "kana": "び",
+   "script": "hira",
+   "romaji": "bi",
+   "accept": [
+    "bi"
+   ],
+   "row": "ba",
+   "type": "dakuon",
+   "pair": "k-bi",
+   "order": 63,
+   "confusables": [
+    {
+     "kana": "ひ",
+     "romaji": "hi"
+    },
+    {
+     "kana": "ぴ",
+     "romaji": "pi"
+    },
+    {
+     "kana": "ば",
+     "romaji": "ba"
+    },
+    {
+     "kana": "ぶ",
+     "romaji": "bu"
+    }
+   ],
+   "unit": "hira-dakuon"
+  },
+  {
+   "id": "k-bi",
+   "kana": "ビ",
+   "script": "kata",
+   "romaji": "bi",
+   "accept": [
+    "bi"
+   ],
+   "row": "ba",
+   "type": "dakuon",
+   "pair": "h-bi",
+   "order": 63,
+   "confusables": [
+    {
+     "kana": "ヒ",
+     "romaji": "hi"
+    },
+    {
+     "kana": "ピ",
+     "romaji": "pi"
+    },
+    {
+     "kana": "バ",
+     "romaji": "ba"
+    },
+    {
+     "kana": "ブ",
+     "romaji": "bu"
+    }
+   ],
+   "unit": "kata-dakuon"
+  },
+  {
+   "id": "h-bu",
+   "kana": "ぶ",
+   "script": "hira",
+   "romaji": "bu",
+   "accept": [
+    "bu"
+   ],
+   "row": "ba",
+   "type": "dakuon",
+   "pair": "k-bu",
+   "order": 64,
+   "confusables": [
+    {
+     "kana": "ふ",
+     "romaji": "fu"
+    },
+    {
+     "kana": "ぷ",
+     "romaji": "pu"
+    },
+    {
+     "kana": "ば",
+     "romaji": "ba"
+    },
+    {
+     "kana": "び",
+     "romaji": "bi"
+    }
+   ],
+   "unit": "hira-dakuon"
+  },
+  {
+   "id": "k-bu",
+   "kana": "ブ",
+   "script": "kata",
+   "romaji": "bu",
+   "accept": [
+    "bu"
+   ],
+   "row": "ba",
+   "type": "dakuon",
+   "pair": "h-bu",
+   "order": 64,
+   "confusables": [
+    {
+     "kana": "フ",
+     "romaji": "fu"
+    },
+    {
+     "kana": "プ",
+     "romaji": "pu"
+    },
+    {
+     "kana": "バ",
+     "romaji": "ba"
+    },
+    {
+     "kana": "ビ",
+     "romaji": "bi"
+    }
+   ],
+   "unit": "kata-dakuon"
+  },
+  {
+   "id": "h-be",
+   "kana": "べ",
+   "script": "hira",
+   "romaji": "be",
+   "accept": [
+    "be"
+   ],
+   "row": "ba",
+   "type": "dakuon",
+   "pair": "k-be",
+   "order": 65,
+   "confusables": [
+    {
+     "kana": "へ",
+     "romaji": "he"
+    },
+    {
+     "kana": "ぺ",
+     "romaji": "pe"
+    },
+    {
+     "kana": "ば",
+     "romaji": "ba"
+    },
+    {
+     "kana": "び",
+     "romaji": "bi"
+    }
+   ],
+   "unit": "hira-dakuon"
+  },
+  {
+   "id": "k-be",
+   "kana": "ベ",
+   "script": "kata",
+   "romaji": "be",
+   "accept": [
+    "be"
+   ],
+   "row": "ba",
+   "type": "dakuon",
+   "pair": "h-be",
+   "order": 65,
+   "confusables": [
+    {
+     "kana": "ヘ",
+     "romaji": "he"
+    },
+    {
+     "kana": "ペ",
+     "romaji": "pe"
+    },
+    {
+     "kana": "バ",
+     "romaji": "ba"
+    },
+    {
+     "kana": "ビ",
+     "romaji": "bi"
+    }
+   ],
+   "unit": "kata-dakuon"
+  },
+  {
+   "id": "h-bo",
+   "kana": "ぼ",
+   "script": "hira",
+   "romaji": "bo",
+   "accept": [
+    "bo"
+   ],
+   "row": "ba",
+   "type": "dakuon",
+   "pair": "k-bo",
+   "order": 66,
+   "confusables": [
+    {
+     "kana": "ほ",
+     "romaji": "ho"
+    },
+    {
+     "kana": "ぽ",
+     "romaji": "po"
+    },
+    {
+     "kana": "ば",
+     "romaji": "ba"
+    },
+    {
+     "kana": "び",
+     "romaji": "bi"
+    }
+   ],
+   "unit": "hira-dakuon"
+  },
+  {
+   "id": "k-bo",
+   "kana": "ボ",
+   "script": "kata",
+   "romaji": "bo",
+   "accept": [
+    "bo"
+   ],
+   "row": "ba",
+   "type": "dakuon",
+   "pair": "h-bo",
+   "order": 66,
+   "confusables": [
+    {
+     "kana": "ホ",
+     "romaji": "ho"
+    },
+    {
+     "kana": "ポ",
+     "romaji": "po"
+    },
+    {
+     "kana": "バ",
+     "romaji": "ba"
+    },
+    {
+     "kana": "ビ",
+     "romaji": "bi"
+    }
+   ],
+   "unit": "kata-dakuon"
+  },
+  {
+   "id": "h-pa",
+   "kana": "ぱ",
+   "script": "hira",
+   "romaji": "pa",
+   "accept": [
+    "pa"
+   ],
+   "row": "pa",
+   "type": "handakuon",
+   "pair": "k-pa",
+   "order": 67,
+   "confusables": [
+    {
+     "kana": "は",
+     "romaji": "ha"
+    },
+    {
+     "kana": "ば",
+     "romaji": "ba"
+    },
+    {
+     "kana": "ぴ",
+     "romaji": "pi"
+    },
+    {
+     "kana": "ぷ",
+     "romaji": "pu"
+    }
+   ],
+   "unit": "hira-dakuon"
+  },
+  {
+   "id": "k-pa",
+   "kana": "パ",
+   "script": "kata",
+   "romaji": "pa",
+   "accept": [
+    "pa"
+   ],
+   "row": "pa",
+   "type": "handakuon",
+   "pair": "h-pa",
+   "order": 67,
+   "confusables": [
+    {
+     "kana": "ハ",
+     "romaji": "ha"
+    },
+    {
+     "kana": "バ",
+     "romaji": "ba"
+    },
+    {
+     "kana": "ピ",
+     "romaji": "pi"
+    },
+    {
+     "kana": "プ",
+     "romaji": "pu"
+    }
+   ],
+   "unit": "kata-dakuon"
+  },
+  {
+   "id": "h-pi",
+   "kana": "ぴ",
+   "script": "hira",
+   "romaji": "pi",
+   "accept": [
+    "pi"
+   ],
+   "row": "pa",
+   "type": "handakuon",
+   "pair": "k-pi",
+   "order": 68,
+   "confusables": [
+    {
+     "kana": "ひ",
+     "romaji": "hi"
+    },
+    {
+     "kana": "び",
+     "romaji": "bi"
+    },
+    {
+     "kana": "ぱ",
+     "romaji": "pa"
+    },
+    {
+     "kana": "ぷ",
+     "romaji": "pu"
+    }
+   ],
+   "unit": "hira-dakuon"
+  },
+  {
+   "id": "k-pi",
+   "kana": "ピ",
+   "script": "kata",
+   "romaji": "pi",
+   "accept": [
+    "pi"
+   ],
+   "row": "pa",
+   "type": "handakuon",
+   "pair": "h-pi",
+   "order": 68,
+   "confusables": [
+    {
+     "kana": "ヒ",
+     "romaji": "hi"
+    },
+    {
+     "kana": "ビ",
+     "romaji": "bi"
+    },
+    {
+     "kana": "パ",
+     "romaji": "pa"
+    },
+    {
+     "kana": "プ",
+     "romaji": "pu"
+    }
+   ],
+   "unit": "kata-dakuon"
+  },
+  {
+   "id": "h-pu",
+   "kana": "ぷ",
+   "script": "hira",
+   "romaji": "pu",
+   "accept": [
+    "pu"
+   ],
+   "row": "pa",
+   "type": "handakuon",
+   "pair": "k-pu",
+   "order": 69,
+   "confusables": [
+    {
+     "kana": "ふ",
+     "romaji": "fu"
+    },
+    {
+     "kana": "ぶ",
+     "romaji": "bu"
+    },
+    {
+     "kana": "ぱ",
+     "romaji": "pa"
+    },
+    {
+     "kana": "ぴ",
+     "romaji": "pi"
+    }
+   ],
+   "unit": "hira-dakuon"
+  },
+  {
+   "id": "k-pu",
+   "kana": "プ",
+   "script": "kata",
+   "romaji": "pu",
+   "accept": [
+    "pu"
+   ],
+   "row": "pa",
+   "type": "handakuon",
+   "pair": "h-pu",
+   "order": 69,
+   "confusables": [
+    {
+     "kana": "フ",
+     "romaji": "fu"
+    },
+    {
+     "kana": "ブ",
+     "romaji": "bu"
+    },
+    {
+     "kana": "パ",
+     "romaji": "pa"
+    },
+    {
+     "kana": "ピ",
+     "romaji": "pi"
+    }
+   ],
+   "unit": "kata-dakuon"
+  },
+  {
+   "id": "h-pe",
+   "kana": "ぺ",
+   "script": "hira",
+   "romaji": "pe",
+   "accept": [
+    "pe"
+   ],
+   "row": "pa",
+   "type": "handakuon",
+   "pair": "k-pe",
+   "order": 70,
+   "confusables": [
+    {
+     "kana": "へ",
+     "romaji": "he"
+    },
+    {
+     "kana": "べ",
+     "romaji": "be"
+    },
+    {
+     "kana": "ぱ",
+     "romaji": "pa"
+    },
+    {
+     "kana": "ぴ",
+     "romaji": "pi"
+    }
+   ],
+   "unit": "hira-dakuon"
+  },
+  {
+   "id": "k-pe",
+   "kana": "ペ",
+   "script": "kata",
+   "romaji": "pe",
+   "accept": [
+    "pe"
+   ],
+   "row": "pa",
+   "type": "handakuon",
+   "pair": "h-pe",
+   "order": 70,
+   "confusables": [
+    {
+     "kana": "ヘ",
+     "romaji": "he"
+    },
+    {
+     "kana": "ベ",
+     "romaji": "be"
+    },
+    {
+     "kana": "パ",
+     "romaji": "pa"
+    },
+    {
+     "kana": "ピ",
+     "romaji": "pi"
+    }
+   ],
+   "unit": "kata-dakuon"
+  },
+  {
+   "id": "h-po",
+   "kana": "ぽ",
+   "script": "hira",
+   "romaji": "po",
+   "accept": [
+    "po"
+   ],
+   "row": "pa",
+   "type": "handakuon",
+   "pair": "k-po",
+   "order": 71,
+   "confusables": [
+    {
+     "kana": "ほ",
+     "romaji": "ho"
+    },
+    {
+     "kana": "ぼ",
+     "romaji": "bo"
+    },
+    {
+     "kana": "ぱ",
+     "romaji": "pa"
+    },
+    {
+     "kana": "ぴ",
+     "romaji": "pi"
+    }
+   ],
+   "unit": "hira-dakuon"
+  },
+  {
+   "id": "k-po",
+   "kana": "ポ",
+   "script": "kata",
+   "romaji": "po",
+   "accept": [
+    "po"
+   ],
+   "row": "pa",
+   "type": "handakuon",
+   "pair": "h-po",
+   "order": 71,
+   "confusables": [
+    {
+     "kana": "ホ",
+     "romaji": "ho"
+    },
+    {
+     "kana": "ボ",
+     "romaji": "bo"
+    },
+    {
+     "kana": "パ",
+     "romaji": "pa"
+    },
+    {
+     "kana": "ピ",
+     "romaji": "pi"
+    }
+   ],
+   "unit": "kata-dakuon"
+  },
+  {
+   "id": "h-kya",
+   "kana": "きゃ",
+   "script": "hira",
+   "romaji": "kya",
+   "accept": [
+    "kya"
+   ],
+   "row": "yoon-ki",
+   "type": "yoon",
+   "pair": "k-kya",
+   "order": 72,
+   "confusables": [
+    {
+     "kana": "きゅ",
+     "romaji": "kyu"
+    },
+    {
+     "kana": "きょ",
+     "romaji": "kyo"
+    },
+    {
+     "kana": "きや",
+     "romaji": "kiya"
+    }
+   ],
+   "note": "小字 ゃ 與大字 や 要分清楚：『きや』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "h-kyu",
+   "kana": "きゅ",
+   "script": "hira",
+   "romaji": "kyu",
+   "accept": [
+    "kyu"
+   ],
+   "row": "yoon-ki",
+   "type": "yoon",
+   "pair": "k-kyu",
+   "order": 73,
+   "confusables": [
+    {
+     "kana": "きゃ",
+     "romaji": "kya"
+    },
+    {
+     "kana": "きょ",
+     "romaji": "kyo"
+    },
+    {
+     "kana": "きゆ",
+     "romaji": "kiyu"
+    }
+   ],
+   "note": "小字 ゅ 與大字 ゆ 要分清楚：『きゆ』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "h-kyo",
+   "kana": "きょ",
+   "script": "hira",
+   "romaji": "kyo",
+   "accept": [
+    "kyo"
+   ],
+   "row": "yoon-ki",
+   "type": "yoon",
+   "pair": "k-kyo",
+   "order": 74,
+   "confusables": [
+    {
+     "kana": "きゃ",
+     "romaji": "kya"
+    },
+    {
+     "kana": "きゅ",
+     "romaji": "kyu"
+    },
+    {
+     "kana": "きよ",
+     "romaji": "kiyo"
+    }
+   ],
+   "note": "小字 ょ 與大字 よ 要分清楚：『きよ』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "k-kya",
+   "kana": "キャ",
+   "script": "kata",
+   "romaji": "kya",
+   "accept": [
+    "kya"
+   ],
+   "row": "yoon-ki",
+   "type": "yoon",
+   "pair": "h-kya",
+   "order": 75,
+   "confusables": [
+    {
+     "kana": "キュ",
+     "romaji": "kyu"
+    },
+    {
+     "kana": "キョ",
+     "romaji": "kyo"
+    },
+    {
+     "kana": "キヤ",
+     "romaji": "kiya"
+    }
+   ],
+   "note": "小字 ャ 與大字 ヤ 要分清楚：『キヤ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "k-kyu",
+   "kana": "キュ",
+   "script": "kata",
+   "romaji": "kyu",
+   "accept": [
+    "kyu"
+   ],
+   "row": "yoon-ki",
+   "type": "yoon",
+   "pair": "h-kyu",
+   "order": 76,
+   "confusables": [
+    {
+     "kana": "キャ",
+     "romaji": "kya"
+    },
+    {
+     "kana": "キョ",
+     "romaji": "kyo"
+    },
+    {
+     "kana": "キユ",
+     "romaji": "kiyu"
+    }
+   ],
+   "note": "小字 ュ 與大字 ユ 要分清楚：『キユ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "k-kyo",
+   "kana": "キョ",
+   "script": "kata",
+   "romaji": "kyo",
+   "accept": [
+    "kyo"
+   ],
+   "row": "yoon-ki",
+   "type": "yoon",
+   "pair": "h-kyo",
+   "order": 77,
+   "confusables": [
+    {
+     "kana": "キャ",
+     "romaji": "kya"
+    },
+    {
+     "kana": "キュ",
+     "romaji": "kyu"
+    },
+    {
+     "kana": "キヨ",
+     "romaji": "kiyo"
+    }
+   ],
+   "note": "小字 ョ 與大字 ヨ 要分清楚：『キヨ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "h-sha",
+   "kana": "しゃ",
+   "script": "hira",
+   "romaji": "sha",
+   "accept": [
+    "sha",
+    "sya"
+   ],
+   "row": "yoon-shi",
+   "type": "yoon",
+   "pair": "k-sha",
+   "order": 78,
+   "confusables": [
+    {
+     "kana": "しゅ",
+     "romaji": "shu"
+    },
+    {
+     "kana": "しょ",
+     "romaji": "sho"
+    },
+    {
+     "kana": "しや",
+     "romaji": "shiya"
+    }
+   ],
+   "note": "小字 ゃ 與大字 や 要分清楚：『しや』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "h-shu",
+   "kana": "しゅ",
+   "script": "hira",
+   "romaji": "shu",
+   "accept": [
+    "shu",
+    "syu"
+   ],
+   "row": "yoon-shi",
+   "type": "yoon",
+   "pair": "k-shu",
+   "order": 79,
+   "confusables": [
+    {
+     "kana": "しゃ",
+     "romaji": "sha"
+    },
+    {
+     "kana": "しょ",
+     "romaji": "sho"
+    },
+    {
+     "kana": "しゆ",
+     "romaji": "shiyu"
+    }
+   ],
+   "note": "小字 ゅ 與大字 ゆ 要分清楚：『しゆ』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "h-sho",
+   "kana": "しょ",
+   "script": "hira",
+   "romaji": "sho",
+   "accept": [
+    "sho",
+    "syo"
+   ],
+   "row": "yoon-shi",
+   "type": "yoon",
+   "pair": "k-sho",
+   "order": 80,
+   "confusables": [
+    {
+     "kana": "しゃ",
+     "romaji": "sha"
+    },
+    {
+     "kana": "しゅ",
+     "romaji": "shu"
+    },
+    {
+     "kana": "しよ",
+     "romaji": "shiyo"
+    }
+   ],
+   "note": "小字 ょ 與大字 よ 要分清楚：『しよ』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "k-sha",
+   "kana": "シャ",
+   "script": "kata",
+   "romaji": "sha",
+   "accept": [
+    "sha",
+    "sya"
+   ],
+   "row": "yoon-shi",
+   "type": "yoon",
+   "pair": "h-sha",
+   "order": 81,
+   "confusables": [
+    {
+     "kana": "シュ",
+     "romaji": "shu"
+    },
+    {
+     "kana": "ショ",
+     "romaji": "sho"
+    },
+    {
+     "kana": "シヤ",
+     "romaji": "shiya"
+    }
+   ],
+   "note": "小字 ャ 與大字 ヤ 要分清楚：『シヤ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "k-shu",
+   "kana": "シュ",
+   "script": "kata",
+   "romaji": "shu",
+   "accept": [
+    "shu",
+    "syu"
+   ],
+   "row": "yoon-shi",
+   "type": "yoon",
+   "pair": "h-shu",
+   "order": 82,
+   "confusables": [
+    {
+     "kana": "シャ",
+     "romaji": "sha"
+    },
+    {
+     "kana": "ショ",
+     "romaji": "sho"
+    },
+    {
+     "kana": "シユ",
+     "romaji": "shiyu"
+    }
+   ],
+   "note": "小字 ュ 與大字 ユ 要分清楚：『シユ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "k-sho",
+   "kana": "ショ",
+   "script": "kata",
+   "romaji": "sho",
+   "accept": [
+    "sho",
+    "syo"
+   ],
+   "row": "yoon-shi",
+   "type": "yoon",
+   "pair": "h-sho",
+   "order": 83,
+   "confusables": [
+    {
+     "kana": "シャ",
+     "romaji": "sha"
+    },
+    {
+     "kana": "シュ",
+     "romaji": "shu"
+    },
+    {
+     "kana": "シヨ",
+     "romaji": "shiyo"
+    }
+   ],
+   "note": "小字 ョ 與大字 ヨ 要分清楚：『シヨ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "h-cha",
+   "kana": "ちゃ",
+   "script": "hira",
+   "romaji": "cha",
+   "accept": [
+    "cha",
+    "tya",
+    "cya"
+   ],
+   "row": "yoon-chi",
+   "type": "yoon",
+   "pair": "k-cha",
+   "order": 84,
+   "confusables": [
+    {
+     "kana": "ちゅ",
+     "romaji": "chu"
+    },
+    {
+     "kana": "ちょ",
+     "romaji": "cho"
+    },
+    {
+     "kana": "ちや",
+     "romaji": "chiya"
+    }
+   ],
+   "note": "小字 ゃ 與大字 や 要分清楚：『ちや』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "h-chu",
+   "kana": "ちゅ",
+   "script": "hira",
+   "romaji": "chu",
+   "accept": [
+    "chu",
+    "tyu",
+    "cyu"
+   ],
+   "row": "yoon-chi",
+   "type": "yoon",
+   "pair": "k-chu",
+   "order": 85,
+   "confusables": [
+    {
+     "kana": "ちゃ",
+     "romaji": "cha"
+    },
+    {
+     "kana": "ちょ",
+     "romaji": "cho"
+    },
+    {
+     "kana": "ちゆ",
+     "romaji": "chiyu"
+    }
+   ],
+   "note": "小字 ゅ 與大字 ゆ 要分清楚：『ちゆ』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "h-cho",
+   "kana": "ちょ",
+   "script": "hira",
+   "romaji": "cho",
+   "accept": [
+    "cho",
+    "tyo",
+    "cyo"
+   ],
+   "row": "yoon-chi",
+   "type": "yoon",
+   "pair": "k-cho",
+   "order": 86,
+   "confusables": [
+    {
+     "kana": "ちゃ",
+     "romaji": "cha"
+    },
+    {
+     "kana": "ちゅ",
+     "romaji": "chu"
+    },
+    {
+     "kana": "ちよ",
+     "romaji": "chiyo"
+    }
+   ],
+   "note": "小字 ょ 與大字 よ 要分清楚：『ちよ』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "k-cha",
+   "kana": "チャ",
+   "script": "kata",
+   "romaji": "cha",
+   "accept": [
+    "cha",
+    "tya",
+    "cya"
+   ],
+   "row": "yoon-chi",
+   "type": "yoon",
+   "pair": "h-cha",
+   "order": 87,
+   "confusables": [
+    {
+     "kana": "チュ",
+     "romaji": "chu"
+    },
+    {
+     "kana": "チョ",
+     "romaji": "cho"
+    },
+    {
+     "kana": "チヤ",
+     "romaji": "chiya"
+    }
+   ],
+   "note": "小字 ャ 與大字 ヤ 要分清楚：『チヤ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "k-chu",
+   "kana": "チュ",
+   "script": "kata",
+   "romaji": "chu",
+   "accept": [
+    "chu",
+    "tyu",
+    "cyu"
+   ],
+   "row": "yoon-chi",
+   "type": "yoon",
+   "pair": "h-chu",
+   "order": 88,
+   "confusables": [
+    {
+     "kana": "チャ",
+     "romaji": "cha"
+    },
+    {
+     "kana": "チョ",
+     "romaji": "cho"
+    },
+    {
+     "kana": "チユ",
+     "romaji": "chiyu"
+    }
+   ],
+   "note": "小字 ュ 與大字 ユ 要分清楚：『チユ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "k-cho",
+   "kana": "チョ",
+   "script": "kata",
+   "romaji": "cho",
+   "accept": [
+    "cho",
+    "tyo",
+    "cyo"
+   ],
+   "row": "yoon-chi",
+   "type": "yoon",
+   "pair": "h-cho",
+   "order": 89,
+   "confusables": [
+    {
+     "kana": "チャ",
+     "romaji": "cha"
+    },
+    {
+     "kana": "チュ",
+     "romaji": "chu"
+    },
+    {
+     "kana": "チヨ",
+     "romaji": "chiyo"
+    }
+   ],
+   "note": "小字 ョ 與大字 ヨ 要分清楚：『チヨ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "h-nya",
+   "kana": "にゃ",
+   "script": "hira",
+   "romaji": "nya",
+   "accept": [
+    "nya"
+   ],
+   "row": "yoon-ni",
+   "type": "yoon",
+   "pair": "k-nya",
+   "order": 90,
+   "confusables": [
+    {
+     "kana": "にゅ",
+     "romaji": "nyu"
+    },
+    {
+     "kana": "にょ",
+     "romaji": "nyo"
+    },
+    {
+     "kana": "にや",
+     "romaji": "niya"
+    }
+   ],
+   "note": "小字 ゃ 與大字 や 要分清楚：『にや』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "h-nyu",
+   "kana": "にゅ",
+   "script": "hira",
+   "romaji": "nyu",
+   "accept": [
+    "nyu"
+   ],
+   "row": "yoon-ni",
+   "type": "yoon",
+   "pair": "k-nyu",
+   "order": 91,
+   "confusables": [
+    {
+     "kana": "にゃ",
+     "romaji": "nya"
+    },
+    {
+     "kana": "にょ",
+     "romaji": "nyo"
+    },
+    {
+     "kana": "にゆ",
+     "romaji": "niyu"
+    }
+   ],
+   "note": "小字 ゅ 與大字 ゆ 要分清楚：『にゆ』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "h-nyo",
+   "kana": "にょ",
+   "script": "hira",
+   "romaji": "nyo",
+   "accept": [
+    "nyo"
+   ],
+   "row": "yoon-ni",
+   "type": "yoon",
+   "pair": "k-nyo",
+   "order": 92,
+   "confusables": [
+    {
+     "kana": "にゃ",
+     "romaji": "nya"
+    },
+    {
+     "kana": "にゅ",
+     "romaji": "nyu"
+    },
+    {
+     "kana": "によ",
+     "romaji": "niyo"
+    }
+   ],
+   "note": "小字 ょ 與大字 よ 要分清楚：『によ』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "k-nya",
+   "kana": "ニャ",
+   "script": "kata",
+   "romaji": "nya",
+   "accept": [
+    "nya"
+   ],
+   "row": "yoon-ni",
+   "type": "yoon",
+   "pair": "h-nya",
+   "order": 93,
+   "confusables": [
+    {
+     "kana": "ニュ",
+     "romaji": "nyu"
+    },
+    {
+     "kana": "ニョ",
+     "romaji": "nyo"
+    },
+    {
+     "kana": "ニヤ",
+     "romaji": "niya"
+    }
+   ],
+   "note": "小字 ャ 與大字 ヤ 要分清楚：『ニヤ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "k-nyu",
+   "kana": "ニュ",
+   "script": "kata",
+   "romaji": "nyu",
+   "accept": [
+    "nyu"
+   ],
+   "row": "yoon-ni",
+   "type": "yoon",
+   "pair": "h-nyu",
+   "order": 94,
+   "confusables": [
+    {
+     "kana": "ニャ",
+     "romaji": "nya"
+    },
+    {
+     "kana": "ニョ",
+     "romaji": "nyo"
+    },
+    {
+     "kana": "ニユ",
+     "romaji": "niyu"
+    }
+   ],
+   "note": "小字 ュ 與大字 ユ 要分清楚：『ニユ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "k-nyo",
+   "kana": "ニョ",
+   "script": "kata",
+   "romaji": "nyo",
+   "accept": [
+    "nyo"
+   ],
+   "row": "yoon-ni",
+   "type": "yoon",
+   "pair": "h-nyo",
+   "order": 95,
+   "confusables": [
+    {
+     "kana": "ニャ",
+     "romaji": "nya"
+    },
+    {
+     "kana": "ニュ",
+     "romaji": "nyu"
+    },
+    {
+     "kana": "ニヨ",
+     "romaji": "niyo"
+    }
+   ],
+   "note": "小字 ョ 與大字 ヨ 要分清楚：『ニヨ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "h-hya",
+   "kana": "ひゃ",
+   "script": "hira",
+   "romaji": "hya",
+   "accept": [
+    "hya"
+   ],
+   "row": "yoon-hi",
+   "type": "yoon",
+   "pair": "k-hya",
+   "order": 96,
+   "confusables": [
+    {
+     "kana": "ひゅ",
+     "romaji": "hyu"
+    },
+    {
+     "kana": "ひょ",
+     "romaji": "hyo"
+    },
+    {
+     "kana": "ひや",
+     "romaji": "hiya"
+    }
+   ],
+   "note": "小字 ゃ 與大字 や 要分清楚：『ひや』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "h-hyu",
+   "kana": "ひゅ",
+   "script": "hira",
+   "romaji": "hyu",
+   "accept": [
+    "hyu"
+   ],
+   "row": "yoon-hi",
+   "type": "yoon",
+   "pair": "k-hyu",
+   "order": 97,
+   "confusables": [
+    {
+     "kana": "ひゃ",
+     "romaji": "hya"
+    },
+    {
+     "kana": "ひょ",
+     "romaji": "hyo"
+    },
+    {
+     "kana": "ひゆ",
+     "romaji": "hiyu"
+    }
+   ],
+   "note": "小字 ゅ 與大字 ゆ 要分清楚：『ひゆ』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "h-hyo",
+   "kana": "ひょ",
+   "script": "hira",
+   "romaji": "hyo",
+   "accept": [
+    "hyo"
+   ],
+   "row": "yoon-hi",
+   "type": "yoon",
+   "pair": "k-hyo",
+   "order": 98,
+   "confusables": [
+    {
+     "kana": "ひゃ",
+     "romaji": "hya"
+    },
+    {
+     "kana": "ひゅ",
+     "romaji": "hyu"
+    },
+    {
+     "kana": "ひよ",
+     "romaji": "hiyo"
+    }
+   ],
+   "note": "小字 ょ 與大字 よ 要分清楚：『ひよ』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "k-hya",
+   "kana": "ヒャ",
+   "script": "kata",
+   "romaji": "hya",
+   "accept": [
+    "hya"
+   ],
+   "row": "yoon-hi",
+   "type": "yoon",
+   "pair": "h-hya",
+   "order": 99,
+   "confusables": [
+    {
+     "kana": "ヒュ",
+     "romaji": "hyu"
+    },
+    {
+     "kana": "ヒョ",
+     "romaji": "hyo"
+    },
+    {
+     "kana": "ヒヤ",
+     "romaji": "hiya"
+    }
+   ],
+   "note": "小字 ャ 與大字 ヤ 要分清楚：『ヒヤ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "k-hyu",
+   "kana": "ヒュ",
+   "script": "kata",
+   "romaji": "hyu",
+   "accept": [
+    "hyu"
+   ],
+   "row": "yoon-hi",
+   "type": "yoon",
+   "pair": "h-hyu",
+   "order": 100,
+   "confusables": [
+    {
+     "kana": "ヒャ",
+     "romaji": "hya"
+    },
+    {
+     "kana": "ヒョ",
+     "romaji": "hyo"
+    },
+    {
+     "kana": "ヒユ",
+     "romaji": "hiyu"
+    }
+   ],
+   "note": "小字 ュ 與大字 ユ 要分清楚：『ヒユ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "k-hyo",
+   "kana": "ヒョ",
+   "script": "kata",
+   "romaji": "hyo",
+   "accept": [
+    "hyo"
+   ],
+   "row": "yoon-hi",
+   "type": "yoon",
+   "pair": "h-hyo",
+   "order": 101,
+   "confusables": [
+    {
+     "kana": "ヒャ",
+     "romaji": "hya"
+    },
+    {
+     "kana": "ヒュ",
+     "romaji": "hyu"
+    },
+    {
+     "kana": "ヒヨ",
+     "romaji": "hiyo"
+    }
+   ],
+   "note": "小字 ョ 與大字 ヨ 要分清楚：『ヒヨ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "h-mya",
+   "kana": "みゃ",
+   "script": "hira",
+   "romaji": "mya",
+   "accept": [
+    "mya"
+   ],
+   "row": "yoon-mi",
+   "type": "yoon",
+   "pair": "k-mya",
+   "order": 102,
+   "confusables": [
+    {
+     "kana": "みゅ",
+     "romaji": "myu"
+    },
+    {
+     "kana": "みょ",
+     "romaji": "myo"
+    },
+    {
+     "kana": "みや",
+     "romaji": "miya"
+    }
+   ],
+   "note": "小字 ゃ 與大字 や 要分清楚：『みや』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "h-myu",
+   "kana": "みゅ",
+   "script": "hira",
+   "romaji": "myu",
+   "accept": [
+    "myu"
+   ],
+   "row": "yoon-mi",
+   "type": "yoon",
+   "pair": "k-myu",
+   "order": 103,
+   "confusables": [
+    {
+     "kana": "みゃ",
+     "romaji": "mya"
+    },
+    {
+     "kana": "みょ",
+     "romaji": "myo"
+    },
+    {
+     "kana": "みゆ",
+     "romaji": "miyu"
+    }
+   ],
+   "note": "小字 ゅ 與大字 ゆ 要分清楚：『みゆ』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "h-myo",
+   "kana": "みょ",
+   "script": "hira",
+   "romaji": "myo",
+   "accept": [
+    "myo"
+   ],
+   "row": "yoon-mi",
+   "type": "yoon",
+   "pair": "k-myo",
+   "order": 104,
+   "confusables": [
+    {
+     "kana": "みゃ",
+     "romaji": "mya"
+    },
+    {
+     "kana": "みゅ",
+     "romaji": "myu"
+    },
+    {
+     "kana": "みよ",
+     "romaji": "miyo"
+    }
+   ],
+   "note": "小字 ょ 與大字 よ 要分清楚：『みよ』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "k-mya",
+   "kana": "ミャ",
+   "script": "kata",
+   "romaji": "mya",
+   "accept": [
+    "mya"
+   ],
+   "row": "yoon-mi",
+   "type": "yoon",
+   "pair": "h-mya",
+   "order": 105,
+   "confusables": [
+    {
+     "kana": "ミュ",
+     "romaji": "myu"
+    },
+    {
+     "kana": "ミョ",
+     "romaji": "myo"
+    },
+    {
+     "kana": "ミヤ",
+     "romaji": "miya"
+    }
+   ],
+   "note": "小字 ャ 與大字 ヤ 要分清楚：『ミヤ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "k-myu",
+   "kana": "ミュ",
+   "script": "kata",
+   "romaji": "myu",
+   "accept": [
+    "myu"
+   ],
+   "row": "yoon-mi",
+   "type": "yoon",
+   "pair": "h-myu",
+   "order": 106,
+   "confusables": [
+    {
+     "kana": "ミャ",
+     "romaji": "mya"
+    },
+    {
+     "kana": "ミョ",
+     "romaji": "myo"
+    },
+    {
+     "kana": "ミユ",
+     "romaji": "miyu"
+    }
+   ],
+   "note": "小字 ュ 與大字 ユ 要分清楚：『ミユ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "k-myo",
+   "kana": "ミョ",
+   "script": "kata",
+   "romaji": "myo",
+   "accept": [
+    "myo"
+   ],
+   "row": "yoon-mi",
+   "type": "yoon",
+   "pair": "h-myo",
+   "order": 107,
+   "confusables": [
+    {
+     "kana": "ミャ",
+     "romaji": "mya"
+    },
+    {
+     "kana": "ミュ",
+     "romaji": "myu"
+    },
+    {
+     "kana": "ミヨ",
+     "romaji": "miyo"
+    }
+   ],
+   "note": "小字 ョ 與大字 ヨ 要分清楚：『ミヨ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "h-rya",
+   "kana": "りゃ",
+   "script": "hira",
+   "romaji": "rya",
+   "accept": [
+    "rya"
+   ],
+   "row": "yoon-ri",
+   "type": "yoon",
+   "pair": "k-rya",
+   "order": 108,
+   "confusables": [
+    {
+     "kana": "りゅ",
+     "romaji": "ryu"
+    },
+    {
+     "kana": "りょ",
+     "romaji": "ryo"
+    },
+    {
+     "kana": "りや",
+     "romaji": "riya"
+    }
+   ],
+   "note": "小字 ゃ 與大字 や 要分清楚：『りや』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "h-ryu",
+   "kana": "りゅ",
+   "script": "hira",
+   "romaji": "ryu",
+   "accept": [
+    "ryu"
+   ],
+   "row": "yoon-ri",
+   "type": "yoon",
+   "pair": "k-ryu",
+   "order": 109,
+   "confusables": [
+    {
+     "kana": "りゃ",
+     "romaji": "rya"
+    },
+    {
+     "kana": "りょ",
+     "romaji": "ryo"
+    },
+    {
+     "kana": "りゆ",
+     "romaji": "riyu"
+    }
+   ],
+   "note": "小字 ゅ 與大字 ゆ 要分清楚：『りゆ』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "h-ryo",
+   "kana": "りょ",
+   "script": "hira",
+   "romaji": "ryo",
+   "accept": [
+    "ryo"
+   ],
+   "row": "yoon-ri",
+   "type": "yoon",
+   "pair": "k-ryo",
+   "order": 110,
+   "confusables": [
+    {
+     "kana": "りゃ",
+     "romaji": "rya"
+    },
+    {
+     "kana": "りゅ",
+     "romaji": "ryu"
+    },
+    {
+     "kana": "りよ",
+     "romaji": "riyo"
+    }
+   ],
+   "note": "小字 ょ 與大字 よ 要分清楚：『りよ』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "k-rya",
+   "kana": "リャ",
+   "script": "kata",
+   "romaji": "rya",
+   "accept": [
+    "rya"
+   ],
+   "row": "yoon-ri",
+   "type": "yoon",
+   "pair": "h-rya",
+   "order": 111,
+   "confusables": [
+    {
+     "kana": "リュ",
+     "romaji": "ryu"
+    },
+    {
+     "kana": "リョ",
+     "romaji": "ryo"
+    },
+    {
+     "kana": "リヤ",
+     "romaji": "riya"
+    }
+   ],
+   "note": "小字 ャ 與大字 ヤ 要分清楚：『リヤ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "k-ryu",
+   "kana": "リュ",
+   "script": "kata",
+   "romaji": "ryu",
+   "accept": [
+    "ryu"
+   ],
+   "row": "yoon-ri",
+   "type": "yoon",
+   "pair": "h-ryu",
+   "order": 112,
+   "confusables": [
+    {
+     "kana": "リャ",
+     "romaji": "rya"
+    },
+    {
+     "kana": "リョ",
+     "romaji": "ryo"
+    },
+    {
+     "kana": "リユ",
+     "romaji": "riyu"
+    }
+   ],
+   "note": "小字 ュ 與大字 ユ 要分清楚：『リユ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "k-ryo",
+   "kana": "リョ",
+   "script": "kata",
+   "romaji": "ryo",
+   "accept": [
+    "ryo"
+   ],
+   "row": "yoon-ri",
+   "type": "yoon",
+   "pair": "h-ryo",
+   "order": 113,
+   "confusables": [
+    {
+     "kana": "リャ",
+     "romaji": "rya"
+    },
+    {
+     "kana": "リュ",
+     "romaji": "ryu"
+    },
+    {
+     "kana": "リヨ",
+     "romaji": "riyo"
+    }
+   ],
+   "note": "小字 ョ 與大字 ヨ 要分清楚：『リヨ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "h-gya",
+   "kana": "ぎゃ",
+   "script": "hira",
+   "romaji": "gya",
+   "accept": [
+    "gya"
+   ],
+   "row": "yoon-gi",
+   "type": "yoon",
+   "pair": "k-gya",
+   "order": 114,
+   "confusables": [
+    {
+     "kana": "ぎゅ",
+     "romaji": "gyu"
+    },
+    {
+     "kana": "ぎょ",
+     "romaji": "gyo"
+    },
+    {
+     "kana": "ぎや",
+     "romaji": "giya"
+    }
+   ],
+   "note": "小字 ゃ 與大字 や 要分清楚：『ぎや』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "h-gyu",
+   "kana": "ぎゅ",
+   "script": "hira",
+   "romaji": "gyu",
+   "accept": [
+    "gyu"
+   ],
+   "row": "yoon-gi",
+   "type": "yoon",
+   "pair": "k-gyu",
+   "order": 115,
+   "confusables": [
+    {
+     "kana": "ぎゃ",
+     "romaji": "gya"
+    },
+    {
+     "kana": "ぎょ",
+     "romaji": "gyo"
+    },
+    {
+     "kana": "ぎゆ",
+     "romaji": "giyu"
+    }
+   ],
+   "note": "小字 ゅ 與大字 ゆ 要分清楚：『ぎゆ』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "h-gyo",
+   "kana": "ぎょ",
+   "script": "hira",
+   "romaji": "gyo",
+   "accept": [
+    "gyo"
+   ],
+   "row": "yoon-gi",
+   "type": "yoon",
+   "pair": "k-gyo",
+   "order": 116,
+   "confusables": [
+    {
+     "kana": "ぎゃ",
+     "romaji": "gya"
+    },
+    {
+     "kana": "ぎゅ",
+     "romaji": "gyu"
+    },
+    {
+     "kana": "ぎよ",
+     "romaji": "giyo"
+    }
+   ],
+   "note": "小字 ょ 與大字 よ 要分清楚：『ぎよ』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "k-gya",
+   "kana": "ギャ",
+   "script": "kata",
+   "romaji": "gya",
+   "accept": [
+    "gya"
+   ],
+   "row": "yoon-gi",
+   "type": "yoon",
+   "pair": "h-gya",
+   "order": 117,
+   "confusables": [
+    {
+     "kana": "ギュ",
+     "romaji": "gyu"
+    },
+    {
+     "kana": "ギョ",
+     "romaji": "gyo"
+    },
+    {
+     "kana": "ギヤ",
+     "romaji": "giya"
+    }
+   ],
+   "note": "小字 ャ 與大字 ヤ 要分清楚：『ギヤ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "k-gyu",
+   "kana": "ギュ",
+   "script": "kata",
+   "romaji": "gyu",
+   "accept": [
+    "gyu"
+   ],
+   "row": "yoon-gi",
+   "type": "yoon",
+   "pair": "h-gyu",
+   "order": 118,
+   "confusables": [
+    {
+     "kana": "ギャ",
+     "romaji": "gya"
+    },
+    {
+     "kana": "ギョ",
+     "romaji": "gyo"
+    },
+    {
+     "kana": "ギユ",
+     "romaji": "giyu"
+    }
+   ],
+   "note": "小字 ュ 與大字 ユ 要分清楚：『ギユ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "k-gyo",
+   "kana": "ギョ",
+   "script": "kata",
+   "romaji": "gyo",
+   "accept": [
+    "gyo"
+   ],
+   "row": "yoon-gi",
+   "type": "yoon",
+   "pair": "h-gyo",
+   "order": 119,
+   "confusables": [
+    {
+     "kana": "ギャ",
+     "romaji": "gya"
+    },
+    {
+     "kana": "ギュ",
+     "romaji": "gyu"
+    },
+    {
+     "kana": "ギヨ",
+     "romaji": "giyo"
+    }
+   ],
+   "note": "小字 ョ 與大字 ヨ 要分清楚：『ギヨ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "h-ja",
+   "kana": "じゃ",
+   "script": "hira",
+   "romaji": "ja",
+   "accept": [
+    "ja",
+    "jya",
+    "zya"
+   ],
+   "row": "yoon-ji",
+   "type": "yoon",
+   "pair": "k-ja",
+   "order": 120,
+   "confusables": [
+    {
+     "kana": "じゅ",
+     "romaji": "ju"
+    },
+    {
+     "kana": "じょ",
+     "romaji": "jo"
+    },
+    {
+     "kana": "じや",
+     "romaji": "jiya"
+    }
+   ],
+   "note": "小字 ゃ 與大字 や 要分清楚：『じや』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "h-ju",
+   "kana": "じゅ",
+   "script": "hira",
+   "romaji": "ju",
+   "accept": [
+    "ju",
+    "jyu",
+    "zyu"
+   ],
+   "row": "yoon-ji",
+   "type": "yoon",
+   "pair": "k-ju",
+   "order": 121,
+   "confusables": [
+    {
+     "kana": "じゃ",
+     "romaji": "ja"
+    },
+    {
+     "kana": "じょ",
+     "romaji": "jo"
+    },
+    {
+     "kana": "じゆ",
+     "romaji": "jiyu"
+    }
+   ],
+   "note": "小字 ゅ 與大字 ゆ 要分清楚：『じゆ』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "h-jo",
+   "kana": "じょ",
+   "script": "hira",
+   "romaji": "jo",
+   "accept": [
+    "jo",
+    "jyo",
+    "zyo"
+   ],
+   "row": "yoon-ji",
+   "type": "yoon",
+   "pair": "k-jo",
+   "order": 122,
+   "confusables": [
+    {
+     "kana": "じゃ",
+     "romaji": "ja"
+    },
+    {
+     "kana": "じゅ",
+     "romaji": "ju"
+    },
+    {
+     "kana": "じよ",
+     "romaji": "jiyo"
+    }
+   ],
+   "note": "小字 ょ 與大字 よ 要分清楚：『じよ』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "k-ja",
+   "kana": "ジャ",
+   "script": "kata",
+   "romaji": "ja",
+   "accept": [
+    "ja",
+    "jya",
+    "zya"
+   ],
+   "row": "yoon-ji",
+   "type": "yoon",
+   "pair": "h-ja",
+   "order": 123,
+   "confusables": [
+    {
+     "kana": "ジュ",
+     "romaji": "ju"
+    },
+    {
+     "kana": "ジョ",
+     "romaji": "jo"
+    },
+    {
+     "kana": "ジヤ",
+     "romaji": "jiya"
+    }
+   ],
+   "note": "小字 ャ 與大字 ヤ 要分清楚：『ジヤ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "k-ju",
+   "kana": "ジュ",
+   "script": "kata",
+   "romaji": "ju",
+   "accept": [
+    "ju",
+    "jyu",
+    "zyu"
+   ],
+   "row": "yoon-ji",
+   "type": "yoon",
+   "pair": "h-ju",
+   "order": 124,
+   "confusables": [
+    {
+     "kana": "ジャ",
+     "romaji": "ja"
+    },
+    {
+     "kana": "ジョ",
+     "romaji": "jo"
+    },
+    {
+     "kana": "ジユ",
+     "romaji": "jiyu"
+    }
+   ],
+   "note": "小字 ュ 與大字 ユ 要分清楚：『ジユ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "k-jo",
+   "kana": "ジョ",
+   "script": "kata",
+   "romaji": "jo",
+   "accept": [
+    "jo",
+    "jyo",
+    "zyo"
+   ],
+   "row": "yoon-ji",
+   "type": "yoon",
+   "pair": "h-jo",
+   "order": 125,
+   "confusables": [
+    {
+     "kana": "ジャ",
+     "romaji": "ja"
+    },
+    {
+     "kana": "ジュ",
+     "romaji": "ju"
+    },
+    {
+     "kana": "ジヨ",
+     "romaji": "jiyo"
+    }
+   ],
+   "note": "小字 ョ 與大字 ヨ 要分清楚：『ジヨ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "h-bya",
+   "kana": "びゃ",
+   "script": "hira",
+   "romaji": "bya",
+   "accept": [
+    "bya"
+   ],
+   "row": "yoon-bi",
+   "type": "yoon",
+   "pair": "k-bya",
+   "order": 126,
+   "confusables": [
+    {
+     "kana": "びゅ",
+     "romaji": "byu"
+    },
+    {
+     "kana": "びょ",
+     "romaji": "byo"
+    },
+    {
+     "kana": "びや",
+     "romaji": "biya"
+    }
+   ],
+   "note": "小字 ゃ 與大字 や 要分清楚：『びや』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "h-byu",
+   "kana": "びゅ",
+   "script": "hira",
+   "romaji": "byu",
+   "accept": [
+    "byu"
+   ],
+   "row": "yoon-bi",
+   "type": "yoon",
+   "pair": "k-byu",
+   "order": 127,
+   "confusables": [
+    {
+     "kana": "びゃ",
+     "romaji": "bya"
+    },
+    {
+     "kana": "びょ",
+     "romaji": "byo"
+    },
+    {
+     "kana": "びゆ",
+     "romaji": "biyu"
+    }
+   ],
+   "note": "小字 ゅ 與大字 ゆ 要分清楚：『びゆ』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "h-byo",
+   "kana": "びょ",
+   "script": "hira",
+   "romaji": "byo",
+   "accept": [
+    "byo"
+   ],
+   "row": "yoon-bi",
+   "type": "yoon",
+   "pair": "k-byo",
+   "order": 128,
+   "confusables": [
+    {
+     "kana": "びゃ",
+     "romaji": "bya"
+    },
+    {
+     "kana": "びゅ",
+     "romaji": "byu"
+    },
+    {
+     "kana": "びよ",
+     "romaji": "biyo"
+    }
+   ],
+   "note": "小字 ょ 與大字 よ 要分清楚：『びよ』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "k-bya",
+   "kana": "ビャ",
+   "script": "kata",
+   "romaji": "bya",
+   "accept": [
+    "bya"
+   ],
+   "row": "yoon-bi",
+   "type": "yoon",
+   "pair": "h-bya",
+   "order": 129,
+   "confusables": [
+    {
+     "kana": "ビュ",
+     "romaji": "byu"
+    },
+    {
+     "kana": "ビョ",
+     "romaji": "byo"
+    },
+    {
+     "kana": "ビヤ",
+     "romaji": "biya"
+    }
+   ],
+   "note": "小字 ャ 與大字 ヤ 要分清楚：『ビヤ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "k-byu",
+   "kana": "ビュ",
+   "script": "kata",
+   "romaji": "byu",
+   "accept": [
+    "byu"
+   ],
+   "row": "yoon-bi",
+   "type": "yoon",
+   "pair": "h-byu",
+   "order": 130,
+   "confusables": [
+    {
+     "kana": "ビャ",
+     "romaji": "bya"
+    },
+    {
+     "kana": "ビョ",
+     "romaji": "byo"
+    },
+    {
+     "kana": "ビユ",
+     "romaji": "biyu"
+    }
+   ],
+   "note": "小字 ュ 與大字 ユ 要分清楚：『ビユ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "k-byo",
+   "kana": "ビョ",
+   "script": "kata",
+   "romaji": "byo",
+   "accept": [
+    "byo"
+   ],
+   "row": "yoon-bi",
+   "type": "yoon",
+   "pair": "h-byo",
+   "order": 131,
+   "confusables": [
+    {
+     "kana": "ビャ",
+     "romaji": "bya"
+    },
+    {
+     "kana": "ビュ",
+     "romaji": "byu"
+    },
+    {
+     "kana": "ビヨ",
+     "romaji": "biyo"
+    }
+   ],
+   "note": "小字 ョ 與大字 ヨ 要分清楚：『ビヨ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "h-pya",
+   "kana": "ぴゃ",
+   "script": "hira",
+   "romaji": "pya",
+   "accept": [
+    "pya"
+   ],
+   "row": "yoon-pi",
+   "type": "yoon",
+   "pair": "k-pya",
+   "order": 132,
+   "confusables": [
+    {
+     "kana": "ぴゅ",
+     "romaji": "pyu"
+    },
+    {
+     "kana": "ぴょ",
+     "romaji": "pyo"
+    },
+    {
+     "kana": "ぴや",
+     "romaji": "piya"
+    }
+   ],
+   "note": "小字 ゃ 與大字 や 要分清楚：『ぴや』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "h-pyu",
+   "kana": "ぴゅ",
+   "script": "hira",
+   "romaji": "pyu",
+   "accept": [
+    "pyu"
+   ],
+   "row": "yoon-pi",
+   "type": "yoon",
+   "pair": "k-pyu",
+   "order": 133,
+   "confusables": [
+    {
+     "kana": "ぴゃ",
+     "romaji": "pya"
+    },
+    {
+     "kana": "ぴょ",
+     "romaji": "pyo"
+    },
+    {
+     "kana": "ぴゆ",
+     "romaji": "piyu"
+    }
+   ],
+   "note": "小字 ゅ 與大字 ゆ 要分清楚：『ぴゆ』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "h-pyo",
+   "kana": "ぴょ",
+   "script": "hira",
+   "romaji": "pyo",
+   "accept": [
+    "pyo"
+   ],
+   "row": "yoon-pi",
+   "type": "yoon",
+   "pair": "k-pyo",
+   "order": 134,
+   "confusables": [
+    {
+     "kana": "ぴゃ",
+     "romaji": "pya"
+    },
+    {
+     "kana": "ぴゅ",
+     "romaji": "pyu"
+    },
+    {
+     "kana": "ぴよ",
+     "romaji": "piyo"
+    }
+   ],
+   "note": "小字 ょ 與大字 よ 要分清楚：『ぴよ』是兩個音節",
+   "unit": "hira-yoon"
+  },
+  {
+   "id": "k-pya",
+   "kana": "ピャ",
+   "script": "kata",
+   "romaji": "pya",
+   "accept": [
+    "pya"
+   ],
+   "row": "yoon-pi",
+   "type": "yoon",
+   "pair": "h-pya",
+   "order": 135,
+   "confusables": [
+    {
+     "kana": "ピュ",
+     "romaji": "pyu"
+    },
+    {
+     "kana": "ピョ",
+     "romaji": "pyo"
+    },
+    {
+     "kana": "ピヤ",
+     "romaji": "piya"
+    }
+   ],
+   "note": "小字 ャ 與大字 ヤ 要分清楚：『ピヤ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "k-pyu",
+   "kana": "ピュ",
+   "script": "kata",
+   "romaji": "pyu",
+   "accept": [
+    "pyu"
+   ],
+   "row": "yoon-pi",
+   "type": "yoon",
+   "pair": "h-pyu",
+   "order": 136,
+   "confusables": [
+    {
+     "kana": "ピャ",
+     "romaji": "pya"
+    },
+    {
+     "kana": "ピョ",
+     "romaji": "pyo"
+    },
+    {
+     "kana": "ピユ",
+     "romaji": "piyu"
+    }
+   ],
+   "note": "小字 ュ 與大字 ユ 要分清楚：『ピユ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "k-pyo",
+   "kana": "ピョ",
+   "script": "kata",
+   "romaji": "pyo",
+   "accept": [
+    "pyo"
+   ],
+   "row": "yoon-pi",
+   "type": "yoon",
+   "pair": "h-pyo",
+   "order": 137,
+   "confusables": [
+    {
+     "kana": "ピャ",
+     "romaji": "pya"
+    },
+    {
+     "kana": "ピュ",
+     "romaji": "pyu"
+    },
+    {
+     "kana": "ピヨ",
+     "romaji": "piyo"
+    }
+   ],
+   "note": "小字 ョ 與大字 ヨ 要分清楚：『ピヨ』是兩個音節",
+   "unit": "kata-yoon"
+  },
+  {
+   "id": "h-sokuon",
+   "kana": "っ",
+   "script": "hira",
+   "romaji": "(促音)",
+   "accept": [],
+   "row": "special",
+   "type": "sokuon",
+   "pair": "k-sokuon",
+   "order": 138,
+   "confusables": [
+    {
+     "kana": "つ",
+     "romaji": "tsu"
+    }
+   ],
+   "note": "小字っ：停頓一拍，下一個子音重複，例 きって kitte",
+   "unit": "special"
+  },
+  {
+   "id": "k-sokuon",
+   "kana": "ッ",
+   "script": "kata",
+   "romaji": "(促音)",
+   "accept": [],
+   "row": "special",
+   "type": "sokuon",
+   "pair": "h-sokuon",
+   "order": 139,
+   "confusables": [
+    {
+     "kana": "ツ",
+     "romaji": "tsu"
+    },
+    {
+     "kana": "シ",
+     "romaji": "shi"
+    }
+   ],
+   "note": "小字ッ：停頓一拍，例 ロボット robotto",
+   "unit": "special"
+  },
+  {
+   "id": "k-chouon",
+   "kana": "ー",
+   "script": "kata",
+   "romaji": "(長音)",
+   "accept": [],
+   "row": "special",
+   "type": "chouon",
+   "pair": null,
+   "order": 140,
+   "confusables": [
+    {
+     "kana": "一",
+     "romaji": "(漢字一)"
+    }
+   ],
+   "note": "長音符號：前一個母音拉長一拍，例 コーヒー koohii",
+   "unit": "special"
+  }
+ ]
+}

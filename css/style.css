@@ -1,0 +1,454 @@
+/* 50 音練習帖：日本小學練習帖的意象——田字格、朱色批改圓圈、藍色鉛筆 */
+
+:root {
+  --paper: #F2F4F1;
+  --paper-raised: #FBFCFA;
+  --ink: #1E2A32;
+  --ink-soft: #55636B;
+  --grid: #B9C4C0;
+  --grid-faint: #E3E8E5;
+  --blue: #2F5E8C;
+  --blue-ink: #F2F4F1;
+  --shu: #C8372D;
+
+  --font-kana: "Klee One", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --font-ui: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --kana-size: clamp(96px, 30vw, 160px);
+  --radius: 6px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #151B1F;
+    --paper-raised: #1C2428;
+    --ink: #E6ECEA;
+    --ink-soft: #9AA8AC;
+    --grid: #3A4649;
+    --grid-faint: #1F282C;
+    --blue: #7FAEE0;
+    --blue-ink: #151B1F;
+    --shu: #F0645A;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  /* 練習帖的淡方格 */
+  background-image:
+    linear-gradient(var(--grid-faint) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-faint) 1px, transparent 1px);
+  background-size: 28px 28px;
+  background-position: center top;
+}
+
+[lang="ja"] { font-family: var(--font-kana); }
+
+a { color: var(--blue); }
+
+button, input, select { font: inherit; color: inherit; }
+
+.view {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 16px 16px calc(88px + env(safe-area-inset-bottom));
+}
+
+body.in-practice .view { padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
+
+.loading, .muted { color: var(--ink-soft); }
+
+/* ---------- 按鈕 ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 20px;
+  border: 1.5px solid var(--grid);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.btn:hover { border-color: var(--blue); }
+.btn:focus-visible, .option:focus-visible, .text-input:focus-visible, .icon-btn:focus-visible, .chip:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+}
+.btn:disabled { opacity: .5; cursor: default; }
+
+.btn-primary {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: var(--blue-ink);
+  font-weight: 700;
+}
+
+.btn-big { width: 100%; min-height: 60px; font-size: 1.15rem; }
+
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn-row .btn { flex: 1 1 140px; }
+
+.icon-btn {
+  width: 44px;
+  height: 44px;
+  border: none;
+  background: none;
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--ink-soft);
+  cursor: pointer;
+  border-radius: var(--radius);
+}
+
+/* ---------- 首頁 ---------- */
+
+.masthead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0 12px;
+  border-bottom: 3px double var(--grid);
+  margin-bottom: 20px;
+}
+
+.masthead h1 {
+  margin: 0;
+  font-family: var(--font-kana);
+  font-weight: 600;
+  font-size: 1.6rem;
+  letter-spacing: .04em;
+}
+
+.masthead .date { margin: 0; color: var(--ink-soft); font-size: .95rem; }
+
+.tally {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1.5px solid var(--grid);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+  margin-bottom: 20px;
+}
+
+.tally > div { padding: 14px 8px; text-align: center; }
+.tally > div + div { border-left: 1px dashed var(--grid); }
+.tally .num { display: block; font-size: 2rem; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.tally .label { font-size: .85rem; color: var(--ink-soft); }
+.tally .sub { display: block; font-size: .78rem; color: var(--ink-soft); }
+
+.section { margin-top: 28px; }
+.section h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 10px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--grid);
+}
+
+.unit-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.unit-list li {
+  padding: 4px 12px;
+  border: 1.5px solid var(--grid);
+  border-radius: 999px;
+  background: var(--paper-raised);
+  font-size: .95rem;
+}
+.unit-list li.locked { border-style: dashed; color: var(--ink-soft); background: none; }
+
+.meter { height: 8px; border-radius: 4px; background: var(--grid-faint); border: 1px solid var(--grid); overflow: hidden; margin: 8px 0 4px; }
+.meter > span { display: block; height: 100%; background: var(--blue); }
+
+.done-note { text-align: center; margin: 4px 0 14px; color: var(--ink-soft); }
+
+/* ---------- 練習畫面 ---------- */
+
+.practice-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: -8px -8px 8px;
+}
+
+.practice-top .progress-text { font-size: .9rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; min-width: 4.5em; text-align: right; }
+.practice-top .meter { flex: 1; margin: 0; }
+
+.prompt { text-align: center; margin: 8px 0 12px; color: var(--ink-soft); font-size: 1rem; }
+
+/* 田字格 */
+.board {
+  position: relative;
+  font-size: var(--kana-size);
+  width: 1.5em;
+  height: 1.5em;
+  margin: 0 auto 20px;
+  border: 2px solid var(--grid);
+  background: var(--paper-raised);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.board::before, .board::after { content: ""; position: absolute; pointer-events: none; }
+.board::before { left: 50%; top: 0; bottom: 0; border-left: 1px dashed var(--grid); }
+.board::after { top: 50%; left: 0; right: 0; border-top: 1px dashed var(--grid); }
+
+.board-char { position: relative; z-index: 1; line-height: 1; }
+.board-char.romaji { font-family: var(--font-ui); font-weight: 500; font-size: .42em; letter-spacing: .02em; }
+.board-char.long { font-size: .7em; }
+
+/* 朱色批改圓圈：一筆畫出 */
+.maru {
+  position: absolute;
+  inset: -12%;
+  width: 124%;
+  height: 124%;
+  z-index: 2;
+  pointer-events: none;
+  fill: none;
+  stroke: var(--shu);
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: maru-draw .3s ease-out forwards;
+}
+
+@keyframes maru-draw { to { stroke-dashoffset: 0; } }
+
+/* 2×2 選項 */
+.options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.option {
+  position: relative;
+  min-height: 64px;
+  padding: 8px;
+  border: 1.5px solid var(--grid);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+  cursor: pointer;
+  font-size: 1.5rem;
+  font-weight: 500;
+  touch-action: manipulation;
+}
+
+.option[lang="ja"] { font-size: 2.2rem; font-weight: 400; }
+.option:hover:not(:disabled) { border-color: var(--blue); }
+.option:disabled { cursor: default; }
+
+.option .key {
+  position: absolute;
+  top: 4px;
+  left: 8px;
+  font-family: var(--font-ui);
+  font-size: .72rem;
+  font-weight: 400;
+  color: var(--ink-soft);
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .option .key { display: block; }
+}
+
+.option.is-answer { border: 2.5px solid var(--blue); color: var(--blue); }
+.option.is-wrong {
+  border: 2.5px solid var(--shu);
+  color: var(--shu);
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+.option.is-picked-right { border: 2.5px solid var(--blue); }
+
+/* 打字 */
+.type-form { display: flex; gap: 10px; }
+
+.text-input {
+  flex: 1;
+  min-width: 0;
+  min-height: 56px;
+  padding: 0 14px;
+  border: 1.5px solid var(--grid);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+  font-size: 1.4rem;
+  letter-spacing: .04em;
+}
+
+.text-input:disabled { opacity: .8; }
+.text-input.is-wrong { border-color: var(--shu); color: var(--shu); text-decoration: line-through; }
+.text-input.is-right { border-color: var(--blue); }
+
+/* 答錯回饋 */
+.feedback {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border: 1.5px solid var(--grid);
+  border-left: 4px solid var(--shu);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+}
+
+.feedback .answer-line { margin: 0 0 4px; font-size: 1.05rem; }
+.feedback .answer-line strong { font-size: 1.5rem; }
+.feedback .note { margin: 6px 0 0; color: var(--ink-soft); }
+.feedback .btn { margin-top: 12px; width: 100%; }
+
+/* 認識卡 */
+.intro-label {
+  text-align: center;
+  margin: 0 0 8px;
+  font-size: .9rem;
+  color: var(--blue);
+  font-weight: 700;
+  letter-spacing: .1em;
+}
+
+.intro-romaji { text-align: center; font-size: 2rem; font-weight: 500; margin: -6px 0 16px; letter-spacing: .04em; }
+.intro-note { text-align: center; color: var(--ink-soft); margin: 0 0 16px; }
+
+.confusables { margin: 0 0 20px; }
+.confusables h3 { font-size: .9rem; font-weight: 500; color: var(--ink-soft); margin: 0 0 8px; text-align: center; }
+.confusables ul { list-style: none; margin: 0; padding: 0; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+.confusables li {
+  width: 76px;
+  padding: 6px 0 4px;
+  border: 1.5px dashed var(--grid);
+  border-radius: var(--radius);
+  text-align: center;
+  line-height: 1.2;
+}
+.confusables .k { display: block; font-family: var(--font-kana); font-size: 2.2rem; }
+.confusables .r { font-size: .85rem; color: var(--ink-soft); }
+
+/* 回合結束 */
+.result-head { text-align: center; margin: 12px 0 20px; }
+.result-head h1 { font-size: 1.3rem; margin: 0 0 6px; }
+
+.unlock-banner {
+  margin: 0 0 20px;
+  padding: 12px 16px;
+  border: 2px solid var(--blue);
+  border-radius: var(--radius);
+  text-align: center;
+  font-weight: 700;
+  color: var(--blue);
+  background: var(--paper-raised);
+}
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.chip {
+  min-width: 52px;
+  min-height: 52px;
+  padding: 2px 10px;
+  border: 1.5px solid var(--grid);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+  font-family: var(--font-kana);
+  font-size: 1.7rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.chip small { display: block; font-family: var(--font-ui); font-size: .7rem; color: var(--ink-soft); margin-top: 2px; }
+
+/* 設定 */
+.field { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px dashed var(--grid); }
+.field label { flex: 1; }
+.field select {
+  min-height: 44px;
+  padding: 0 10px;
+  border: 1.5px solid var(--grid);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+}
+
+.danger-zone .confirm { margin-top: 10px; padding: 12px; border: 1.5px solid var(--shu); border-radius: var(--radius); }
+
+/* ---------- 底部選單 ---------- */
+
+.tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px 16px calc(6px + env(safe-area-inset-bottom));
+  background: var(--paper);
+  border-top: 1.5px solid var(--grid);
+  z-index: 10;
+}
+
+.tabbar a {
+  flex: 0 1 140px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: var(--ink-soft);
+  border-radius: var(--radius);
+}
+
+.tabbar a[aria-current="page"] { color: var(--blue); font-weight: 700; }
+
+body.in-practice .tabbar { display: none; }
+
+/* ---------- 其他 ---------- */
+
+.card-dialog {
+  width: min(92vw, 420px);
+  border: 2px solid var(--grid);
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--ink);
+  padding: 20px 16px 16px;
+}
+.card-dialog::backdrop { background: rgb(0 0 0 / .4); }
+.card-dialog form { text-align: center; }
+
+.toast {
+  position: fixed;
+  left: 50%;
+  top: calc(16px + env(safe-area-inset-top));
+  transform: translateX(-50%);
+  max-width: calc(100vw - 32px);
+  padding: 10px 18px;
+  border: 2px solid var(--blue);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+  color: var(--blue);
+  font-weight: 700;
+  z-index: 20;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .maru { animation: none; stroke-dashoffset: 0; }
+}
