@@ -64,10 +64,21 @@ button, input, select { font: inherit; color: inherit; }
 .view {
   max-width: 560px;
   margin: 0 auto;
-  padding: 16px 16px calc(88px + env(safe-area-inset-bottom));
+  padding: 16px 16px 24px;
 }
 
 body.in-practice .view { padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
+
+/* 頁尾授權註記，下方留出底部選單的高度 */
+.site-credit {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 0 16px calc(80px + env(safe-area-inset-bottom));
+  font-size: .78rem;
+  color: var(--ink-soft);
+  text-align: center;
+}
+body.in-practice .site-credit { display: none; }
 
 .loading, .muted { color: var(--ink-soft); }
 
@@ -548,6 +559,153 @@ body.in-practice .tabbar { display: none; }
   z-index: 20;
 }
 
+.btn-small { min-height: 40px; padding: 0 14px; font-size: .9rem; }
+.intro-strokes { text-align: center; margin: -6px 0 16px; }
+
+/* ---------- 書寫 ---------- */
+
+/* 書寫題畫面擋下 Chrome 的下拉重新整理（canvas 的 touch-action 單獨擋不住） */
+html.no-overscroll, html.no-overscroll body { overscroll-behavior: none; }
+
+.no-select, .no-select * {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.write-cue { display: flex; align-items: center; justify-content: center; margin: 0 0 14px; }
+.write-romaji { font-size: 2.6rem; font-weight: 500; letter-spacing: .04em; line-height: 1.2; }
+
+.seg {
+  display: flex;
+  width: min(80vw, 320px);
+  margin: 0 auto 14px;
+  border: 1.5px solid var(--grid);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.seg-btn {
+  flex: 1;
+  min-height: 44px;
+  border: none;
+  background: var(--paper-raised);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.seg-btn + .seg-btn { border-left: 1.5px solid var(--grid); }
+.seg-btn[aria-pressed="true"] { background: var(--blue); color: var(--blue-ink); font-weight: 700; }
+.seg-btn:focus-visible { outline: 3px solid var(--blue); outline-offset: -3px; }
+
+.paper-note {
+  text-align: center;
+  color: var(--ink-soft);
+  margin: 8px 0 16px;
+}
+
+/* 手寫田字格：螢幕寬 80%、最大 320px，左右保留空白避免觸發邊緣返回手勢 */
+.pad-wrap {
+  --pad-size: min(80vw, 320px);
+  position: relative;
+  width: var(--pad-size);
+  height: var(--pad-size);
+  margin: 0 auto 12px;
+  border: 2px solid var(--grid);
+  background: var(--paper-raised);
+}
+.pad-wrap::before, .pad-wrap::after { content: ""; position: absolute; pointer-events: none; }
+.pad-wrap::before { left: 50%; top: 0; bottom: 0; border-left: 1px dashed var(--grid); }
+.pad-wrap::after { top: 50%; left: 0; right: 0; border-top: 1px dashed var(--grid); }
+
+.pad {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  touch-action: none;
+  color: var(--ink);
+  cursor: crosshair;
+}
+
+/* 對答案時疊在筆跡上方的範字（30% 透明度），字級和題目田字格的比例一致 */
+.pad-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(var(--pad-size) / 1.5);
+  line-height: 1;
+  color: var(--blue);
+  opacity: .3;
+  pointer-events: none;
+}
+
+.pad-tools { margin-bottom: 10px; }
+
+.write-answer { margin-top: 4px; }
+.write-answer .note { text-align: center; color: var(--ink-soft); margin: 8px 0 0; }
+
+.model-row { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+.model-cell { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.model-cell figcaption { font-size: .85rem; color: var(--ink-soft); min-height: 40px; display: flex; align-items: center; }
+
+.board-small {
+  font-size: clamp(64px, 24vw, 100px);
+  margin: 0;
+}
+
+.stroke-box { cursor: pointer; }
+.stroke-box::before, .stroke-box::after { z-index: 0; }
+.stroke-missing { font-size: .8rem; color: var(--ink-soft); }
+
+.stroke-anim { position: relative; z-index: 1; width: 100%; height: 100%; }
+.stroke-anim path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.stroke-ghost path { stroke: var(--grid); stroke-width: 3; }
+.stroke-ink path {
+  stroke: var(--ink);
+  stroke-width: 3.5;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: stroke-draw .5s linear forwards;
+}
+.stroke-nums text {
+  font-family: var(--font-ui);
+  font-size: 9px;
+  font-weight: 700;
+  fill: var(--blue);
+  opacity: 0;
+  animation: stroke-num .01s linear forwards;
+}
+
+@keyframes stroke-draw { to { stroke-dashoffset: 0; } }
+@keyframes stroke-num { to { opacity: 1; } }
+
+.grade-prompt { text-align: center; margin: 18px 0 10px; color: var(--ink-soft); }
+.grade-buttons { display: grid; gap: 10px; }
+.grade-buttons .btn { position: relative; min-height: 56px; font-size: 1.05rem; }
+.grade-buttons .key {
+  position: absolute;
+  left: 12px;
+  font-size: .72rem;
+  font-weight: 400;
+  opacity: .7;
+  display: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .grade-buttons .key { display: block; }
+}
+
+.tally-2 { grid-template-columns: repeat(2, 1fr); }
+
+.chip-locked { border-style: dashed; color: var(--ink-soft); background: none; }
+.wdots { display: flex !important; justify-content: center; gap: 2px; margin-top: 4px !important; }
+.wdots i { width: 5px; height: 5px; border-radius: 50%; background: var(--grid); }
+.wdots i.on { background: var(--blue); }
+
 @media (prefers-reduced-motion: reduce) {
   .maru { animation: none; stroke-dashoffset: 0; }
+  .stroke-ink path { animation: none; stroke-dashoffset: 0; }
+  .stroke-nums text { animation: none; opacity: 1; }
 }

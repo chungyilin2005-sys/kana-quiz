@@ -167,3 +167,48 @@ export function streakDays(state, day) {
   }
   return n;
 }
+
+// ---------- 書寫軌 ----------
+
+// 認讀達到 2 級才開放書寫
+export const WRITE_OPEN_LEVEL = 2;
+
+// ぢ、づ（及片假名）與じ、ず同音，聽音或看拼音寫不出唯一答案，不出書寫題
+const NO_WRITE = new Set(['h-dji', 'h-dzu', 'k-dji', 'k-dzu']);
+
+export function canWrite(item) {
+  return hasReading(item) && !NO_WRITE.has(item.id);
+}
+
+export function writeLevel(state, id) {
+  return state.items[id]?.write?.level ?? 0;
+}
+
+export function writeOpen(item, state) {
+  return canWrite(item) && readLevel(state, item.id) >= WRITE_OPEN_LEVEL;
+}
+
+// 書寫自評三個按鈕對應的作答結果：寫對＝快且正確、大致對＝正確但慢（等級不變）、寫錯＝答錯
+const WRITE_GRADES = {
+  right: { correct: true, fast: true },
+  unsure: { correct: true, fast: false },
+  wrong: { correct: false, fast: false },
+};
+
+export function applyWrite(track, grade, day) {
+  return applyAnswer(track, WRITE_GRADES[grade], day);
+}
+
+// 今天要寫的字：到期的書寫複習在前，剛開放、還沒寫過的字排在後面
+export function dueWriteItems(items, state, day) {
+  const open = unlockedItems(items, state.unlocked).filter((it) => writeOpen(it, state));
+  const due = open
+    .filter((it) => isDue(state.items[it.id]?.write, day))
+    .sort((a, b) => {
+      const ta = state.items[a.id].write;
+      const tb = state.items[b.id].write;
+      return ta.due.localeCompare(tb.due) || ta.level - tb.level || a.order - b.order;
+    });
+  const fresh = open.filter((it) => writeLevel(state, it.id) === 0).sort((a, b) => a.order - b.order);
+  return [...due, ...fresh];
+}

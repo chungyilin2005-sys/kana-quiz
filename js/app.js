@@ -1,9 +1,10 @@
-// 路由與畫面。畫面用 hash 切換：#today、#practice、#settings（#write、#words、#stats 之後的階段加入）。
+// 路由與畫面。畫面用 hash 切換：#today、#practice、#write、#settings（#words、#stats 之後的階段加入）。
 
 import * as store from './storage.js';
 import * as srs from './srs.js';
 import * as quiz from './quiz.js';
 import * as tts from './tts.js';
+import * as write from './write.js';
 
 const CORRECT_PAUSE_MS = 600;
 const BACKUP_REMIND_DAYS = 7;
@@ -18,7 +19,14 @@ const PROMPTS = {
   C: (item) => `聽到的是哪個${scriptName(item.script)}？`,
   D: (item) => `選出對應的${scriptName(otherScript(item.script))}`,
   E: () => '輸入羅馬拼音',
+  F: (item) => `寫出${scriptName(item.script)}`,
 };
+
+const WRITE_GRADES = [
+  ['right', '寫對', 'btn btn-primary'],
+  ['unsure', '大致對但不確定', 'btn'],
+  ['wrong', '寫錯或想不起來', 'btn'],
+];
 
 let data;
 let index;
@@ -99,6 +107,8 @@ function setPage(route) {
   }
   keyHandler = null;
   tts.stop();
+  // 只有書寫題要擋下拉重新整理，其他畫面照常
+  document.documentElement.classList.remove('no-overscroll');
   view.replaceChildren();
   window.scrollTo(0, 0);
 }
@@ -141,7 +151,8 @@ function route() {
   const name = (location.hash || '#today').slice(1);
   if (name === 'practice') return session ? renderPractice() : go('today');
   if (name === 'settings') return renderSettings();
-  if (['write', 'words', 'stats'].includes(name)) return renderComingSoon(name);
+  if (name === 'write') return renderWritePage();
+  if (['words', 'stats'].includes(name)) return renderComingSoon(name);
   return renderToday();
 }
 
@@ -167,17 +178,18 @@ function renderToday() {
   }
 
   const due = srs.dueReadItems(data.items, state, day).length;
+  const writeDue = srs.dueWriteItems(data.items, state, day).length;
   const newAvail = srs.newItemsAvailable(data.items, state).length;
   const newToday = Math.min(srs.newQuotaLeft(state, day), newAvail);
   const streak = srs.streakDays(state, day);
-  const hasWork = due > 0 || newToday > 0;
+  const hasWork = due > 0 || newToday > 0 || writeDue > 0;
 
   const [y, m, d] = day.split('-').map(Number);
   const weekday = WEEKDAYS[new Date(y, m - 1, d).getDay()];
 
   const start = el('button', {
     class: 'btn btn-primary btn-big',
-    onclick: () => startRound(!hasWork),
+    onclick: () => startRound(hasWork ? 'today' : 'extra'),
   }, hasWork ? '開始今日練習' : '加練一回合');
 
   const learned = data.items.some((it) => srs.readLevel(state, it.id) > 0);
@@ -190,9 +202,9 @@ function renderToday() {
     backupReminder(day),
     el('div', { class: 'tally' },
       el('div', {},
-        el('span', { class: 'num' }, due),
+        el('span', { class: 'num' }, due + writeDue),
         el('span', { class: 'label' }, '待複習'),
-        el('span', { class: 'sub' }, '認讀 ', due, '・書寫 0'),
+        el('span', { class: 'sub' }, '認讀 ', due, '・書寫 ', writeDue),
       ),
       el('div', {},
         el('span', { class: 'num' }, newToday),
@@ -291,21 +303,26 @@ function levelChips(items) {
 
 // ---------- 練習回合 ----------
 
-async function startRound(extra) {
+// mode：today 今日練習、extra 加練、write 書寫頁的單獨練習
+async function startRound(mode = 'today') {
   // iOS 要在點擊當下先發聲一次，之後的語音才會出聲
   tts.unlock();
   await tts.ready();
 
   const day = srs.today();
   const opts = { enabledTypes: enabledTypes() };
-  const round = extra ? quiz.buildExtraRound(data, state, opts) : quiz.buildRound(data, state, day, opts);
+  let round;
+  if (mode === 'extra') round = quiz.buildExtraRound(data, state, opts);
+  else if (mode === 'write') round = quiz.buildWriteRound(data, state, day);
+  else round = quiz.buildRound(data, state, day, opts);
 
   if (!round.steps.length) {
     toast('目前沒有可以練習的字');
     return;
   }
-  session = new quiz.Session(round.steps, { extra });
+  session = new quiz.Session(round.steps, { extra: mode !== 'today' });
   session.introduced = new Set();
+  session.home = mode === 'write' ? 'write' : 'today';
   go('practice');
 }
 
@@ -326,14 +343,16 @@ function renderPractice() {
   );
 
   if (step.kind === 'intro') renderIntro(step);
+  else if (step.type === 'F') renderWrite(step);
   else renderQuestion(step);
 }
 
 function quitRound() {
   const answered = session.results.length;
   if (answered > 0 && !session.done && !confirm('結束這回合？已作答的進度都已儲存。')) return;
+  const home = session.home;
   session = null;
-  go('today');
+  go(home);
 }
 
 function nextStep() {
@@ -348,6 +367,10 @@ function introCard(item) {
     el('div', { class: 'board' }, boardChar(item.kana)),
     el('p', { class: reading ? 'intro-romaji' : 'intro-romaji intro-kind' },
       item.romaji, reading ? speakerButton(item.kana) : null),
+    reading && write.hasStrokeData(item.kana)
+      ? el('p', { class: 'intro-strokes' },
+        el('button', { class: 'btn btn-small', type: 'button', onclick: () => showStrokeCard(item) }, '看筆順'))
+      : null,
     item.note ? el('p', { class: 'intro-note' }, item.note) : null,
     item.confusables?.length
       ? el('div', { class: 'confusables' },
@@ -549,6 +572,212 @@ function renderQuestion(step) {
   else begin();
 }
 
+// ---------- 書寫題（F） ----------
+
+// 範字（Klee One）＋筆順動畫並排；拗音只有範字
+function modelBlock(item) {
+  const model = el('div', { class: 'board board-small' }, boardChar(item.kana));
+  const cells = [el('figure', { class: 'model-cell' }, model, el('figcaption', {}, '範字'))];
+  if (write.hasStrokeData(item.kana)) {
+    const box = el('div', { class: 'board board-small stroke-box' });
+    const replay = el('button', { class: 'btn btn-small', type: 'button', disabled: true }, '重播筆順');
+    cells.push(el('figure', { class: 'model-cell' }, box, el('figcaption', {}, replay)));
+    write.loadStrokes(item.kana).then((strokes) => {
+      const anim = write.strokeAnimation(strokes);
+      box.append(anim);
+      replay.disabled = false;
+      replay.addEventListener('click', () => anim.replay());
+      box.addEventListener('click', () => anim.replay());
+    }).catch(() => {
+      box.append(el('span', { class: 'stroke-missing' }, '筆順載入失敗'));
+    });
+  }
+  return { node: el('div', { class: 'model-row' }, cells), model };
+}
+
+function renderWrite(step) {
+  const item = index.byId.get(step.id);
+  const yoon = !write.hasStrokeData(item.kana);
+  document.documentElement.classList.add('no-overscroll');
+
+  let mode = state.settings.writeMode === 'screen' ? 'screen' : 'paper';
+  let pad = null;
+  let revealed = false;
+  let graded = false;
+
+  const MODES = [['paper', '紙筆'], ['screen', '螢幕手寫']];
+  const modeButtons = MODES.map(([m, label]) => el('button', {
+    class: 'seg-btn',
+    type: 'button',
+    'aria-pressed': String(m === mode),
+    onclick: () => {
+      if (m === mode) return;
+      mode = m;
+      state.settings.writeMode = m;
+      persist();
+      modeButtons.forEach((b, i) => b.setAttribute('aria-pressed', String(MODES[i][0] === mode)));
+      drawArea();
+    },
+  }, label));
+  const modeSwitch = el('div', { class: 'seg', role: 'group', 'aria-label': '書寫方式' }, modeButtons);
+
+  const area = el('div', { class: 'write-area' });
+  const actions = el('div', { class: 'write-actions' });
+  const reveal = el('button', { class: 'btn btn-primary btn-big', type: 'button', onclick: showAnswer }, '對答案');
+
+  mount(
+    el('p', { class: 'prompt' }, PROMPTS.F(item), yoon ? '（注意小字的位置和大小）' : ''),
+    el('div', { class: 'write-cue' },
+      el('span', { class: 'write-romaji', lang: 'en' }, item.romaji),
+      speakerButton(item.kana)),
+    modeSwitch,
+    area,
+    actions,
+  );
+
+  function drawArea() {
+    if (mode === 'paper') {
+      pad = null;
+      area.replaceChildren(el('p', { class: 'paper-note' }, '在紙上寫完，再按「對答案」。'));
+      actions.replaceChildren(reveal);
+      return;
+    }
+    const canvas = el('canvas', { class: 'pad', 'aria-label': '手寫區' });
+    const wrap = el('div', { class: 'pad-wrap no-select' }, canvas);
+    area.replaceChildren(wrap);
+    pad = new write.WritingPad(canvas);
+    const undo = el('button', { class: 'btn', type: 'button', disabled: true, onclick: () => pad.undo() }, '復原上一筆');
+    const clear = el('button', { class: 'btn', type: 'button', disabled: true, onclick: () => pad.clear() }, '清除');
+    pad.onChange((p) => { undo.disabled = p.isEmpty; clear.disabled = p.isEmpty; });
+    actions.replaceChildren(el('div', { class: 'btn-row pad-tools' }, undo, clear), reveal);
+  }
+
+  function showAnswer() {
+    if (revealed) return;
+    revealed = true;
+    modeSwitch.remove();
+
+    // 螢幕手寫：範字以 30% 透明度疊在筆跡上方，方便比對位置與比例
+    if (pad) {
+      pad.canvas.parentNode.append(el('span', { class: 'pad-overlay', lang: 'ja', 'aria-hidden': 'true' }, item.kana));
+    }
+    const { node, model } = modelBlock(item);
+    const buttons = WRITE_GRADES.map(([g, label, cls], i) => el('button', {
+      class: cls,
+      type: 'button',
+      onclick: () => grade(g, model),
+    }, el('span', { class: 'key', 'aria-hidden': 'true' }, i + 1), label));
+    actions.replaceChildren(
+      el('div', { class: 'write-answer no-select' }, node, item.note ? el('p', { class: 'note' }, item.note) : null),
+      el('p', { class: 'grade-prompt' }, '和範字比一比，你寫得如何？'),
+      el('div', { class: 'grade-buttons' }, buttons),
+    );
+    buttons[0].focus({ preventScroll: true });
+    actions.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    keyHandler = (e) => {
+      const n = Number(e.key);
+      if (n >= 1 && n <= WRITE_GRADES.length) { e.preventDefault(); grade(WRITE_GRADES[n - 1][0], model); }
+      else if (e.key === ' ') { e.preventDefault(); say(item.kana); }
+    };
+  }
+
+  function grade(g, model) {
+    if (graded) return;
+    graded = true;
+    keyHandler = null;
+    actions.querySelectorAll('.grade-buttons button').forEach((b) => { b.disabled = true; });
+    const day = srs.today();
+    const correct = g !== 'wrong';
+    const prog = (state.items[item.id] ||= {});
+    const wasNew = (prog.write?.level ?? 0) === 0;
+    const { track, leveledUp } = srs.applyWrite(prog.write, g, day);
+    prog.write = track;
+    if (leveledUp && !wasNew) session.leveledUp.push(item.id);
+
+    const log = dayLog(day);
+    log.q += 1;
+    if (correct) log.correct += 1;
+    session.record({ id: item.id, type: 'F', correct, ms: null, grade: g });
+    persist();
+
+    if (g === 'right') {
+      model.append(maruSvg());
+      setTimeout(nextStep, CORRECT_PAUSE_MS);
+    } else {
+      nextStep();
+    }
+  }
+
+  drawArea();
+  say(item.kana);
+  keyHandler = (e) => {
+    if (e.key === 'Enter' && document.activeElement?.tagName !== 'BUTTON') { e.preventDefault(); showAnswer(); }
+    else if (e.key === ' ') { e.preventDefault(); say(item.kana); }
+  };
+}
+
+function showStrokeCard(item) {
+  const dlg = document.getElementById('card-dialog');
+  const { node } = modelBlock(item);
+  document.getElementById('card-dialog-body').replaceChildren(
+    el('p', { class: 'intro-romaji' }, item.romaji, speakerButton(item.kana)),
+    el('div', { class: 'no-select' }, node),
+  );
+  if (!dlg.open) dlg.showModal();
+}
+
+// ---------- 書寫頁 ----------
+
+function renderWritePage() {
+  setPage('write');
+  const day = srs.today();
+  const open = srs.unlockedItems(data.items, state.unlocked).filter((it) => srs.writeOpen(it, state));
+  const due = srs.dueWriteItems(data.items, state, day).length;
+
+  const start = el('button', {
+    class: 'btn btn-primary btn-big',
+    disabled: !open.length,
+    onclick: () => startRound('write'),
+  }, due ? `開始書寫練習（${Math.min(due, quiz.WRITE_ROUND_SIZE)} 個字）` : '加練書寫');
+
+  const isDakuon = (it) => it.type === 'dakuon' || it.type === 'handakuon';
+  const groups = [
+    ['平假名', (it) => it.script === 'hira' && it.type === 'seion'],
+    ['片假名', (it) => it.script === 'kata' && it.type === 'seion'],
+    ['平假名濁音・半濁音', (it) => it.script === 'hira' && isDakuon(it)],
+    ['片假名濁音・半濁音', (it) => it.script === 'kata' && isDakuon(it)],
+  ];
+  const unlocked = new Set(state.unlocked);
+
+  mount(
+    el('header', { class: 'masthead' }, el('h1', {}, '書寫練習')),
+    el('p', { class: 'muted' }, '看拼音、聽讀音，自己寫出假名，再對照範字和筆順自評。建議用紙筆寫，也可以直接在螢幕上寫。'),
+    el('div', { class: 'tally tally-2' },
+      el('div', {}, el('span', { class: 'num' }, open.length), el('span', { class: 'label' }, '可以寫的字')),
+      el('div', {}, el('span', { class: 'num' }, due), el('span', { class: 'label' }, '今天要寫')),
+    ),
+    open.length ? null : el('p', { class: 'done-note' }, '認讀升到 2 級的字才會開放書寫，先去做今日練習吧。'),
+    start,
+    el('section', { class: 'section' },
+      el('h2', {}, '筆順表'),
+      el('p', { class: 'muted' }, '點字看筆順動畫。字下面的小點是書寫等級（0～5）。'),
+      groups.map(([title, test]) => el('div', { class: 'unit-group' },
+        el('h3', {}, title),
+        el('div', { class: 'chips' },
+          data.items.filter(test).map((it) => {
+            const level = srs.writeLevel(state, it.id);
+            return el('button', {
+              class: unlocked.has(it.unit) ? 'chip' : 'chip chip-locked',
+              lang: 'ja',
+              onclick: () => showStrokeCard(it),
+            }, it.kana, el('small', { class: 'wdots', 'aria-label': `書寫 ${level} 級` },
+              [1, 2, 3, 4, 5].map((n) => el('i', { class: n <= level ? 'on' : '' }))));
+          })),
+      )),
+    ),
+  );
+}
+
 function finishRound() {
   const day = srs.today();
   dayLog(day).rounds += 1;
@@ -564,7 +793,9 @@ function renderSummary() {
       item.kana, el('small', {}, item.romaji));
   };
 
-  const home = el('button', { class: 'btn btn-primary', onclick: () => { session = null; go('today'); } }, '回到首頁');
+  const back = session.home;
+  const home = el('button', { class: 'btn btn-primary', onclick: () => { session = null; go(back); } },
+    back === 'write' ? '回到書寫練習' : '回到首頁');
 
   mount(
     el('div', { class: 'result-head' },
@@ -789,7 +1020,7 @@ function ttsStatusBlock() {
 
 function renderComingSoon(name) {
   setPage(name);
-  const titles = { write: '書寫練習', words: '單字閱讀', stats: '統計' };
+  const titles = { words: '單字閱讀', stats: '統計' };
   mount(
     el('header', { class: 'masthead' }, el('h1', {}, titles[name])),
     el('p', { class: 'muted' }, '這個功能還在製作中。'),

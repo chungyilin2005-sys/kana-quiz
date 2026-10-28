@@ -10,6 +10,7 @@ export const DEFAULT_SETTINGS = {
   roundSize: 30,
   syncScripts: false,
   ttsRate: 0.8,
+  writeMode: 'paper',   // 書寫題：paper 紙筆、screen 螢幕手寫
 };
 
 export function load(key, fallback) {

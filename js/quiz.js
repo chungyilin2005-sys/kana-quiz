@@ -1,9 +1,11 @@
 // 出題、選項產生、判分、回合組成。純函式＋一個不碰 DOM 的 Session 類別。
 //
 // 題型代號沿用規格書：
-//   A 看假名選拼音、B 看拼音選假名、C 聽音選假名、D 平片對照、E 打字（看假名輸入拼音）
+//   A 看假名選拼音、B 看拼音選假名、C 聽音選假名、D 平片對照、E 打字（看假名輸入拼音）、F 書寫自評
 
-import { dueReadItems, hasReading, newItemsAvailable, newQuotaLeft, readLevel, unlockedItems } from './srs.js';
+import {
+  dueReadItems, dueWriteItems, hasReading, newItemsAvailable, newQuotaLeft, readLevel, unlockedItems, writeLevel, writeOpen,
+} from './srs.js';
 
 // ぢ、づ（及片假名）與じ、ず同音：不出「看拼音選假名」與「聽音選假名」
 const NO_ROMAJI_TO_KANA = new Set(['h-dji', 'h-dzu', 'k-dji', 'k-dzu']);
@@ -13,6 +15,10 @@ const NO_LISTENING = new Set([...NO_ROMAJI_TO_KANA, 'h-wo', 'k-wo']);
 export const ALL_TYPES = ['A', 'B', 'C', 'D', 'E'];
 
 const MAX_REVIEWS = 20;
+const MAX_WRITES = 8;
+// 書寫題先保留名額（最多佔回合的四分之一），避免認讀複習一多就永遠輪不到書寫
+const WRITE_SHARE = 0.25;
+export const WRITE_ROUND_SIZE = 10;
 const MAX_REQUEUE_PER_ITEM = 3;
 
 export function shuffle(arr, rng = Math.random) {
@@ -137,18 +143,19 @@ export function buildChoices(item, type, { data, index, state, rng = Math.random
   return { options, answerIndex: options.findIndex((o) => o.correct), target };
 }
 
-// 組成今日回合：到期 read 複習（最多 20）→ 新字（認識卡＋2 題簡單題）。
-// 書寫複習與單字補題在之後的階段加入。
+// 組成今日回合：到期 read 複習（最多 20）→ 新字（認識卡＋2 題簡單題）→ 到期 write 複習（最多 8）。
+// 單字補題在階段四加入。
 export function buildRound(data, state, day, { rng = Math.random, enabledTypes = ALL_TYPES } = {}) {
   const size = state.settings.roundSize;
-  const reviews = shuffle(dueReadItems(data.items, state, day).slice(0, Math.min(MAX_REVIEWS, size)), rng);
+  const writes = dueWriteItems(data.items, state, day).slice(0, Math.min(MAX_WRITES, Math.ceil(size * WRITE_SHARE)));
+  const reviews = shuffle(dueReadItems(data.items, state, day).slice(0, Math.min(MAX_REVIEWS, size - writes.length)), rng);
   const steps = [];
   for (const it of reviews) {
     const type = pickType(it, readLevel(state, it.id), rng, enabledTypes, state);
     if (type) steps.push({ kind: 'q', id: it.id, type });
   }
 
-  let budget = size - steps.length;
+  let budget = size - steps.length - writes.length;
   let quota = newQuotaLeft(state, day);
   const newIds = [];
   for (const it of newItemsAvailable(data.items, state)) {
@@ -161,8 +168,21 @@ export function buildRound(data, state, day, { rng = Math.random, enabledTypes =
     quota -= 1;
   }
   steps.push(...newItemSteps(newIds.map((id) => data.items.find((it) => it.id === id)), enabledTypes));
+  steps.push(...shuffle(writes, rng).map((it) => ({ kind: 'q', id: it.id, type: 'F' })));
 
   return { steps, newIds };
+}
+
+// 書寫頁的單獨練習：先寫到期的字；都寫完了就挑書寫等級低的字加練
+export function buildWriteRound(data, state, day, { rng = Math.random } = {}) {
+  let list = dueWriteItems(data.items, state, day);
+  if (!list.length) {
+    list = unlockedItems(data.items, state.unlocked)
+      .filter((it) => writeOpen(it, state))
+      .sort((a, b) => writeLevel(state, a.id) - writeLevel(state, b.id) || rng() - 0.5);
+  }
+  const steps = shuffle(list.slice(0, WRITE_ROUND_SIZE), rng).map((it) => ({ kind: 'q', id: it.id, type: 'F' }));
+  return { steps, newIds: [] };
 }
 
 // 新字穿插：認識卡 n1、簡單題 n1、認識卡 n2、簡單題 n2、第二題 n1、認識卡 n3…，第二題隔幾題再考，效果比緊接著好

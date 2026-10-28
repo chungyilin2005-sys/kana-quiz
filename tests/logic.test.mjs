@@ -7,6 +7,7 @@ import { readFileSync } from 'node:fs';
 
 import * as srs from '../js/srs.js';
 import * as quiz from '../js/quiz.js';
+import * as write from '../js/write.js';
 import { freshState } from '../js/storage.js';
 
 const data = JSON.parse(readFileSync(new URL('../data/kana-data.json', import.meta.url), 'utf8'));
@@ -237,7 +238,110 @@ test('今日回合：到期複習在前，最多 20 題', () => {
   for (const it of data.items.filter((x) => hiraSeion(data.units.find((u) => u.unit === x.unit)))) {
     state.items[it.id] = { read: { level: 3, due: '2026-10-27' } };
   }
-  const { steps } = quiz.buildRound(data, state, day, { rng: seeded(2) });
-  assert.equal(steps.length, 20);
-  assert.ok(steps.every((s) => s.kind === 'q' && quiz.ALL_TYPES.includes(s.type)));
+  const reads = quiz.buildRound(data, state, day, { rng: seeded(2) }).steps.filter((s) => s.type !== 'F');
+  assert.equal(reads.length, 20);
+  assert.ok(reads.every((s) => s.kind === 'q' && quiz.ALL_TYPES.includes(s.type)));
+});
+
+// ---------- 書寫（階段三） ----------
+
+test('書寫軌：認讀 2 級才開放；ぢ、づ、ヂ、ヅ 與促音、長音不出書寫題', () => {
+  const state = stateWith(data.units.map((u) => u.unit));
+  const nu = index.byId.get('h-nu');
+  state.items['h-nu'] = { read: { level: 1 } };
+  assert.equal(srs.writeOpen(nu, state), false);
+  state.items['h-nu'].read.level = 2;
+  assert.equal(srs.writeOpen(nu, state), true);
+  for (const id of ['h-dji', 'h-dzu', 'k-dji', 'k-dzu', 'h-sokuon', 'k-sokuon', 'k-chouon']) {
+    assert.equal(srs.canWrite(index.byId.get(id)), false, id);
+  }
+  assert.equal(srs.canWrite(index.byId.get('h-kya')), true, '拗音考小字位置');
+});
+
+test('書寫自評：寫對升級、大致對不變、寫錯回 1 級；同一天只升一次', () => {
+  let t = srs.applyWrite({ level: 2, due: '2026-10-28' }, 'right', '2026-10-28').track;
+  assert.equal(t.level, 3);
+  assert.equal(t.due, '2026-10-31');
+  t = srs.applyWrite(t, 'right', '2026-10-28').track;
+  assert.equal(t.level, 3, '同一天不再升');
+  t = srs.applyWrite(t, 'unsure', '2026-10-31').track;
+  assert.equal(t.level, 3);
+  t = srs.applyWrite(t, 'wrong', '2026-10-31').track;
+  assert.equal(t.level, 1);
+  assert.equal(srs.applyWrite(undefined, 'unsure', '2026-10-28').track.level, 1, '第一次寫就進排程');
+});
+
+test('今天要寫的字：到期的在前、剛開放的在後，未到期的不列入', () => {
+  const day = '2026-10-28';
+  const state = stateWith(['hira-a']);
+  for (const it of data.items.filter((x) => x.unit === 'hira-a')) state.items[it.id] = { read: { level: 3 } };
+  state.items['h-a'].write = { level: 2, due: '2026-10-30' };
+  state.items['h-i'].write = { level: 1, due: '2026-10-27' };
+  state.items['h-u'].read.level = 1;
+  const ids = srs.dueWriteItems(data.items, state, day).map((it) => it.id);
+  assert.deepEqual(ids, ['h-i', 'h-e', 'h-o']);
+});
+
+test('今日回合：書寫題排在最後、最多 8 題，認讀複習很多時也保留名額', () => {
+  const day = '2026-10-28';
+  const units = data.units.filter(hiraSeion).map((u) => u.unit);
+  const state = stateWith(units);
+  for (const it of data.items.filter((x) => units.includes(x.unit))) {
+    state.items[it.id] = { read: { level: 3, due: '2026-10-27' } };
+  }
+  const { steps } = quiz.buildRound(data, state, day, { rng: seeded(5) });
+  assert.equal(steps.length, 28, '認讀複習 20 題＋書寫 8 題');
+  const w = steps.filter((s) => s.type === 'F');
+  assert.equal(w.length, 8);
+  assert.ok(steps.slice(-8).every((s) => s.type === 'F'), '書寫在最後');
+  assert.ok(w.every((s) => srs.writeOpen(index.byId.get(s.id), state)));
+  assert.equal(steps.filter((s) => s.type !== 'F').length, 20);
+
+  // 20 題的回合只保留 5 題給書寫
+  state.settings.roundSize = 20;
+  const small = quiz.buildRound(data, state, day, { rng: seeded(5) }).steps;
+  assert.equal(small.filter((s) => s.type === 'F').length, 5);
+  assert.equal(small.length, 20);
+
+  // 認讀都沒到 2 級時沒有書寫題
+  const beginner = stateWith(['hira-a']);
+  assert.equal(quiz.buildRound(data, beginner, day).steps.filter((s) => s.type === 'F').length, 0);
+});
+
+test('書寫頁練習：先寫到期的，都寫完就挑等級低的字加練', () => {
+  const day = '2026-10-28';
+  const state = stateWith(['hira-a']);
+  for (const it of data.items.filter((x) => x.unit === 'hira-a')) {
+    state.items[it.id] = { read: { level: 3 }, write: { level: 3, due: '2026-11-01' } };
+  }
+  state.items['h-e'].write.due = '2026-10-28';
+  assert.deepEqual(quiz.buildWriteRound(data, state, day).steps.map((s) => s.id), ['h-e']);
+  state.items['h-e'].write.due = '2026-11-01';
+  const extra = quiz.buildWriteRound(data, state, day, { rng: seeded(2) }).steps;
+  assert.equal(extra.length, 5);
+  assert.ok(extra.every((s) => s.type === 'F'));
+});
+
+test('答錯的書寫題同回合再考一次', () => {
+  const steps = Array.from({ length: 8 }, (_, i) => ({ kind: 'q', id: `w${i}`, type: 'F' }));
+  const s = new quiz.Session(steps, { rng: seeded(3) });
+  s.record({ id: 'w0', type: 'F', correct: false });
+  const again = s.steps.findIndex((st, i) => i > 0 && st.id === 'w0');
+  assert.ok(again >= 3 && again <= 5);
+  assert.equal(s.steps[again].type, 'F');
+});
+
+test('KanjiVG 筆順檔：142 個清音、濁音、半濁音都在，筆數與筆順數字一致', () => {
+  const kana = data.items.filter((it) => ['seion', 'dakuon', 'handakuon'].includes(it.type));
+  assert.equal(kana.length, 142);
+  assert.equal(write.strokeFile('あ'), 'strokes/03042.svg');
+  for (const it of kana) {
+    const svg = readFileSync(new URL(`../${write.strokeFile(it.kana)}`, import.meta.url), 'utf8');
+    const strokes = write.parseKanjiVG(svg);
+    assert.ok(strokes.length >= 1, it.kana);
+    assert.ok(strokes.every((st) => st.d.startsWith('M') && st.label), it.kana);
+  }
+  assert.equal(write.parseKanjiVG(readFileSync(new URL('../strokes/03042.svg', import.meta.url), 'utf8')).length, 3, 'あ 三筆');
+  assert.equal(write.parseKanjiVG(readFileSync(new URL('../strokes/03071.svg', import.meta.url), 'utf8')).length, 4, 'ぱ 四筆');
+  assert.equal(write.hasStrokeData('きゃ'), false);
 });

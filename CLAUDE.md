@@ -4,8 +4,8 @@
 
 ## 目前進度
 
-- 階段一、二已完成並上線：<https://chungyilin2005-sys.github.io/kana-quiz/>
-- 下一步：階段三（書寫模式、KanjiVG 筆順、write 軌排進今日練習）
+- 階段一、二、三已完成並上線：<https://chungyilin2005-sys.github.io/kana-quiz/>
+- 下一步：階段四（單字閱讀、長音 normalize、統計頁）
 - repo：<https://github.com/chungyilin2005-sys/kana-quiz>，部署方式為 GitHub Pages（main 分支、根目錄）
 
 ## 工作流程
@@ -18,7 +18,7 @@
 
 ## 程式結構
 
-- `js/srs.js`、`js/quiz.js` 是純函式（不碰 DOM、localStorage），測試直接 import；畫面邏輯都在 `js/app.js`。
+- `js/srs.js`、`js/quiz.js` 是純函式；`js/write.js` 的 `parseKanjiVG` 也是純函式，其餘（筆順動畫、`WritingPad`）才碰 DOM（不碰 DOM、localStorage），測試直接 import；畫面邏輯都在 `js/app.js`。
 - `app.js` 用 `el()` 建 DOM、`mount()` 掛到畫面（會濾掉 null）；`replaceChildren` 不會濾 null，傳入前要自己 filter。
 - 狀態存在 localStorage 的 `kanaQuiz:state`，結構見 `js/storage.js` 的 `freshState()`。
 
@@ -32,10 +32,15 @@
 - D（平片對照）只有在對應的另一種假名已經學過（read 等級 > 0）時才出。
 - 語音挑選優先順序：Edge 的 Natural／Online 神經語音 → Google 日語 → 名稱含 Japanese／日本語 → 其他 ja 語音。
 - 「記住」＝ read 等級 ≥ 3；首頁用 3 格顯示每個未記住字的等級，並有白話說明。
+- 書寫題（F）：write 等級 0 的字（剛開放、還沒寫過）也算「今天要寫」，排在到期的書寫題後面。今日練習先保留書寫名額：最多 8 題且不超過回合題數的 1/4（20 題回合留 5 題），剩下的才給認讀複習與新字。
+- 書寫自評對應：寫對＝快且正確、大致對＝正確但慢、寫錯＝答錯，沿用 `applyAnswer`（同一天只升一次）。ぢ、づ、ヂ、ヅ 與促音、長音不出書寫題；拗音出，但只顯示範字不放筆順動畫。
+- 書寫頁（#write）的單獨練習一回合 10 個字；都寫完時挑書寫等級低的字加練。紙筆／螢幕手寫的選擇記在 `settings.writeMode`。
+- 下拉重新整理只在書寫題畫面擋（`html.no-overscroll`，`setPage` 會移除），其他畫面照常可以下拉。
 
 ## 測試注意
 
 - 這台 Windows 沒有日語語音，聽音題會被自動隱藏。要測聽音題畫面，在頁面裡改寫 `speechSynthesis.getVoices` 回傳一個假的 `ja-JP` 語音，再觸發 `voiceschanged` 事件。
 - 內建瀏覽器在背景時 `requestAnimationFrame` 可能不觸發，反應時間有以 `performance.now()` 先記一次的保底。
+- 測螢幕手寫可以對 canvas `dispatchEvent(new PointerEvent(...))`；本機預覽若 8000 被占用會改用別的 port，確認 server 真的有起來。
 - 測試完記得清掉 localStorage 的 `kanaQuiz:` 資料。
 - 使用者主要裝置是 Android（Chrome）；手機版 Edge 沒有語音。
