@@ -41,14 +41,58 @@ test('考ぬ時，干擾選項包含 め、ね、あ 之中至少兩個', () => 
   }
 });
 
-test('「看拼音選假名」不會出 ぢ、づ、ヂ、ヅ', () => {
+test('「看拼音選假名」與聽音題不會出 ぢ、づ、ヂ、ヅ', () => {
   for (const id of ['h-dji', 'h-dzu', 'k-dji', 'k-dzu']) {
     const item = index.byId.get(id);
     assert.equal(quiz.canAsk(item, 'B'), false);
+    assert.equal(quiz.canAsk(item, 'C'), false);
     for (let seed = 1; seed <= 200; seed++) {
-      assert.notEqual(quiz.pickType(item, 4, seeded(seed)), 'B');
+      const t = quiz.pickType(item, 4, seeded(seed));
+      assert.ok(t !== 'B' && t !== 'C', t);
     }
   }
+  // 新字的第二題也不能是 B／C
+  const state = stateWith(['hira-dakuon']);
+  state.settings.newPerDay = 30;
+  const { steps } = quiz.buildRound(data, state, '2026-10-28', { rng: seeded(4) });
+  const bad = steps.filter((s) => ['h-dji', 'h-dzu'].includes(s.id) && ['B', 'C'].includes(s.type));
+  assert.deepEqual(bad, []);
+});
+
+test('平片對照（D）：對應字學過才出，選項全是另一種假名且含形近字', () => {
+  const state = stateWith(['hira-a', 'hira-na', 'kata-a', 'kata-na']);
+  const nu = index.byId.get('h-nu');
+  assert.equal(quiz.canAsk(nu, 'D', state), false);
+  state.items['k-nu'] = { read: { level: 1, due: '2026-10-29' } };
+  assert.equal(quiz.canAsk(nu, 'D', state), true);
+  for (let seed = 1; seed <= 30; seed++) {
+    const { options, target } = quiz.buildChoices(nu, 'D', { data, index, state, rng: seeded(seed) });
+    assert.equal(target.id, 'k-nu');
+    assert.equal(options.find((o) => o.correct).label, 'ヌ');
+    assert.ok(options.every((o) => o.id ? index.byId.get(o.id).script === 'kata' : true));
+    const conf = index.byId.get('k-nu').confusables.map((c) => c.kana);
+    assert.ok(options.filter((o) => conf.includes(o.label)).length >= 2);
+  }
+  assert.equal(quiz.canAsk(index.byId.get('k-chouon'), 'D', state), false);
+});
+
+test('誤選紀錄只用同一種假名補干擾項', () => {
+  const state = stateWith(['hira-a', 'kata-a']);
+  state.items['h-a'] = { wrongWith: { 'k-a': 9, 'k-i': 9 } };
+  for (let seed = 1; seed <= 20; seed++) {
+    const { options } = quiz.buildChoices(index.byId.get('h-a'), 'B', { data, index, state, rng: seeded(seed) });
+    assert.ok(options.every((o) => !/[ァ-ヶ]/.test(o.label)), options.map((o) => o.label).join(','));
+  }
+});
+
+test('特殊符號：只出說明卡，看過就不再當新字', () => {
+  const day = '2026-10-28';
+  const state = stateWith(['special']);
+  const { steps, newIds } = quiz.buildRound(data, state, day, { rng: seeded(1) });
+  assert.deepEqual(newIds, ['h-sokuon', 'k-sokuon', 'k-chouon']);
+  assert.ok(steps.every((s) => s.kind === 'intro'));
+  for (const id of newIds) state.items[id] = { seen: day };
+  assert.equal(srs.newItemsAvailable(data.items, state).length, 0);
 });
 
 test('選項不出現與正解同音的字（を／お、じ／ぢ）', () => {
@@ -157,10 +201,11 @@ test('已解鎖項目 read 皆 ≥ 3 時，自動解鎖下一行', () => {
   assert.deepEqual(srs.autoUnlock(data, state, { enabled: hiraSeion }), []);
 });
 
-test('階段一不會解鎖到平假名清音以外的單位', () => {
-  const state = stateWith(data.units.filter(hiraSeion).map((u) => u.unit));
-  for (const it of data.items) state.items[it.id] = { read: { level: 5 } };
-  assert.deepEqual(srs.autoUnlock(data, state, { enabled: hiraSeion }), []);
+test('全部單位都解鎖後不再解鎖；特殊符號不擋解鎖', () => {
+  const state = stateWith(data.units.map((u) => u.unit));
+  for (const it of data.items) if (srs.hasReading(it)) state.items[it.id] = { read: { level: 5 } };
+  assert.ok(srs.readyToUnlock(data.items, state), '促音、長音沒有 read 等級也不影響');
+  assert.deepEqual(srs.autoUnlock(data, state), []);
 });
 
 test('平片同步學：同一行一起解鎖', () => {
@@ -194,5 +239,5 @@ test('今日回合：到期複習在前，最多 20 題', () => {
   }
   const { steps } = quiz.buildRound(data, state, day, { rng: seeded(2) });
   assert.equal(steps.length, 20);
-  assert.ok(steps.every((s) => s.kind === 'q' && ['A', 'B', 'E'].includes(s.type)));
+  assert.ok(steps.every((s) => s.kind === 'q' && quiz.ALL_TYPES.includes(s.type)));
 });

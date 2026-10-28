@@ -14,6 +14,13 @@ export const FAST_MS = { choice: 2500, typing: 4000 };
 // 解鎖下一單位所需的 read 等級
 export const UNLOCK_LEVEL = 3;
 
+// 促音、長音沒有單獨讀音：只看說明卡，不進認讀排程，也不擋解鎖
+const NO_READING_TYPES = new Set(['sokuon', 'chouon']);
+
+export function hasReading(item) {
+  return !NO_READING_TYPES.has(item.type);
+}
+
 const pad = (n) => String(n).padStart(2, '0');
 const ymd = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 
@@ -102,7 +109,7 @@ export function unlockedItems(items, unlocked) {
 
 // 所有已解鎖項目的 read 等級都 ≥ 3 才能解鎖下一單位
 export function readyToUnlock(items, state) {
-  const list = unlockedItems(items, state.unlocked);
+  const list = unlockedItems(items, state.unlocked).filter(hasReading);
   return list.length > 0 && list.every((it) => readLevel(state, it.id) >= UNLOCK_LEVEL);
 }
 
@@ -124,7 +131,8 @@ export function manualUnlock(data, state, opts = {}) {
 
 // 還沒解鎖下一單位前，有幾個已解鎖的字未達 3 級
 export function itemsBelowUnlock(items, state) {
-  return unlockedItems(items, state.unlocked).filter((it) => readLevel(state, it.id) < UNLOCK_LEVEL).length;
+  return unlockedItems(items, state.unlocked)
+    .filter((it) => hasReading(it) && readLevel(state, it.id) < UNLOCK_LEVEL).length;
 }
 
 export function dueReadItems(items, state, day) {
@@ -139,7 +147,7 @@ export function dueReadItems(items, state, day) {
 
 export function newItemsAvailable(items, state) {
   return unlockedItems(items, state.unlocked)
-    .filter((it) => readLevel(state, it.id) === 0)
+    .filter((it) => readLevel(state, it.id) === 0 && !state.items[it.id]?.seen)
     .sort((a, b) => a.order - b.order);
 }
 

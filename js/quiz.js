@@ -1,15 +1,16 @@
 // 出題、選項產生、判分、回合組成。純函式＋一個不碰 DOM 的 Session 類別。
 //
 // 題型代號沿用規格書：
-//   A 看假名選拼音、B 看拼音選假名、E 打字（看假名輸入拼音）
-//   C 聽音選假名、D 平片對照（階段二）
+//   A 看假名選拼音、B 看拼音選假名、C 聽音選假名、D 平片對照、E 打字（看假名輸入拼音）
 
-import { dueReadItems, newItemsAvailable, newQuotaLeft, readLevel, unlockedItems } from './srs.js';
+import { dueReadItems, hasReading, newItemsAvailable, newQuotaLeft, readLevel, unlockedItems } from './srs.js';
 
-// ぢ、づ（及片假名）與じ、ず同音：不出「看拼音選假名」
+// ぢ、づ（及片假名）與じ、ず同音：不出「看拼音選假名」與「聽音選假名」
 const NO_ROMAJI_TO_KANA = new Set(['h-dji', 'h-dzu', 'k-dji', 'k-dzu']);
-// 促音、長音沒有單獨讀音，不出拼音類題型
-const NO_READING_TYPES = new Set(['sokuon', 'chouon']);
+// を 的語音念成 o，和 お 聽起來一樣，不出聽音題
+const NO_LISTENING = new Set([...NO_ROMAJI_TO_KANA, 'h-wo', 'k-wo']);
+
+export const ALL_TYPES = ['A', 'B', 'C', 'D', 'E'];
 
 const MAX_REVIEWS = 20;
 const MAX_REQUEUE_PER_ITEM = 3;
@@ -43,21 +44,33 @@ export function sameReading(a, b) {
   return false;
 }
 
-export function canAsk(item, type) {
-  if (NO_READING_TYPES.has(item.type)) return false;
-  if (type === 'B') return !NO_ROMAJI_TO_KANA.has(item.id);
-  return type === 'A' || type === 'E';
+// 這個字能不能出某種題型。D 需要對應的另一種假名已經學過（傳入 state 才判斷得了）
+export function canAsk(item, type, state) {
+  if (!hasReading(item)) return false;
+  switch (type) {
+    case 'A':
+    case 'E':
+      return true;
+    case 'B':
+      return !NO_ROMAJI_TO_KANA.has(item.id);
+    case 'C':
+      return !NO_LISTENING.has(item.id);
+    case 'D':
+      return !!item.pair && !!state && readLevel(state, item.pair) > 0;
+    default:
+      return false;
+  }
 }
 
-// 等級 1～2 多出 A；等級 3 以上多出 B 與打字
+// 等級 1～2 多出 A 與 C；等級 3 以上多出 B 與打字
 const TYPE_WEIGHTS = {
-  low: { A: 6, B: 2, E: 2 },
-  high: { A: 2, B: 4, E: 4 },
+  low: { A: 5, C: 3, B: 1, D: 1, E: 1 },
+  high: { A: 1, C: 1, B: 3, D: 2, E: 3 },
 };
 
-export function pickType(item, level, rng = Math.random, enabled = ['A', 'B', 'E']) {
+export function pickType(item, level, rng = Math.random, enabled = ALL_TYPES, state = null) {
   const weights = level >= 3 ? TYPE_WEIGHTS.high : TYPE_WEIGHTS.low;
-  const choices = enabled.filter((t) => weights[t] && canAsk(item, t));
+  const choices = enabled.filter((t) => weights[t] && canAsk(item, t, state));
   if (!choices.length) return null;
   const total = choices.reduce((s, t) => s + weights[t], 0);
   let r = rng() * total;
@@ -74,37 +87,46 @@ export function indexData(data) {
   return { byId, byKana };
 }
 
+// 題目要選出的那個字：D 是對應的另一種假名，其他題型是字本身
+export function targetOf(item, type, index) {
+  return type === 'D' ? index.byId.get(item.pair) : item;
+}
+
+// 濁音與半濁音視為同一類，補干擾項時一起用
+const kindOf = (it) => (it.type === 'handakuon' ? 'dakuon' : it.type);
+
 // 4 個選項。干擾項依序取：形近字 → 使用者最常誤選的字 → 同單位已解鎖字 → 同類已解鎖字 → 同類任一字。
 // 選項不重複，也不放與正解同音的字。
 export function buildChoices(item, type, { data, index, state, rng = Math.random }) {
+  const target = targetOf(item, type, index);
   const field = type === 'A' ? 'romaji' : 'kana';
   const toEntry = (it) => ({ kana: it.kana, romaji: it.romaji, accept: it.accept, id: it.id });
   const fromConfusable = (c) => {
     const known = index.byKana.get(c.kana);
     return known ? toEntry(known) : { kana: c.kana, romaji: c.romaji, accept: [c.romaji] };
   };
-  const sameKind = (it) => it.id !== item.id && it.script === item.script && it.type === item.type;
+  const sameKind = (it) => it.id !== target.id && it.script === target.script && kindOf(it) === kindOf(target);
   const unlocked = unlockedItems(data.items, state.unlocked);
-  const wrongWith = Object.entries(state.items[item.id]?.wrongWith || {})
+  const wrongWith = Object.entries(state.items[target.id]?.wrongWith || {})
     .sort((a, b) => b[1] - a[1])
     .map(([id]) => index.byId.get(id))
-    .filter(Boolean);
+    .filter((it) => it && it.script === target.script);
 
   const pools = [
-    shuffle(item.confusables || [], rng).map(fromConfusable),
+    shuffle(target.confusables || [], rng).map(fromConfusable),
     wrongWith.map(toEntry),
-    shuffle(unlocked.filter((it) => sameKind(it) && it.unit === item.unit), rng).map(toEntry),
+    shuffle(unlocked.filter((it) => sameKind(it) && it.unit === target.unit), rng).map(toEntry),
     shuffle(unlocked.filter(sameKind), rng).map(toEntry),
     shuffle(data.items.filter(sameKind), rng).map(toEntry),
   ];
 
-  const answer = toEntry(item);
+  const answer = toEntry(target);
   const used = new Set([answer[field]]);
   const distractors = [];
   for (const pool of pools) {
     for (const cand of pool) {
       if (distractors.length === 3) break;
-      if (used.has(cand[field]) || sameReading(cand, item)) continue;
+      if (used.has(cand[field]) || sameReading(cand, target)) continue;
       used.add(cand[field]);
       distractors.push(cand);
     }
@@ -112,51 +134,63 @@ export function buildChoices(item, type, { data, index, state, rng = Math.random
 
   const options = shuffle([{ ...answer, correct: true }, ...distractors.map((d) => ({ ...d, correct: false }))], rng)
     .map((o) => ({ ...o, label: o[field] }));
-  return { options, answerIndex: options.findIndex((o) => o.correct) };
+  return { options, answerIndex: options.findIndex((o) => o.correct), target };
 }
 
 // 組成今日回合：到期 read 複習（最多 20）→ 新字（認識卡＋2 題簡單題）。
 // 書寫複習與單字補題在之後的階段加入。
-export function buildRound(data, state, day, { rng = Math.random, enabledTypes } = {}) {
+export function buildRound(data, state, day, { rng = Math.random, enabledTypes = ALL_TYPES } = {}) {
   const size = state.settings.roundSize;
   const reviews = shuffle(dueReadItems(data.items, state, day).slice(0, Math.min(MAX_REVIEWS, size)), rng);
   const steps = [];
   for (const it of reviews) {
-    const type = pickType(it, readLevel(state, it.id), rng, enabledTypes);
+    const type = pickType(it, readLevel(state, it.id), rng, enabledTypes, state);
     if (type) steps.push({ kind: 'q', id: it.id, type });
   }
 
-  const budget = size - steps.length;
-  const fresh = newItemsAvailable(data.items, state).filter((it) => canAsk(it, 'A'));
-  const newCount = Math.min(newQuotaLeft(state, day), Math.floor(budget / 2), fresh.length);
-  const newIds = fresh.slice(0, newCount).map((it) => it.id);
-  steps.push(...newItemSteps(newIds));
+  let budget = size - steps.length;
+  let quota = newQuotaLeft(state, day);
+  const newIds = [];
+  for (const it of newItemsAvailable(data.items, state)) {
+    if (quota <= 0) break;
+    // 促音、長音只有說明卡，不佔題數
+    const cost = hasReading(it) ? 2 : 0;
+    if (cost > budget) break;
+    newIds.push(it.id);
+    budget -= cost;
+    quota -= 1;
+  }
+  steps.push(...newItemSteps(newIds.map((id) => data.items.find((it) => it.id === id)), enabledTypes));
 
   return { steps, newIds };
 }
 
-// 新字穿插：認識卡 n1、A n1、認識卡 n2、A n2、B n1、認識卡 n3…，第二題隔幾題再考，效果比緊接著好
-function newItemSteps(ids) {
+// 新字穿插：認識卡 n1、簡單題 n1、認識卡 n2、簡單題 n2、第二題 n1、認識卡 n3…，第二題隔幾題再考，效果比緊接著好
+function newItemSteps(items, enabledTypes) {
   const steps = [];
-  ids.forEach((id, i) => {
-    steps.push({ kind: 'intro', id });
-    steps.push({ kind: 'q', id, type: 'A', isNew: true });
-    if (i > 0) steps.push(secondEasy(ids[i - 1]));
-  });
-  if (ids.length) steps.push(secondEasy(ids[ids.length - 1]));
+  let pending = null;
+  for (const it of items) {
+    steps.push({ kind: 'intro', id: it.id });
+    if (!hasReading(it)) continue;
+    steps.push({ kind: 'q', id: it.id, type: 'A', isNew: true });
+    if (pending) steps.push(secondEasy(pending, enabledTypes));
+    pending = it;
+  }
+  if (pending) steps.push(secondEasy(pending, enabledTypes));
   return steps;
 }
 
-function secondEasy(id) {
-  // ぢ、づ不出 B，退回 A
-  return { kind: 'q', id, type: NO_ROMAJI_TO_KANA.has(id) ? 'A' : 'B', isNew: true };
+function secondEasy(item, enabledTypes) {
+  // 有語音就聽音選字，否則看拼音選字；ぢ、づ兩者都不出，退回 A
+  const type = ['C', 'B'].find((t) => enabledTypes.includes(t) && canAsk(item, t)) || 'A';
+  return { kind: 'q', id: item.id, type, isNew: true };
 }
 
 // 今日任務做完後的加練：挑等級低、較早到期的已學字
-export function buildExtraRound(data, state, { rng = Math.random, enabledTypes } = {}) {
+export function buildExtraRound(data, state, { rng = Math.random, enabledTypes = ALL_TYPES } = {}) {
   const size = state.settings.roundSize;
   const learned = unlockedItems(data.items, state.unlocked)
-    .filter((it) => readLevel(state, it.id) > 0 && canAsk(it, 'A'))
+    .filter((it) => readLevel(state, it.id) > 0 && hasReading(it))
     .sort((a, b) => {
       const ta = state.items[a.id].read;
       const tb = state.items[b.id].read;
@@ -164,7 +198,7 @@ export function buildExtraRound(data, state, { rng = Math.random, enabledTypes }
     })
     .slice(0, size);
   const steps = shuffle(learned, rng)
-    .map((it) => ({ kind: 'q', id: it.id, type: pickType(it, readLevel(state, it.id), rng, enabledTypes) }))
+    .map((it) => ({ kind: 'q', id: it.id, type: pickType(it, readLevel(state, it.id), rng, enabledTypes, state) }))
     .filter((s) => s.type);
   return { steps, newIds: [] };
 }
