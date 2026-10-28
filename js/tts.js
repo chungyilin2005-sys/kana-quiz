@@ -13,11 +13,22 @@ const listeners = new Set();
 
 const supported = () => typeof window !== 'undefined' && 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
 
+// 日語語音的優先順序：Edge 的神經語音（Natural／Online）最自然，其次 Google 日語，
+// 再來是名稱標明 Japanese／日本語 的語音，最後才是其他 ja 語音
+function voiceScore(v) {
+  let score = 0;
+  if (/natural/i.test(v.name)) score += 8;
+  if (/online/i.test(v.name)) score += 4;
+  if (/google/i.test(v.name)) score += 2;
+  if (/japanese|日本語/i.test(v.name)) score += 1;
+  return score;
+}
+
 function pickVoice() {
   const voices = speechSynthesis.getVoices();
   if (!voices.length) return false;
   const ja = voices.filter((v) => /^ja([-_]|$)/i.test(v.lang));
-  voice = ja.find((v) => /japanese|日本語/i.test(v.name)) || ja[0] || null;
+  voice = ja.reduce((best, v) => (!best || voiceScore(v) > voiceScore(best) ? v : best), null);
   return true;
 }
 
