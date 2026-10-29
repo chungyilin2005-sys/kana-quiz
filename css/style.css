@@ -704,6 +704,193 @@ html.no-overscroll, html.no-overscroll body { overscroll-behavior: none; }
 .wdots i { width: 5px; height: 5px; border-radius: 50%; background: var(--grid); }
 .wdots i.on { background: var(--blue); }
 
+/* ---------- 單字閱讀 ---------- */
+
+/* 單字寫在一行橫格上（像練習帖），字級依字數縮小 */
+.word-board {
+  position: relative;
+  margin: 0 auto 16px;
+  padding: 18px 8px;
+  border: 2px solid var(--grid);
+  background: var(--paper-raised);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 9rem;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.word-board::after { content: ""; position: absolute; top: 50%; left: 0; right: 0; border-top: 1px dashed var(--grid); pointer-events: none; }
+.word-board .maru { inset: auto; left: 50%; top: 50%; width: 9rem; height: 9rem; transform: translate(-50%, -50%); }
+.word-board-small { min-height: 6rem; margin-bottom: 8px; }
+.word-text {
+  position: relative;
+  z-index: 1;
+  line-height: 1.1;
+  font-size: min(calc(76vw / var(--n)), calc(440px / var(--n)), 96px);
+  letter-spacing: .04em;
+}
+.word-board-small .word-text { font-size: min(calc(60vw / var(--n)), calc(320px / var(--n)), 64px); }
+
+.word-reveal { min-height: 3.2rem; }
+.word-answer { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 4px 12px; margin: 0 0 12px; }
+.word-romaji { font-size: 1.6rem; font-weight: 500; letter-spacing: .04em; }
+.word-meaning { font-size: 1.1rem; color: var(--ink-soft); }
+.word-actions { margin-top: 4px; }
+.grade-2 { grid-template-columns: 1fr 1fr; }
+
+.compare-words .compare-word {
+  font-size: min(calc(36vw / var(--n)), calc(200px / var(--n)), 56px);
+  line-height: 1.2;
+}
+
+.chip-word { font-size: 1.35rem; padding: 6px 12px; min-height: 56px; }
+.center { text-align: center; }
+
+/* ---------- 統計 ---------- */
+
+/* 認讀等級：單一藍色由淡到深；書寫等級：右下小點 */
+.cell { --lv: var(--paper-raised); }
+.lv1 { --lv: color-mix(in srgb, var(--blue) 14%, var(--paper-raised)); }
+.lv2 { --lv: color-mix(in srgb, var(--blue) 30%, var(--paper-raised)); }
+.lv3 { --lv: color-mix(in srgb, var(--blue) 48%, var(--paper-raised)); }
+.lv4 { --lv: color-mix(in srgb, var(--blue) 70%, var(--paper-raised)); }
+.lv5 { --lv: var(--blue); }
+
+.seg-4 { display: grid; grid-template-columns: repeat(4, 1fr); width: 100%; margin-bottom: 14px; }
+
+.kana-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+/* 拗音三欄，格子大小和五十音表一致 */
+.kana-grid-3 { grid-template-columns: repeat(3, 1fr); width: calc(60% - 1.6px); }
+.kana-grid .cell {
+  position: relative;
+  aspect-ratio: 1;
+  min-height: 44px;
+  border: 1.5px solid var(--grid);
+  border-radius: 4px;
+  background: var(--lv);
+  color: var(--ink);
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: clamp(1.4rem, 7vw, 2rem);
+  line-height: 1;
+}
+.kana-grid .cell.lv0 { color: var(--ink-soft); }
+.kana-grid .cell.lv4, .kana-grid .cell.lv5 { color: var(--blue-ink); border-color: transparent; }
+.kana-grid .cell.is-locked { border-style: dashed; background: none; color: var(--ink-soft); }
+.kana-grid .cell-empty { border: 0; background: none; cursor: default; }
+.kana-grid .cell:focus-visible { outline: 3px solid var(--blue); outline-offset: 1px; }
+.cell-k-long { font-size: .8em; }
+
+.wdot {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+.lv4 .wdot, .lv5 .wdot { background: var(--blue-ink); }
+.wdot.w1 { width: 4px; height: 4px; opacity: .45; }
+.wdot.w2 { width: 5px; height: 5px; opacity: .6; }
+.wdot.w3 { width: 6px; height: 6px; opacity: .75; }
+.wdot.w4 { width: 7px; height: 7px; opacity: .9; }
+.wdot.w5 { width: 8px; height: 8px; opacity: 1; }
+
+.grid-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin-top: 12px; font-size: .82rem; color: var(--ink-soft); }
+.legend-steps { display: inline-flex; gap: 3px; }
+.grid-legend .cell {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--grid);
+  border-radius: 3px;
+  background: var(--lv);
+  font-size: .72rem;
+  color: var(--ink);
+}
+.grid-legend .lv4, .grid-legend .lv5 { color: var(--blue-ink); border-color: transparent; }
+.grid-legend .wdot { right: 3px; bottom: 3px; }
+.legend-dot { display: inline-flex; align-items: center; gap: 6px; }
+
+.record { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; margin: 0 0 10px; padding: 10px 12px; border: 1px dashed var(--grid); border-radius: var(--radius); font-size: .92rem; }
+.record dt { color: var(--ink-soft); }
+.record dd { margin: 0; }
+.record-wrong { font-size: .92rem; margin: 0 0 12px; }
+.record-wrong [lang="ja"] { font-size: 1.2rem; }
+
+.conf-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.conf-btn {
+  width: 100%;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 12px;
+  border: 1.5px solid var(--grid);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+  cursor: pointer;
+  text-align: left;
+}
+.conf-btn:hover { border-color: var(--blue); }
+.conf-btn:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.conf-k { font-size: 1.8rem; line-height: 1; }
+.conf-arrow { font-size: .85rem; color: var(--ink-soft); }
+.conf-count { margin-left: auto; font-variant-numeric: tabular-nums; color: var(--ink-soft); font-size: .9rem; }
+.conf-go { color: var(--blue); font-weight: 700; font-size: .9rem; }
+
+/* 每日練習量長條圖（單一數列，不需圖例） */
+.chart { display: grid; grid-template-columns: auto 1fr; grid-template-rows: 140px auto; gap: 4px 6px; margin-top: 28px; }
+.chart-y { display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; font-size: .72rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; line-height: 1; }
+.chart-plot { position: relative; border-bottom: 1.5px solid var(--grid); }
+.chart-grid { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none; }
+.chart-grid i { border-top: 1px dashed var(--grid); opacity: .6; }
+.chart-grid i:last-child { border: 0; }
+.chart-bars { position: absolute; inset: 0; display: flex; align-items: flex-end; gap: 2px; }
+.bar {
+  flex: 1;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  position: relative;
+}
+.bar::before {
+  content: "";
+  position: absolute;
+  left: 15%;
+  right: 15%;
+  bottom: 0;
+  height: var(--h);
+  background: var(--blue);
+  border-radius: 4px 4px 0 0;
+}
+.bar-zero::before { display: none; }
+.bar:hover::before, .bar:focus-visible::before { filter: brightness(1.15); }
+.bar:focus-visible { outline: 2px solid var(--blue); outline-offset: 1px; }
+.chart-x { grid-column: 2; display: flex; justify-content: space-between; font-size: .72rem; color: var(--ink-soft); }
+.chart-tip {
+  position: absolute;
+  top: -6px;
+  transform: translate(-50%, -100%);
+  padding: 4px 10px;
+  border: 1.5px solid var(--grid);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+  color: var(--ink);
+  font-size: .82rem;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 3;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .maru { animation: none; stroke-dashoffset: 0; }
   .stroke-ink path { animation: none; stroke-dashoffset: 0; }

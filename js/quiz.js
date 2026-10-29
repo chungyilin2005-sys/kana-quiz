@@ -3,6 +3,7 @@
 // 題型代號沿用規格書：
 //   A 看假名選拼音、B 看拼音選假名、C 聽音選假名、D 平片對照、E 打字（看假名輸入拼音）、F 書寫自評
 
+import { pickWords, wordSteps } from './words.js';
 import {
   dueReadItems, dueWriteItems, hasReading, newItemsAvailable, newQuotaLeft, readLevel, unlockedItems, writeLevel, writeOpen,
 } from './srs.js';
@@ -101,9 +102,9 @@ export function targetOf(item, type, index) {
 // 濁音與半濁音視為同一類，補干擾項時一起用
 const kindOf = (it) => (it.type === 'handakuon' ? 'dakuon' : it.type);
 
-// 4 個選項。干擾項依序取：形近字 → 使用者最常誤選的字 → 同單位已解鎖字 → 同類已解鎖字 → 同類任一字。
+// 4 個選項。干擾項依序取：（混淆專練指定的字）→ 形近字 → 使用者最常誤選的字 → 同單位已解鎖字 → 同類已解鎖字 → 同類任一字。
 // 選項不重複，也不放與正解同音的字。
-export function buildChoices(item, type, { data, index, state, rng = Math.random }) {
+export function buildChoices(item, type, { data, index, state, rng = Math.random, prefer = [] }) {
   const target = targetOf(item, type, index);
   const field = type === 'A' ? 'romaji' : 'kana';
   const toEntry = (it) => ({ kana: it.kana, romaji: it.romaji, accept: it.accept, id: it.id });
@@ -118,7 +119,14 @@ export function buildChoices(item, type, { data, index, state, rng = Math.random
     .map(([id]) => index.byId.get(id))
     .filter((it) => it && it.script === target.script);
 
+  // 混淆專練：指定的字換成和正解同一種假名（D 題）後放最前面
+  const preferred = prefer
+    .map((id) => index.byId.get(id))
+    .map((it) => (it && it.script !== target.script ? index.byId.get(it.pair) : it))
+    .filter((it) => it && it.id !== target.id);
+
   const pools = [
+    shuffle(preferred, rng).map(toEntry),
     shuffle(target.confusables || [], rng).map(fromConfusable),
     wrongWith.map(toEntry),
     shuffle(unlocked.filter((it) => sameKind(it) && it.unit === target.unit), rng).map(toEntry),
@@ -143,12 +151,22 @@ export function buildChoices(item, type, { data, index, state, rng = Math.random
   return { options, answerIndex: options.findIndex((o) => o.correct), target };
 }
 
-// 組成今日回合：到期 read 複習（最多 20）→ 新字（認識卡＋2 題簡單題）→ 到期 write 複習（最多 8）。
-// 單字補題在階段四加入。
-export function buildRound(data, state, day, { rng = Math.random, enabledTypes = ALL_TYPES } = {}) {
+// 單字答錯時排進來的弱字（state.focus）：已解鎖、有讀音、沒有在 exclude 裡的
+function focusItems(data, state, exclude = new Set()) {
+  const unlocked = new Set(state.unlocked);
+  return (state.focus || [])
+    .map((id) => data.items.find((it) => it.id === id))
+    .filter((it) => it && unlocked.has(it.unit) && hasReading(it) && readLevel(state, it.id) > 0 && !exclude.has(it.id));
+}
+
+// 組成今日回合：到期 read 複習（最多 20，單字答錯排進來的弱字也算在這裡）→ 新字（認識卡＋2 題簡單題）
+// → 到期 write 複習（最多 8）→ 還不足回合題數就用已解鎖的單字題補滿（要傳入 words）。
+export function buildRound(data, state, day, { rng = Math.random, enabledTypes = ALL_TYPES, words = [], index = null } = {}) {
   const size = state.settings.roundSize;
   const writes = dueWriteItems(data.items, state, day).slice(0, Math.min(MAX_WRITES, Math.ceil(size * WRITE_SHARE)));
-  const reviews = shuffle(dueReadItems(data.items, state, day).slice(0, Math.min(MAX_REVIEWS, size - writes.length)), rng);
+  const due = dueReadItems(data.items, state, day);
+  const focus = focusItems(data, state, new Set(due.map((it) => it.id)));
+  const reviews = shuffle([...focus, ...due].slice(0, Math.min(MAX_REVIEWS, size - writes.length)), rng);
   const steps = [];
   for (const it of reviews) {
     const type = pickType(it, readLevel(state, it.id), rng, enabledTypes, state);
@@ -169,6 +187,11 @@ export function buildRound(data, state, day, { rng = Math.random, enabledTypes =
   }
   steps.push(...newItemSteps(newIds.map((id) => data.items.find((it) => it.id === id)), enabledTypes));
   steps.push(...shuffle(writes, rng).map((it) => ({ kind: 'q', id: it.id, type: 'F' })));
+
+  const missing = size - steps.filter((s) => s.kind === 'q').length;
+  if (missing > 0 && words.length && index) {
+    steps.push(...wordSteps(pickWords(words, index, state, missing, rng), index, state, rng));
+  }
 
   return { steps, newIds };
 }
@@ -217,7 +240,8 @@ export function buildExtraRound(data, state, { rng = Math.random, enabledTypes =
       return ta.level - tb.level || (ta.due || '').localeCompare(tb.due || '') || rng() - 0.5;
     })
     .slice(0, size);
-  const steps = shuffle(learned, rng)
+  const focus = focusItems(data, state, new Set(learned.map((it) => it.id)));
+  const steps = shuffle([...focus, ...learned].slice(0, size), rng)
     .map((it) => ({ kind: 'q', id: it.id, type: pickType(it, readLevel(state, it.id), rng, enabledTypes, state) }))
     .filter((s) => s.type);
   return { steps, newIds: [] };
@@ -268,7 +292,8 @@ export class Session {
     this.requeued[step.id] = n;
 
     const gap = 3 + Math.floor(this.rng() * 3); // 3～5 題後
-    const copy = { kind: 'q', id: step.id, type: step.type, retry: true };
+    const copy = { ...step, retry: true };
+    delete copy.filler;
 
     // 找到第 gap-1 個之後的題目，插在它後面
     let seen = 0;
@@ -281,10 +306,15 @@ export class Session {
       }
     }
 
-    // 剩下的題目不夠：用本回合其他字的 A 題補到間隔夠，再重考
-    const others = [...new Set(this.steps.filter((s) => s.kind === 'q' && s.id !== step.id).map((s) => s.id))];
-    const fillers = shuffle(others, this.rng).slice(0, gap - 1 - seen);
-    for (const id of fillers) this.steps.push({ kind: 'q', id, type: 'A', filler: true });
+    // 剩下的題目不夠：用本回合其他字的 A 題（單字則用同一種做法）補到間隔夠，再重考
+    const others = new Map();
+    for (const s of this.steps) if (s.kind === 'q' && s.id !== step.id && !others.has(s.id)) others.set(s.id, s);
+    const fillers = shuffle([...others.values()], this.rng).slice(0, gap - 1 - seen);
+    for (const s of fillers) {
+      this.steps.push(s.word
+        ? { kind: 'q', word: true, id: s.id, type: s.type, filler: true }
+        : { kind: 'q', id: s.id, type: 'A', filler: true, ...(s.prefer ? { prefer: s.prefer } : {}) });
+    }
     this.steps.push(copy);
   }
 
@@ -298,7 +328,8 @@ export class Session {
       accuracy: graded.length ? correct / graded.length : 0,
       avgMs: times.length ? times.reduce((a, b) => a + b, 0) / times.length : null,
       leveledUp: [...new Set(this.leveledUp)],
-      wrong: [...new Set(graded.filter((r) => !r.correct).map((r) => r.id))],
+      wrong: [...new Set(graded.filter((r) => !r.correct && !r.word).map((r) => r.id))],
+      wrongWords: [...new Set(graded.filter((r) => !r.correct && r.word).map((r) => r.id))],
       unlockedUnits: this.unlockedUnits,
     };
   }

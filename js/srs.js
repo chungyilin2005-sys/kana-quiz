@@ -64,6 +64,9 @@ export function applyAnswer(track, { correct, fast, ms }, day) {
   // 記下第一次學的日子（書寫軌要隔天才開放）；舊資料沒有這個欄位，視為早就學過
   if (wasNew) t.since = day;
   if (ms != null) t.lastMs = Math.round(ms);
+  // 答題紀錄（統計頁用）：作答次數、答對次數
+  t.n = (t.n || 0) + 1;
+  if (correct) t.ok = (t.ok || 0) + 1;
   return { track: t, leveledUp };
 }
 

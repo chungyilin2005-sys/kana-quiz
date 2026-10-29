@@ -8,10 +8,13 @@ import { readFileSync } from 'node:fs';
 import * as srs from '../js/srs.js';
 import * as quiz from '../js/quiz.js';
 import * as write from '../js/write.js';
+import * as wq from '../js/words.js';
 import { freshState } from '../js/storage.js';
 
 const data = JSON.parse(readFileSync(new URL('../data/kana-data.json', import.meta.url), 'utf8'));
 const index = quiz.indexData(data);
+const words = JSON.parse(readFileSync(new URL('../data/words.json', import.meta.url), 'utf8')).words;
+const allUnits = data.units.map((u) => u.unit);
 const hiraSeion = (u) => u && u.script === 'hira' && u.type === 'seion';
 
 function seeded(seed = 1) {
@@ -360,4 +363,202 @@ test('KanjiVG 筆順檔：142 個清音、濁音、半濁音都在，筆數與�
   assert.equal(write.parseKanjiVG(readFileSync(new URL('../strokes/03042.svg', import.meta.url), 'utf8')).length, 3, 'あ 三筆');
   assert.equal(write.parseKanjiVG(readFileSync(new URL('../strokes/03071.svg', import.meta.url), 'utf8')).length, 4, 'ぱ 四筆');
   assert.equal(write.hasStrokeData('きゃ'), false);
+});
+
+// ---------- 階段四：單字與統計 ----------
+
+test('單字題不會出現含未解鎖假名的單字', () => {
+  const units = [];
+  for (const u of allUnits) {
+    units.push(u);
+    const state = stateWith(units);
+    state.settings.roundSize = 50;
+    const unlocked = new Set(units);
+    const ok = (w) => w.requires.every((id) => unlocked.has(index.byId.get(id).unit));
+    assert.ok(wq.availableWords(words, index, state).every(ok));
+    for (let seed = 1; seed <= 5; seed++) {
+      const { steps } = wq.buildWordRound(words, index, state, { rng: seeded(seed) });
+      for (const s of steps) assert.ok(ok(words.find((w) => w.word === s.id)), `${u}: ${s.id}`);
+      // 今日練習補題也一樣
+      const round = quiz.buildRound(data, state, '2026-10-28', { rng: seeded(seed), words, index });
+      for (const s of round.steps.filter((x) => x.word)) assert.ok(ok(words.find((w) => w.word === s.id)), s.id);
+    }
+  }
+});
+
+test('解鎖不足 5 個單字時，算出還要再解鎖幾行', () => {
+  const state = stateWith(['hira-a']);
+  const n = wq.rowsUntilWords(data, words, index, state);
+  assert.ok(n > 0);
+  const more = stateWith(allUnits.slice(0, 1 + n));
+  assert.ok(wq.availableWords(words, index, more).length >= wq.MIN_WORDS);
+  const less = stateWith(allUnits.slice(0, n));
+  assert.ok(wq.availableWords(words, index, less).length < wq.MIN_WORDS);
+  assert.equal(wq.rowsUntilWords(data, words, index, more), 0);
+});
+
+test('斷字轉拼音：69 個單字都和標準答案一致（含促音、長音、拗音）', () => {
+  for (const w of words) {
+    const tokens = wq.tokenize(w.word, index);
+    assert.ok(tokens.every((t) => t.id), w.word);
+    assert.equal(wq.tokensToRomaji(tokens), w.romaji, w.word);
+    assert.deepEqual([...new Set(tokens.map((t) => t.id))].sort(), [...w.requires].sort(), w.word);
+  }
+});
+
+test('長音 normalize：ō、ou、ū、uu、â 都接受，大小寫與空白不影響', () => {
+  const find = (k) => words.find((w) => w.word === k);
+  const cases = {
+    'コーヒー': ['koohii', 'kōhii', 'kouhii', 'KŌHII ', 'kôhii'],
+    'ジュース': ['juusu', 'jūsu', 'JŪSU', ' juu su '],
+    'きょう': ['kyou', 'kyō', 'kyoo'],
+    'ラーメン': ['raamen', 'rāmen', 'râmen'],
+    'ろうそく': ['rousoku', 'rōsoku', 'roosoku'],
+  };
+  for (const [k, list] of Object.entries(cases)) {
+    for (const v of list) assert.ok(wq.checkWordTyped(find(k), v), `${k} ${v}`);
+  }
+  assert.equal(wq.checkWordTyped(find('コーヒー'), 'kohii'), false, '漏掉長音算錯');
+  assert.equal(wq.checkWordTyped(find('ラーメン'), ''), false);
+  assert.equal(wq.normalizeWordRomaji('ＫＯＯＨＩＩ'), 'koohii');
+});
+
+test('單字選拼音：干擾項是把 1 個假名換成形近字的拼音，選項不重複', () => {
+  const state = stateWith(allUnits);
+  const neko = words.find((w) => w.word === 'ねこ');
+  const seen = new Set();
+  for (let seed = 1; seed <= 40; seed++) {
+    const { options } = wq.buildWordChoices(neko, { data, index, state, rng: seeded(seed) });
+    assert.equal(options.length, 4);
+    assert.equal(options.filter((o) => o.correct).length, 1);
+    assert.equal(new Set(options.map((o) => wq.normalizeWordRomaji(o.label))).size, 4);
+    for (const o of options.filter((x) => !x.correct)) seen.add(o.kana);
+  }
+  assert.ok(['れこ', 'ぬこ', 'わこ'].some((k) => seen.has(k)), [...seen].join(','));
+  for (const k of seen) assert.equal([...k].length, 2, k);
+
+  // 每個單字在剛解鎖的狀態下也湊得滿 4 個選項
+  for (const w of words) {
+    const units = [...new Set(w.requires.map((id) => index.byId.get(id).unit))];
+    const { options } = wq.buildWordChoices(w, { data, index, state: stateWith(units), rng: seeded(3) });
+    assert.equal(options.length, 4, w.word);
+  }
+});
+
+test('促音、長音的單字：干擾項包含漏掉促音或長音的寫法', () => {
+  const state = stateWith(allUnits);
+  const labels = (k) => {
+    const w = words.find((x) => x.word === k);
+    const all = new Set();
+    for (let seed = 1; seed <= 40; seed++) {
+      wq.buildWordChoices(w, { data, index, state, rng: seeded(seed) }).options.forEach((o) => all.add(o.label));
+    }
+    return all;
+  };
+  assert.ok(labels('コーヒー').has('kohii'));
+  const k = labels('きって');
+  assert.ok(k.has('kite') && k.has('kitsute'), [...k].join(','));
+});
+
+test('答錯的單字：把其中 read 等級最低的假名排進下一回合', () => {
+  const state = stateWith(allUnits.slice(0, 5));
+  const neko = words.find((w) => w.word === 'ねこ');
+  state.items['h-ne'] = { read: { level: 4, due: '2026-11-05' } };
+  state.items['h-ko'] = { read: { level: 2, due: '2026-11-05' } };
+  assert.equal(wq.addFocus(state, neko, index), 'h-ko');
+  assert.deepEqual(state.focus, ['h-ko']);
+  // こ 還沒到期，但下一回合會出現
+  const { steps } = quiz.buildRound(data, state, '2026-10-28', { rng: seeded(2) });
+  assert.ok(steps.some((s) => s.id === 'h-ko' && s.kind === 'q'));
+  // 促音、長音不會被排進來
+  const kitte = words.find((w) => w.word === 'きって');
+  const st2 = stateWith(allUnits);
+  st2.items['h-ki'] = { read: { level: 3 } };
+  st2.items['h-te'] = { read: { level: 1 } };
+  assert.equal(wq.weakestKana(kitte, index, st2).id, 'h-te');
+});
+
+test('今日練習：認讀、新字、書寫都排完仍不足回合題數時，用單字題補滿', () => {
+  const state = stateWith(allUnits.slice(0, 5));
+  for (const it of srs.unlockedItems(data.items, state.unlocked)) {
+    state.items[it.id] = { read: { level: 3, due: '2026-11-20', since: '2026-10-01' }, write: { level: 3, due: '2026-11-20' } };
+  }
+  state.items['h-a'].read.due = '2026-10-28';
+  const { steps } = quiz.buildRound(data, state, '2026-10-28', { rng: seeded(1), words, index });
+  const avail = wq.availableWords(words, index, state).length;
+  assert.equal(steps.filter((s) => s.kind === 'q').length, Math.min(30, 1 + avail));
+  assert.equal(steps[0].id, 'h-a');
+  assert.ok(steps.slice(1).every((s) => s.word && ['W', 'S', 'T'].includes(s.type)));
+  // 沒傳單字就不補
+  assert.equal(quiz.buildRound(data, state, '2026-10-28', { rng: seeded(1) }).steps.length, 1);
+});
+
+test('單字題型：選拼音、唸讀自評輪替；假名都到 3 級才出打字', () => {
+  const state = stateWith(allUnits);
+  const neko = words.find((w) => w.word === 'ねこ');
+  assert.deepEqual(wq.wordTypes(neko, index, state), ['W', 'S']);
+  state.items['h-ne'] = { read: { level: 3 } };
+  state.items['h-ko'] = { read: { level: 5 } };
+  assert.deepEqual(wq.wordTypes(neko, index, state), ['W', 'S', 'T']);
+
+  const st = stateWith(allUnits);
+  const { steps } = wq.buildWordRound(words, index, st, { rng: seeded(5) });
+  assert.equal(steps.length, wq.WORD_ROUND_SIZE);
+  assert.equal(new Set(steps.map((s) => s.id)).size, steps.length, '同一回合不重複');
+  assert.ok(steps.some((s) => s.type === 'W') && steps.some((s) => s.type === 'S'));
+  assert.ok(steps.every((s) => s.type !== 'T'));
+
+  // 沒讀過的單字優先
+  st.words = Object.fromEntries(words.slice(0, 60).map((w) => [w.word, { last: '2026-10-20' }]));
+  const ids = wq.buildWordRound(words, index, st, { rng: seeded(5) }).steps.map((s) => s.id);
+  for (const w of words.slice(60)) assert.ok(ids.includes(w.word), w.word);
+});
+
+test('答錯的單字題同回合再考；補題用其他單字', () => {
+  const steps = [{ kind: 'q', word: true, id: 'ねこ', type: 'W' }, { kind: 'q', word: true, id: 'いぬ', type: 'S' }];
+  const s = new quiz.Session(steps, { rng: seeded(1) });
+  s.record({ id: 'ねこ', word: true, correct: false });
+  assert.ok(s.steps.every((x) => x.word));
+  assert.equal(s.steps.at(-1).id, 'ねこ');
+  assert.equal(s.steps.at(-1).type, 'W');
+  assert.deepEqual(s.summary().wrongWords, ['ねこ']);
+  assert.deepEqual(s.summary().wrong, []);
+});
+
+test('最常混淆的字組：依 wrongWith 排序，最多 10 組', () => {
+  const state = stateWith(allUnits);
+  state.items['h-nu'] = { wrongWith: { 'h-me': 4, 'h-ne': 1 } };
+  state.items['h-sa'] = { wrongWith: { 'h-chi': 2 } };
+  state.items['h-a'] = { wrongWith: Object.fromEntries(['h-i', 'h-u', 'h-e', 'h-o', 'h-ka', 'h-ki', 'h-ku', 'h-ke', 'h-ko'].map((id) => [id, 1])) };
+  const top = wq.topConfusions(state, index);
+  assert.equal(top.length, 10);
+  assert.deepEqual(top[0], { id: 'h-nu', other: 'h-me', count: 4 });
+  assert.deepEqual(top[1], { id: 'h-sa', other: 'h-chi', count: 2 });
+  assert.deepEqual(wq.drillSet(state, index, 'h-nu', 'h-me'), ['h-nu', 'h-me', 'h-ne']);
+});
+
+test('混淆專練：10 題只考這兩三個字，選項包含它們，不連續考同一個字', () => {
+  const state = stateWith(allUnits);
+  state.items['h-nu'] = { read: { level: 2 }, wrongWith: { 'h-me': 4 } };
+  state.items['h-me'] = { read: { level: 1 } };
+  const ids = ['h-nu', 'h-me'];
+  for (let seed = 1; seed <= 20; seed++) {
+    const { steps } = wq.buildDrillRound(data, state, ids, { rng: seeded(seed), enabledTypes: quiz.ALL_TYPES });
+    assert.equal(steps.length, wq.DRILL_SIZE);
+    assert.ok(steps.every((s) => ids.includes(s.id) && s.type !== 'D'));
+    for (let i = 1; i < steps.length; i++) assert.notEqual(steps[i].id, steps[i - 1].id);
+    for (const s of steps.filter((x) => x.type !== 'E')) {
+      const { options } = quiz.buildChoices(index.byId.get(s.id), s.type, { data, index, state, rng: seeded(seed), prefer: s.prefer });
+      const labels = options.map((o) => o.label);
+      const want = s.type === 'A' ? ['nu', 'me'] : ['ぬ', 'め'];
+      assert.ok(want.every((w) => labels.includes(w)), labels.join(','));
+    }
+  }
+});
+
+test('答題紀錄：applyAnswer 累計作答與答對次數', () => {
+  let t = srs.applyAnswer(undefined, { correct: true, fast: true, ms: 900 }, '2026-10-28').track;
+  t = srs.applyAnswer(t, { correct: false, fast: false, ms: 3000 }, '2026-10-28').track;
+  assert.equal(t.n, 2);
+  assert.equal(t.ok, 1);
 });

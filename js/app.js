@@ -1,10 +1,11 @@
-// 路由與畫面。畫面用 hash 切換：#today、#practice、#write、#settings（#words、#stats 之後的階段加入）。
+// 路由與畫面。畫面用 hash 切換：#today、#practice、#write、#words、#stats、#settings。
 
 import * as store from './storage.js';
 import * as srs from './srs.js';
 import * as quiz from './quiz.js';
 import * as tts from './tts.js';
 import * as write from './write.js';
+import * as wq from './words.js';
 
 const CORRECT_PAUSE_MS = 600;
 const BACKUP_REMIND_DAYS = 7;
@@ -22,6 +23,12 @@ const PROMPTS = {
   F: (item) => `寫出${scriptName(item.script)}`,
 };
 
+const WORD_PROMPTS = {
+  W: '這個單字怎麼念？',
+  S: '先自己唸出來，再聽答案',
+  T: '輸入這個單字的羅馬拼音',
+};
+
 const WRITE_GRADES = [
   ['right', '寫對', 'btn btn-primary'],
   ['unsure', '大致對但不確定', 'btn'],
@@ -29,6 +36,8 @@ const WRITE_GRADES = [
 ];
 
 let data;
+let words = [];
+let wordIndex = new Map();
 let index;
 let state;
 let session = null;
@@ -152,7 +161,8 @@ function route() {
   if (name === 'practice') return session ? renderPractice() : go('today');
   if (name === 'settings') return renderSettings();
   if (name === 'write') return renderWritePage();
-  if (['words', 'stats'].includes(name)) return renderComingSoon(name);
+  if (name === 'words') return renderWordsPage();
+  if (name === 'stats') return renderStats();
   return renderToday();
 }
 
@@ -303,8 +313,8 @@ function levelChips(items) {
 
 // ---------- 練習回合 ----------
 
-// mode：today 今日練習、extra 加練、write 書寫頁的單獨練習
-async function startRound(mode = 'today') {
+// mode：today 今日練習、extra 加練、write 書寫頁的單獨練習、words 單字閱讀、drill 混淆專練（傳入字的 id）
+async function startRound(mode = 'today', drillIds = []) {
   // iOS 要在點擊當下先發聲一次，之後的語音才會出聲
   tts.unlock();
   await tts.ready();
@@ -314,15 +324,23 @@ async function startRound(mode = 'today') {
   let round;
   if (mode === 'extra') round = quiz.buildExtraRound(data, state, opts);
   else if (mode === 'write') round = quiz.buildWriteRound(data, state, day);
-  else round = quiz.buildRound(data, state, day, opts);
+  else if (mode === 'words') round = wq.buildWordRound(words, index, state);
+  else if (mode === 'drill') round = wq.buildDrillRound(data, state, drillIds, opts);
+  else round = quiz.buildRound(data, state, day, { ...opts, words, index });
 
   if (!round.steps.length) {
-    toast('目前沒有可以練習的字');
+    toast(mode === 'words' ? '目前沒有可以讀的單字' : '目前沒有可以練習的字');
     return;
+  }
+  // 單字答錯排進來的弱字，排進這回合後就從待練清單移除
+  if (state.focus?.length) {
+    const used = new Set(round.steps.filter((s) => !s.word).map((s) => s.id));
+    state.focus = state.focus.filter((id) => !used.has(id));
+    persist();
   }
   session = new quiz.Session(round.steps, { extra: mode !== 'today' });
   session.introduced = new Set();
-  session.home = mode === 'write' ? 'write' : 'today';
+  session.home = { write: 'write', words: 'words', drill: 'stats' }[mode] || 'today';
   go('practice');
 }
 
@@ -343,6 +361,7 @@ function renderPractice() {
   );
 
   if (step.kind === 'intro') renderIntro(step);
+  else if (step.word) renderWordQuestion(step);
   else if (step.type === 'F') renderWrite(step);
   else renderQuestion(step);
 }
@@ -529,7 +548,7 @@ function renderQuestion(step) {
     mount(form, feedbackSlot);
     input.focus();
   } else {
-    const { options } = quiz.buildChoices(item, step.type, { data, index, state });
+    const { options } = quiz.buildChoices(item, step.type, { data, index, state, prefer: step.prefer });
     const buttons = options.map((opt, i) => el('button', {
       class: 'option',
       lang: step.type === 'A' ? 'en' : 'ja',
@@ -793,9 +812,17 @@ function renderSummary() {
       item.kana, el('small', {}, item.romaji));
   };
 
+  const wordChip = (id) => {
+    const w = wordIndex.get(id);
+    return el('button', { class: 'chip chip-word', lang: 'ja', onclick: () => showWordCard(w) },
+      w.word, el('small', {}, w.meaning));
+  };
+
   const back = session.home;
+  const backLabels = { write: '回到書寫練習', words: '回到單字閱讀', stats: '回到統計' };
   const home = el('button', { class: 'btn btn-primary', onclick: () => { session = null; go(back); } },
-    back === 'write' ? '回到書寫練習' : '回到首頁');
+    backLabels[back] || '回到首頁');
+  const wrongCount = s.wrong.length + s.wrongWords.length;
 
   mount(
     el('div', { class: 'result-head' },
@@ -807,14 +834,18 @@ function renderSummary() {
     s.unlockedUnits.length
       ? el('p', { class: 'unlock-banner', lang: 'ja' }, `解鎖了：${s.unlockedUnits.map(unitLabel).join('、')}`)
       : null,
+    // 只有單字題的回合（單字閱讀）沒有等級可升，不顯示這一段
+    session.results.some((r) => !r.word)
+      ? el('section', { class: 'section' },
+        el('h2', {}, `升級的字（${s.leveledUp.length}）`),
+        s.leveledUp.length ? el('div', { class: 'chips' }, s.leveledUp.map(chipFor)) : el('p', { class: 'muted' }, '這回合沒有升級的字。答得又快又對才會升級。'),
+      )
+      : null,
     el('section', { class: 'section' },
-      el('h2', {}, `升級的字（${s.leveledUp.length}）`),
-      s.leveledUp.length ? el('div', { class: 'chips' }, s.leveledUp.map(chipFor)) : el('p', { class: 'muted' }, '這回合沒有升級的字。答得又快又對才會升級。'),
-    ),
-    el('section', { class: 'section' },
-      el('h2', {}, `答錯的字（${s.wrong.length}）`),
-      s.wrong.length
-        ? el('div', {}, el('p', { class: 'muted' }, '點字可以再看一次認識卡。'), el('div', { class: 'chips' }, s.wrong.map(chipFor)))
+      el('h2', {}, `答錯的${s.wrongWords.length ? '字和單字' : '字'}（${wrongCount}）`),
+      wrongCount
+        ? el('div', {}, el('p', { class: 'muted' }, '點字可以再看一次認識卡。'),
+          el('div', { class: 'chips' }, s.wrong.map(chipFor), s.wrongWords.map(wordChip)))
         : el('p', { class: 'muted' }, '全部答對！'),
     ),
     el('div', { class: 'section btn-row' }, home),
@@ -829,6 +860,474 @@ function showCard(item) {
   const dlg = document.getElementById('card-dialog');
   document.getElementById('card-dialog-body').replaceChildren(introCard(item));
   dlg.showModal();
+}
+
+// ---------- 單字題（G） ----------
+
+// 單字依字數縮小字級，一行放得下
+function wordText(text, cls = 'word-text') {
+  const n = Math.max([...text].length, 2);
+  return el('span', { class: cls, lang: 'ja', style: `--n:${n}` }, text);
+}
+
+function wordAnswerLine(word) {
+  return el('p', { class: 'word-answer' },
+    el('span', { class: 'word-romaji', lang: 'en' }, word.romaji),
+    el('span', { class: 'word-meaning' }, word.meaning),
+    speakerButton(word.word));
+}
+
+function renderWordQuestion(step) {
+  const word = wordIndex.get(step.id);
+  const board = el('div', { class: 'word-board' }, wordText(word.word));
+  const reveal = el('div', { class: 'word-reveal' });
+  const feedbackSlot = el('div');
+  let answered = false;
+
+  mount(el('p', { class: 'prompt' }, WORD_PROMPTS[step.type]), board, reveal);
+
+  function settle({ correct, picked, typed }) {
+    if (answered) return;
+    answered = true;
+    keyHandler = null;
+    const day = srs.today();
+    state.words ||= {};
+    const rec = (state.words[word.word] ||= { n: 0, ok: 0 });
+    rec.n += 1;
+    if (correct) rec.ok += 1;
+    rec.last = day;
+    // 答錯：把單字裡最弱的假名排進下一回合
+    const focus = correct ? null : wq.addFocus(state, word, index);
+
+    const log = dayLog(day);
+    log.q += 1;
+    if (correct) log.correct += 1;
+    session.record({ id: word.word, word: true, type: step.type, correct, ms: null });
+    persist();
+
+    if (!reveal.hasChildNodes()) reveal.append(wordAnswerLine(word));
+    if (correct) {
+      board.append(maruSvg());
+      // 唸讀自評已經聽過答案；選拼音、打字答對時再念一次，多看一下意思
+      // 等待期間若已離開這一題（結束回合），就不再前進
+      const proceed = () => { if (session?.current === step) nextStep(); };
+      if (step.type === 'S') setTimeout(proceed, CORRECT_PAUSE_MS);
+      else say(word.word).then(() => setTimeout(proceed, CORRECT_PAUSE_MS));
+      return;
+    }
+    if (step.type === 'S') {
+      if (focus) toast(`「${index.byId.get(focus).kana}」會排進下一回合複習`);
+      nextStep();
+      return;
+    }
+    showWrong({ picked, typed, focus });
+  }
+
+  function showWrong({ picked, typed, focus }) {
+    const next = el('button', { class: 'btn btn-primary', onclick: nextStep }, '下一題');
+    const wrong = picked ? { kana: picked.kana, romaji: picked.romaji } : { typed: true, romaji: typed };
+    feedbackSlot.append(el('div', { class: 'feedback' },
+      el('div', { class: 'compare compare-words' },
+        compareWordCell('正解', { kana: word.word, romaji: word.romaji }, 'is-right'),
+        compareWordCell(wrong.typed ? '你輸入' : '你選的', wrong, 'is-wrong')),
+      focus ? el('p', { class: 'note' }, `「${index.byId.get(focus).kana}」會排進下一回合複習。`) : null,
+      next,
+    ));
+    next.focus({ preventScroll: true });
+    next.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    say(word.word);
+    keyHandler = (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); nextStep(); }
+      else if (e.key === ' ') { e.preventDefault(); say(word.word); }
+    };
+  }
+
+  if (step.type === 'S') {
+    const hasVoice = tts.getStatus() === 'ok';
+    const actions = el('div', { class: 'word-actions' });
+    const show = el('button', { class: 'btn btn-primary btn-big', type: 'button', onclick: showAnswer },
+      hasVoice ? '🔊 聽答案' : '看答案');
+    actions.append(show);
+    mount(actions, feedbackSlot);
+    show.focus();
+
+    function showAnswer() {
+      if (reveal.hasChildNodes()) return;
+      reveal.append(wordAnswerLine(word));
+      say(word.word);
+      const grades = [[true, '唸對了', 'btn btn-primary'], [false, '唸錯了', 'btn']].map(([ok, label, cls], i) =>
+        el('button', { class: cls, type: 'button', onclick: () => settle({ correct: ok }) },
+          el('span', { class: 'key', 'aria-hidden': 'true' }, i + 1), label));
+      actions.replaceChildren(
+        el('p', { class: 'grade-prompt' }, '和你唸的一樣嗎？'),
+        el('div', { class: 'grade-buttons grade-2' }, grades),
+      );
+      grades[0].focus({ preventScroll: true });
+      keyHandler = (e) => {
+        if (e.key === '1') { e.preventDefault(); settle({ correct: true }); }
+        else if (e.key === '2') { e.preventDefault(); settle({ correct: false }); }
+        else if (e.key === ' ') { e.preventDefault(); say(word.word); }
+      };
+    }
+    keyHandler = (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showAnswer(); }
+    };
+    return;
+  }
+
+  if (step.type === 'T') {
+    const input = el('input', {
+      class: 'text-input',
+      type: 'text',
+      inputmode: 'text',
+      enterkeyhint: 'done',
+      autocapitalize: 'off',
+      autocomplete: 'off',
+      autocorrect: 'off',
+      spellcheck: 'false',
+      'aria-label': '羅馬拼音',
+      placeholder: '長音可打 ou、ō 或 oo',
+    });
+    const submit = el('button', { class: 'btn btn-primary', type: 'submit' }, '確定');
+    const form = el('form', {
+      class: 'type-form',
+      onsubmit: (e) => {
+        e.preventDefault();
+        if (answered || wq.normalizeWordRomaji(input.value) === '') return;
+        const correct = wq.checkWordTyped(word, input.value);
+        input.disabled = true;
+        submit.disabled = true;
+        input.classList.add(correct ? 'is-right' : 'is-wrong');
+        settle({ correct, typed: input.value.trim() });
+      },
+    }, input, submit);
+    mount(form, feedbackSlot);
+    input.focus();
+    return;
+  }
+
+  const { options } = wq.buildWordChoices(word, { data, index, state });
+  const buttons = options.map((opt, i) => el('button', {
+    class: 'option',
+    lang: 'en',
+    onclick: () => choose(i),
+  }, el('span', { class: 'key', 'aria-hidden': 'true' }, i + 1), opt.label));
+
+  function choose(i) {
+    if (answered) return;
+    const opt = options[i];
+    buttons.forEach((b) => { b.disabled = true; });
+    if (opt.correct) buttons[i].classList.add('is-picked-right');
+    else {
+      buttons[i].classList.add('is-wrong');
+      buttons[options.findIndex((o) => o.correct)].classList.add('is-answer');
+    }
+    settle({ correct: opt.correct, picked: opt });
+  }
+
+  mount(el('div', { class: 'options' }, buttons), feedbackSlot);
+  keyHandler = (e) => {
+    const n = Number(e.key);
+    if (n >= 1 && n <= options.length) { e.preventDefault(); choose(n - 1); }
+  };
+}
+
+function compareWordCell(label, entry, cls) {
+  return el('div', { class: `compare-cell ${cls}` },
+    el('span', { class: 'compare-label' }, label),
+    entry.kana ? wordText(entry.kana, 'compare-word') : null,
+    el('span', { class: 'compare-romaji' }, entry.romaji || '（空白）'));
+}
+
+function showWordCard(word) {
+  const dlg = document.getElementById('card-dialog');
+  const rec = state.words?.[word.word];
+  const kana = word.requires.map((id) => index.byId.get(id)).filter((it) => it && srs.hasReading(it));
+  document.getElementById('card-dialog-body').replaceChildren(
+    el('div', { class: 'word-board word-board-small' }, wordText(word.word)),
+    wordAnswerLine(word),
+    el('p', { class: 'muted center' }, rec ? `讀過 ${rec.n} 次，唸對 ${rec.ok} 次` : '還沒讀過'),
+    kana.length
+      ? el('div', { class: 'confusables' },
+        el('h3', {}, '用到的假名'),
+        el('ul', {}, kana.map((it) => el('li', {},
+          el('span', { class: 'k', lang: 'ja' }, it.kana),
+          el('span', { class: 'r' }, `${it.romaji}・${srs.readLevel(state, it.id)} 級`)))))
+      : null,
+  );
+  if (!dlg.open) dlg.showModal();
+}
+
+// ---------- 單字頁 ----------
+
+function renderWordsPage() {
+  setPage('words');
+  const avail = wq.availableWords(words, index, state);
+  const enough = avail.length >= wq.MIN_WORDS;
+  const read = avail.filter((w) => state.words?.[w.word]).length;
+
+  const start = el('button', {
+    class: 'btn btn-primary btn-big',
+    disabled: !enough,
+    onclick: () => startRound('words'),
+  }, enough ? `開始讀單字（${Math.min(avail.length, wq.WORD_ROUND_SIZE)} 個）` : '解鎖更多假名後開放');
+
+  let hint = null;
+  if (!enough) {
+    const rows = wq.rowsUntilWords(data, words, index, state);
+    hint = el('p', { class: 'done-note' },
+      rows ? `再解鎖 ${rows} 行就能開始讀單字。` : '目前解鎖的字還湊不到 5 個單字。');
+  }
+
+  mount(
+    el('header', { class: 'masthead' }, el('h1', {}, '單字閱讀')),
+    el('p', { class: 'muted' }, '用真實單字練「看到就讀得出來」。有時選拼音，有時自己唸出來再聽答案。促音（っ）和長音（ー）也在這裡練。單字只會用到你已經解鎖的假名。'),
+    el('div', { class: 'tally tally-2' },
+      el('div', {}, el('span', { class: 'num' }, avail.length), el('span', { class: 'label' }, '可以讀的單字'),
+        el('span', { class: 'sub' }, `共 ${words.length} 個`)),
+      el('div', {}, el('span', { class: 'num' }, read), el('span', { class: 'label' }, '讀過的單字')),
+    ),
+    hint,
+    start,
+    avail.length
+      ? el('section', { class: 'section' },
+        el('h2', {}, '單字表'),
+        el('p', { class: 'muted' }, '點單字看拼音、意思和用到的假名。'),
+        el('div', { class: 'chips' }, avail.map((w) => el('button', {
+          class: 'chip chip-word',
+          lang: 'ja',
+          onclick: () => showWordCard(w),
+        }, w.word, el('small', {}, w.meaning)))),
+        avail.length < words.length
+          ? el('p', { class: 'muted' }, `還有 ${words.length - avail.length} 個單字會在解鎖更多假名後出現。`)
+          : null,
+      )
+      : null,
+  );
+  keyHandler = (e) => {
+    if (e.key === 'Enter' && enough && document.activeElement?.tagName !== 'BUTTON') { e.preventDefault(); start.click(); }
+  };
+}
+
+// ---------- 統計頁 ----------
+
+const STATS_TABS = [
+  ['hira', '平假名', [['', (it) => it.script === 'hira' && it.type === 'seion']]],
+  ['kata', '片假名', [['', (it) => it.script === 'kata' && it.type === 'seion']]],
+  ['dakuon', '濁音', [
+    ['平假名', (it) => it.script === 'hira' && (it.type === 'dakuon' || it.type === 'handakuon')],
+    ['片假名', (it) => it.script === 'kata' && (it.type === 'dakuon' || it.type === 'handakuon')],
+  ]],
+  ['yoon', '拗音', [
+    ['平假名', (it) => it.script === 'hira' && it.type === 'yoon'],
+    ['片假名', (it) => it.script === 'kata' && it.type === 'yoon'],
+  ]],
+];
+let statsTab = 'hira';
+const CHART_DAYS = 30;
+
+function renderStats() {
+  setPage('stats');
+  const learnable = data.items.filter(srs.hasReading);
+  const learned = learnable.filter((it) => srs.readLevel(state, it.id) > 0).length;
+  const remembered = learnable.filter((it) => srs.readLevel(state, it.id) >= srs.UNLOCK_LEVEL).length;
+  const mastered = learnable.filter((it) => state.items[it.id]?.read?.mastered).length;
+
+  const gridSlot = el('div');
+  const tabs = STATS_TABS.map(([key, label]) => el('button', {
+    class: 'seg-btn',
+    type: 'button',
+    'aria-pressed': String(key === statsTab),
+    onclick: () => {
+      statsTab = key;
+      tabs.forEach((b, i) => b.setAttribute('aria-pressed', String(STATS_TABS[i][0] === statsTab)));
+      drawGrid();
+    },
+  }, label));
+
+  function drawGrid() {
+    const [, , groups] = STATS_TABS.find(([key]) => key === statsTab);
+    gridSlot.replaceChildren(...groups.map(([title, test]) => el('div', { class: 'unit-group' },
+      title ? el('h3', {}, title) : null,
+      kanaGrid(data.items.filter(test)))));
+  }
+  drawGrid();
+
+  mount(
+    el('header', { class: 'masthead' }, el('h1', {}, '統計')),
+    el('div', { class: 'tally' },
+      el('div', {}, el('span', { class: 'num' }, learned), el('span', { class: 'label' }, '學過的字')),
+      el('div', {}, el('span', { class: 'num' }, remembered), el('span', { class: 'label' }, '記住'),
+        el('span', { class: 'sub' }, '3 級以上')),
+      el('div', {}, el('span', { class: 'num' }, mastered), el('span', { class: 'label' }, '精熟')),
+    ),
+    el('section', { class: 'section' },
+      el('h2', {}, '50 音表'),
+      el('div', { class: 'seg seg-4', role: 'group', 'aria-label': '切換字表' }, tabs),
+      gridSlot,
+      gridLegend(),
+    ),
+    confusionSection(),
+    dailyChart(),
+  );
+}
+
+// 傳統 50 音表排法：每列一行，欄是母音（拗音是 ya、yu、yo 三欄）；ん 自成一列
+function kanaGrid(items) {
+  const yoon = items[0]?.type === 'yoon';
+  const cols = yoon ? 'auo' : 'aiueo';
+  const rowKey = (it) => (it.id.endsWith('-n') ? 'n' : it.row);
+  const rows = [...new Set(items.map(rowKey))];
+  const unlocked = new Set(state.unlocked);
+  const cells = [];
+  for (const row of rows) {
+    const inRow = items.filter((it) => rowKey(it) === row);
+    for (const v of cols) {
+      const it = row === 'n'
+        ? (v === 'a' ? inRow[0] : null)
+        : inRow.find((x) => x.id.split('-')[1].endsWith(v));
+      cells.push(it ? gridCell(it, unlocked.has(it.unit)) : el('span', { class: 'cell cell-empty', 'aria-hidden': 'true' }));
+    }
+  }
+  return el('div', { class: yoon ? 'kana-grid kana-grid-3' : 'kana-grid' }, cells);
+}
+
+function gridCell(item, isUnlocked) {
+  const lv = srs.readLevel(state, item.id);
+  const wl = srs.writeLevel(state, item.id);
+  const cls = ['cell', `lv${lv}`];
+  if (!isUnlocked) cls.push('is-locked');
+  return el('button', {
+    class: cls.join(' '),
+    type: 'button',
+    lang: 'ja',
+    'aria-label': `${item.kana}（${item.romaji}）：認讀 ${lv} 級、書寫 ${wl} 級${isUnlocked ? '' : '，未解鎖'}`,
+    onclick: () => showItemCard(item),
+  }, el('span', { class: [...item.kana].length > 1 ? 'cell-k cell-k-long' : 'cell-k' }, item.kana),
+  wl > 0 ? el('i', { class: `wdot w${wl}`, 'aria-hidden': 'true' }) : null);
+}
+
+function gridLegend() {
+  return el('div', { class: 'grid-legend' },
+    el('span', {}, '認讀等級'),
+    el('span', { class: 'legend-steps', 'aria-hidden': 'true' },
+      [0, 1, 2, 3, 4, 5].map((n) => el('span', { class: `cell lv${n}` }, n))),
+    el('span', { class: 'legend-dot' }, el('span', { class: 'cell lv0' }, el('i', { class: 'wdot w3' })), '右下小點：書寫等級（越大越深越高）'),
+  );
+}
+
+// 點格子：認識卡＋答題紀錄
+function showItemCard(item) {
+  const dlg = document.getElementById('card-dialog');
+  const prog = state.items[item.id] || {};
+  const read = prog.read;
+  const write = prog.write;
+  const wrongs = Object.entries(prog.wrongWith || {})
+    .sort((a, b) => b[1] - a[1])
+    .map(([id, n]) => [index.byId.get(id), n])
+    .filter(([it]) => it);
+  const unlocked = state.unlocked.includes(item.unit);
+
+  const rows = [];
+  if (!unlocked) rows.push(['狀態', '還沒解鎖']);
+  else if (!srs.hasReading(item)) rows.push(['狀態', prog.seen ? `看過說明卡（${prog.seen}）` : '還沒看過說明卡']);
+  else {
+    rows.push(['認讀', read?.level ? `${read.level} 級${read.mastered ? '（精熟）' : ''}・下次 ${read.due}` : '還沒學過']);
+    if (read?.n) rows.push(['答題', `${read.n} 次，答對 ${read.ok || 0} 次`]);
+    if (read?.lastMs != null) rows.push(['上次反應', `${(read.lastMs / 1000).toFixed(1)} 秒`]);
+    if (srs.canWrite(item)) {
+      rows.push(['書寫', write?.level ? `${write.level} 級・下次 ${write.due}` : (srs.writeOpen(item, state, srs.today()) ? '已開放，還沒寫過' : '學過的隔天開放')]);
+    }
+  }
+
+  document.getElementById('card-dialog-body').replaceChildren(
+    introCard(item),
+    el('dl', { class: 'record' }, rows.flatMap(([k, v]) => [el('dt', {}, k), el('dd', {}, v)])),
+    wrongs.length
+      ? el('p', { class: 'record-wrong' }, '常誤選成：', wrongs.flatMap(([it, n], i) => [
+        i ? '、' : '', el('span', { lang: 'ja' }, it.kana), ` ${n} 次`]))
+      : null,
+  );
+  if (!dlg.open) dlg.showModal();
+}
+
+function confusionSection() {
+  const top = wq.topConfusions(state, index);
+  const kana = (id) => el('span', { class: 'conf-k', lang: 'ja' }, index.byId.get(id).kana);
+  return el('section', { class: 'section' },
+    el('h2', {}, '最常混淆的字組'),
+    top.length
+      ? el('div', {},
+        el('p', { class: 'muted' }, '點一組開始「混淆專練」：10 題，只在這兩三個字之間出題。'),
+        el('ol', { class: 'conf-list' }, top.map(({ id, other, count }) => el('li', {},
+          el('button', {
+            class: 'conf-btn',
+            type: 'button',
+            onclick: () => startRound('drill', wq.drillSet(state, index, id, other)),
+          },
+          kana(id), el('span', { class: 'conf-arrow' }, '→ 誤選'), kana(other),
+          el('span', { class: 'conf-count' }, `${count} 次`),
+          el('span', { class: 'conf-go' }, '專練')))))
+      )
+      : el('p', { class: 'muted' }, '還沒有選錯的紀錄。答錯時選到的字會記在這裡。'),
+  );
+}
+
+// 近 30 天每日練習量：單一數列的長條圖，點或滑過長條顯示當天題數
+function dailyChart() {
+  const day = srs.today();
+  const days = Array.from({ length: CHART_DAYS }, (_, i) => srs.addDays(day, i - CHART_DAYS + 1));
+  const counts = days.map((d) => state.log[d]?.q ?? 0);
+  const total = counts.reduce((a, b) => a + b, 0);
+  const active = counts.filter((n) => n > 0).length;
+  const max = Math.max(...counts, 1);
+  // 刻度取整到 10 的倍數
+  const top = Math.max(10, Math.ceil(max / 10) * 10);
+  const md = (d) => `${Number(d.slice(5, 7))}/${Number(d.slice(8))}`;
+
+  const tip = el('div', { class: 'chart-tip', role: 'status', hidden: true });
+  const showTip = (i, bar) => {
+    const log = state.log[days[i]];
+    tip.textContent = counts[i]
+      ? `${md(days[i])}：${counts[i]} 題，答對 ${log?.correct ?? 0} 題`
+      : `${md(days[i])}：沒有練習`;
+    tip.hidden = false;
+    const box = bar.parentNode.getBoundingClientRect();
+    const r = bar.getBoundingClientRect();
+    // 提示框不超出圖表左右邊界
+    const half = tip.offsetWidth / 2;
+    tip.style.left = `${Math.min(Math.max(r.left - box.left + r.width / 2, half), box.width - half)}px`;
+  };
+  const hideTip = () => { tip.hidden = true; };
+
+  const bars = days.map((d, i) => {
+    const bar = el('button', {
+      class: counts[i] ? 'bar' : 'bar bar-zero',
+      type: 'button',
+      style: `--h:${(counts[i] / top) * 100}%`,
+      'aria-label': `${md(d)} ${counts[i]} 題`,
+      onpointerenter: (e) => showTip(i, e.currentTarget),
+      onpointerleave: hideTip,
+      onfocus: (e) => showTip(i, e.currentTarget),
+      onblur: hideTip,
+      onclick: (e) => showTip(i, e.currentTarget),
+    });
+    return bar;
+  });
+
+  return el('section', { class: 'section' },
+    el('h2', {}, '每日練習量（近 30 天）'),
+    el('p', { class: 'muted' }, total ? `共 ${total} 題，練習了 ${active} 天。` : '還沒有練習紀錄。'),
+    el('div', { class: 'chart' },
+      el('div', { class: 'chart-y', 'aria-hidden': 'true' }, el('span', {}, top), el('span', {}, top / 2), el('span', {}, 0)),
+      el('div', { class: 'chart-plot' },
+        el('div', { class: 'chart-grid', 'aria-hidden': 'true' }, el('i'), el('i'), el('i')),
+        el('div', { class: 'chart-bars' }, bars),
+        tip),
+      el('div', { class: 'chart-x', 'aria-hidden': 'true' },
+        el('span', {}, md(days[0])), el('span', {}, md(days[14])), el('span', {}, '今天')),
+    ),
+  );
 }
 
 // ---------- 備份 ----------
@@ -1018,16 +1517,6 @@ function ttsStatusBlock() {
   return box;
 }
 
-function renderComingSoon(name) {
-  setPage(name);
-  const titles = { words: '單字閱讀', stats: '統計' };
-  mount(
-    el('header', { class: 'masthead' }, el('h1', {}, titles[name])),
-    el('p', { class: 'muted' }, '這個功能還在製作中。'),
-    el('a', { class: 'btn', href: '#today' }, '回到首頁'),
-  );
-}
-
 // ---------- 啟動 ----------
 
 async function init() {
@@ -1040,6 +1529,15 @@ async function init() {
     console.error(err);
     return;
   }
+  // 單字資料載入失敗時只影響單字題，其他功能照常
+  try {
+    const res = await fetch('data/words.json');
+    if (!res.ok) throw new Error(res.status);
+    words = (await res.json()).words || [];
+  } catch (err) {
+    console.error(err);
+  }
+  wordIndex = new Map(words.map((w) => [w.word, w]));
   index = quiz.indexData(data);
   state = store.loadState([data.units[0].unit]);
   tts.ready();
