@@ -18,7 +18,8 @@
 
 ## 程式結構
 
-- `js/srs.js`、`js/quiz.js` 是純函式；`js/write.js` 的 `parseKanjiVG` 也是純函式，其餘（筆順動畫、`WritingPad`）才碰 DOM（不碰 DOM、localStorage），測試直接 import；畫面邏輯都在 `js/app.js`。
+- `js/srs.js`、`js/quiz.js` 是純函式（不碰 DOM、localStorage），測試直接 import；畫面邏輯都在 `js/app.js`。
+- `js/write.js` 的 `parseKanjiVG`、`strokeFile`、`hasStrokeData` 也是純函式，可以直接測；筆順動畫和 `WritingPad` 才碰 DOM。
 - `app.js` 用 `el()` 建 DOM、`mount()` 掛到畫面（會濾掉 null）；`replaceChildren` 不會濾 null，傳入前要自己 filter。
 - 狀態存在 localStorage 的 `kanaQuiz:state`，結構見 `js/storage.js` 的 `freshState()`。
 
