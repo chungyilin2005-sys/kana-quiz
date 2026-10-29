@@ -245,13 +245,23 @@ test('今日回合：到期複習在前，最多 20 題', () => {
 
 // ---------- 書寫（階段三） ----------
 
-test('書寫軌：認讀 2 級才開放；ぢ、づ、ヂ、ヅ 與促音、長音不出書寫題', () => {
+test('書寫軌：學過的隔天才開放；ぢ、づ、ヂ、ヅ 與促音、長音不出書寫題', () => {
+  const day = '2026-10-28';
   const state = stateWith(data.units.map((u) => u.unit));
   const nu = index.byId.get('h-nu');
-  state.items['h-nu'] = { read: { level: 1 } };
-  assert.equal(srs.writeOpen(nu, state), false);
-  state.items['h-nu'].read.level = 2;
-  assert.equal(srs.writeOpen(nu, state), true);
+  assert.equal(srs.writeOpen(nu, state, day), false, '還沒學過');
+  // 今天第一次學（答得慢也一樣進排程）：今天還不能寫，隔天就能寫
+  state.items['h-nu'] = { read: srs.applyAnswer(undefined, { correct: true, fast: false }, day).track };
+  assert.equal(state.items['h-nu'].read.since, day);
+  assert.equal(srs.writeOpen(nu, state, day), false, '當天剛學');
+  assert.equal(srs.writeOpen(nu, state, '2026-10-29'), true, '隔天開放');
+  // 之後答錯掉回 1 級，第一次學的日子不變，仍可以寫
+  state.items['h-nu'].read = srs.applyAnswer(state.items['h-nu'].read, { correct: false }, '2026-10-30').track;
+  assert.equal(state.items['h-nu'].read.since, day);
+  assert.equal(srs.writeOpen(nu, state, '2026-10-30'), true);
+  // 舊資料沒有 since：視為早就學過
+  state.items['h-ne'] = { read: { level: 1, due: '2026-10-29' } };
+  assert.equal(srs.writeOpen(index.byId.get('h-ne'), state, day), true);
   for (const id of ['h-dji', 'h-dzu', 'k-dji', 'k-dzu', 'h-sokuon', 'k-sokuon', 'k-chouon']) {
     assert.equal(srs.canWrite(index.byId.get(id)), false, id);
   }
@@ -277,7 +287,7 @@ test('今天要寫的字：到期的在前、剛開放的在後，未到期的�
   for (const it of data.items.filter((x) => x.unit === 'hira-a')) state.items[it.id] = { read: { level: 3 } };
   state.items['h-a'].write = { level: 2, due: '2026-10-30' };
   state.items['h-i'].write = { level: 1, due: '2026-10-27' };
-  state.items['h-u'].read.level = 1;
+  state.items['h-u'].read = { level: 1, since: day };
   const ids = srs.dueWriteItems(data.items, state, day).map((it) => it.id);
   assert.deepEqual(ids, ['h-i', 'h-e', 'h-o']);
 });
@@ -294,7 +304,7 @@ test('今日回合：書寫題排在最後、最多 8 題，認讀複習很多�
   const w = steps.filter((s) => s.type === 'F');
   assert.equal(w.length, 8);
   assert.ok(steps.slice(-8).every((s) => s.type === 'F'), '書寫在最後');
-  assert.ok(w.every((s) => srs.writeOpen(index.byId.get(s.id), state)));
+  assert.ok(w.every((s) => srs.writeOpen(index.byId.get(s.id), state, day)));
   assert.equal(steps.filter((s) => s.type !== 'F').length, 20);
 
   // 20 題的回合只保留 5 題給書寫
@@ -303,9 +313,15 @@ test('今日回合：書寫題排在最後、最多 8 題，認讀複習很多�
   assert.equal(small.filter((s) => s.type === 'F').length, 5);
   assert.equal(small.length, 20);
 
-  // 認讀都沒到 2 級時沒有書寫題
+  // 全新的使用者：今天學的新字不出書寫題
   const beginner = stateWith(['hira-a']);
-  assert.equal(quiz.buildRound(data, beginner, day).steps.filter((s) => s.type === 'F').length, 0);
+  const first = quiz.buildRound(data, beginner, day, { rng: seeded(1) });
+  assert.ok(first.newIds.length > 0);
+  assert.equal(first.steps.filter((s) => s.type === 'F').length, 0);
+  for (const id of first.newIds) beginner.items[id] = { read: srs.applyAnswer(undefined, { correct: true, fast: true }, day).track };
+  assert.equal(quiz.buildRound(data, beginner, day).steps.filter((s) => s.type === 'F').length, 0, '當天加練也不出');
+  const next = quiz.buildRound(data, beginner, '2026-10-29', { rng: seeded(1) }).steps.filter((s) => s.type === 'F');
+  assert.equal(next.length, first.newIds.length, '隔天就排進書寫題');
 });
 
 test('書寫頁練習：先寫到期的，都寫完就挑等級低的字加練', () => {

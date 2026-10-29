@@ -41,6 +41,7 @@ export function isFast(ms, kind) {
 // fast：快且正確才升級；同一天同一軌道只升一次。
 export function applyAnswer(track, { correct, fast, ms }, day) {
   const t = { level: 0, due: null, streak: 0, ...track };
+  const wasNew = t.level === 0 && !t.since;
   let leveledUp = false;
 
   if (!correct) {
@@ -60,6 +61,8 @@ export function applyAnswer(track, { correct, fast, ms }, day) {
   }
 
   t.due = addDays(day, t.mastered ? MASTERED_DAYS : INTERVAL_DAYS[t.level]);
+  // 記下第一次學的日子（書寫軌要隔天才開放）；舊資料沒有這個欄位，視為早就學過
+  if (wasNew) t.since = day;
   if (ms != null) t.lastMs = Math.round(ms);
   return { track: t, leveledUp };
 }
@@ -170,8 +173,9 @@ export function streakDays(state, day) {
 
 // ---------- 書寫軌 ----------
 
-// 認讀達到 2 級才開放書寫
-export const WRITE_OPEN_LEVEL = 2;
+// 學過的字隔天就開放書寫：認讀 1 級以上，而且不是今天才第一次學的字。
+// SPEC 原本是認讀 2 級才開放，但 2 級要隔天又答得夠快，實際用起來書寫一直開不了。
+export const WRITE_OPEN_LEVEL = 1;
 
 // ぢ、づ（及片假名）與じ、ず同音，聽音或看拼音寫不出唯一答案，不出書寫題
 const NO_WRITE = new Set(['h-dji', 'h-dzu', 'k-dji', 'k-dzu']);
@@ -184,8 +188,9 @@ export function writeLevel(state, id) {
   return state.items[id]?.write?.level ?? 0;
 }
 
-export function writeOpen(item, state) {
-  return canWrite(item) && readLevel(state, item.id) >= WRITE_OPEN_LEVEL;
+export function writeOpen(item, state, day) {
+  const since = state.items[item.id]?.read?.since;
+  return canWrite(item) && readLevel(state, item.id) >= WRITE_OPEN_LEVEL && !(since && since >= day);
 }
 
 // 書寫自評三個按鈕對應的作答結果：寫對＝快且正確、大致對＝正確但慢（等級不變）、寫錯＝答錯
@@ -201,7 +206,7 @@ export function applyWrite(track, grade, day) {
 
 // 今天要寫的字：到期的書寫複習在前，剛開放、還沒寫過的字排在後面
 export function dueWriteItems(items, state, day) {
-  const open = unlockedItems(items, state.unlocked).filter((it) => writeOpen(it, state));
+  const open = unlockedItems(items, state.unlocked).filter((it) => writeOpen(it, state, day));
   const due = open
     .filter((it) => isDue(state.items[it.id]?.write, day))
     .sort((a, b) => {

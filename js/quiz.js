@@ -178,7 +178,7 @@ export function buildWriteRound(data, state, day, { rng = Math.random } = {}) {
   let list = dueWriteItems(data.items, state, day);
   if (!list.length) {
     list = unlockedItems(data.items, state.unlocked)
-      .filter((it) => writeOpen(it, state))
+      .filter((it) => writeOpen(it, state, day))
       .sort((a, b) => writeLevel(state, a.id) - writeLevel(state, b.id) || rng() - 0.5);
   }
   const steps = shuffle(list.slice(0, WRITE_ROUND_SIZE), rng).map((it) => ({ kind: 'q', id: it.id, type: 'F' }));

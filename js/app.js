@@ -731,7 +731,7 @@ function showStrokeCard(item) {
 function renderWritePage() {
   setPage('write');
   const day = srs.today();
-  const open = srs.unlockedItems(data.items, state.unlocked).filter((it) => srs.writeOpen(it, state));
+  const open = srs.unlockedItems(data.items, state.unlocked).filter((it) => srs.writeOpen(it, state, day));
   const due = srs.dueWriteItems(data.items, state, day).length;
 
   const start = el('button', {
@@ -756,7 +756,7 @@ function renderWritePage() {
       el('div', {}, el('span', { class: 'num' }, open.length), el('span', { class: 'label' }, '可以寫的字')),
       el('div', {}, el('span', { class: 'num' }, due), el('span', { class: 'label' }, '今天要寫')),
     ),
-    open.length ? null : el('p', { class: 'done-note' }, '認讀升到 2 級的字才會開放書寫，先去做今日練習吧。'),
+    open.length ? null : el('p', { class: 'done-note' }, '學過的字隔天就會開放書寫，先去做今日練習吧。'),
     start,
     el('section', { class: 'section' },
       el('h2', {}, '筆順表'),
