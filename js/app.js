@@ -6,6 +6,7 @@ import * as quiz from './quiz.js';
 import * as tts from './tts.js';
 import * as write from './write.js';
 import * as wq from './words.js';
+import * as mv from './motivation.js';
 
 const CORRECT_PAUSE_MS = 600;
 const BACKUP_REMIND_DAYS = 7;
@@ -74,6 +75,15 @@ function persist() {
 function dayLog(day) {
   state.log[day] ||= { q: 0, correct: 0, ms: 0, newItems: 0, rounds: 0 };
   return state.log[day];
+}
+
+// 記一題作答；答到每日目標題數的當下記下 met，之後調高目標也不影響這天
+function countAnswer(day, correct, ms = null) {
+  const log = dayLog(day);
+  log.q += 1;
+  if (correct) log.correct += 1;
+  if (ms != null) log.ms += Math.round(ms);
+  if (log.q >= state.settings.dailyGoal) log.met = true;
 }
 
 function daysBetween(a, b) {
@@ -182,16 +192,20 @@ function renderToday() {
   const day = srs.today();
 
   const unlocked = srs.autoUnlock(data, state);
-  if (unlocked.length) {
+  const titles = mv.awardTitles(data.items, state, day);
+  if (unlocked.length || titles.length) {
     persist();
-    toast(`解鎖了：${unlocked.map(unitLabel).join('、')}`);
+    toast([
+      unlocked.length ? `解鎖了：${unlocked.map(unitLabel).join('、')}` : '',
+      titles.length ? `取得稱號：${titleName(titles.at(-1))}` : '',
+    ].filter(Boolean).join('。'));
   }
 
   const due = srs.dueReadItems(data.items, state, day).length;
   const writeDue = srs.dueWriteItems(data.items, state, day).length;
   const newAvail = srs.newItemsAvailable(data.items, state).length;
   const newToday = Math.min(srs.newQuotaLeft(state, day), newAvail);
-  const streak = srs.streakDays(state, day);
+  const streak = mv.streakInfo(state, day);
   const hasWork = due > 0 || newToday > 0 || writeDue > 0;
 
   const [y, m, d] = day.split('-').map(Number);
@@ -210,6 +224,8 @@ function renderToday() {
       el('p', { class: 'date' }, `${m}月${d}日（${weekday}）`),
     ),
     backupReminder(day),
+    streakNotice(streak, day),
+    goalPanel(day),
     el('div', { class: 'tally' },
       el('div', {},
         el('span', { class: 'num' }, due + writeDue),
@@ -221,8 +237,9 @@ function renderToday() {
         el('span', { class: 'label' }, '今日新字'),
       ),
       el('div', {},
-        el('span', { class: 'num' }, streak),
+        el('span', { class: 'num' }, streak.current),
         el('span', { class: 'label' }, '連續天數'),
+        el('span', { class: 'sub' }, `最長 ${streak.best}・休息卡 ${streak.cards}`),
       ),
     ),
     !hasWork && learned ? el('p', { class: 'done-note' }, '今天的練習都完成了，明天再來！') : null,
@@ -233,6 +250,47 @@ function renderToday() {
   keyHandler = (e) => {
     if (e.key === 'Enter' && document.activeElement?.tagName !== 'BUTTON') { e.preventDefault(); start.click(); }
   };
+}
+
+function titleName(id) {
+  return mv.TITLES.find((t) => t.id === id).name;
+}
+
+// 稱號＋今日目標
+function goalPanel(day) {
+  const { title, next, remaining } = mv.titleInfo(data.items, state);
+  const p = mv.dailyProgress(state, day);
+  const pct = Math.min(100, (p.done / p.goal) * 100);
+  return el('div', { class: 'goal-panel' },
+    el('p', { class: 'goal-title' },
+      el('span', { class: 'title-badge' }, title.name),
+      el('span', { class: 'muted' }, next ? `再記住 ${remaining} 個字升級為「${next.name}」` : '所有稱號都拿到了！')),
+    el('div', { class: p.met ? 'goal-row is-met' : 'goal-row' },
+      el('span', { class: 'goal-label' }, '今日目標'),
+      el('div', { class: 'meter', role: 'progressbar', 'aria-valuemin': 0, 'aria-valuemax': p.goal, 'aria-valuenow': Math.min(p.done, p.goal) },
+        el('span', { style: `width:${pct}%` })),
+      el('span', { class: 'goal-num' }, p.met ? `✓ ${p.done} 題` : `${p.done}／${p.goal} 題`),
+    ),
+    el('details', { class: 'level-help' },
+      el('summary', {}, '連續天數和休息卡怎麼算？'),
+      el('p', {}, `一天答滿 ${p.goal} 題（今日練習、加練、書寫、單字都算）才算達標，連續達標的天數就是連續天數。題數可以在設定裡改。`),
+      el('p', {}, `每連續達標 ${mv.CARD_EVERY} 天送 1 張休息卡，最多存 ${mv.MAX_CARDS} 張。哪天沒達標會自動用掉一張，連續天數就不會斷（那天不加天數）。`),
+      el('p', {}, '稱號看的是「記住」的字數（認讀 3 級以上），拿到之後就不會收回。'),
+    ),
+  );
+}
+
+// 昨天用掉休息卡，或連續天數斷掉時的提示
+function streakNotice(info, day) {
+  const used = mv.restDaysEndingYesterday(info, day);
+  if (used) {
+    return el('p', { class: 'streak-note' },
+      `${used > 1 ? `前 ${used} 天` : '昨天'}沒達標，自動用掉 ${used} 張休息卡，連續天數保住了（還剩 ${info.cards} 張）。`);
+  }
+  if (info.current === 0 && info.best > 0) {
+    return el('p', { class: 'streak-note' }, `重新開始！最長紀錄 ${info.best} 天還在。`);
+  }
+  return null;
 }
 
 // 每 7 天提醒一次備份：從最後一次匯出、上次提醒、第一次練習三者中最晚的那天算起
@@ -340,6 +398,8 @@ async function startRound(mode = 'today', drillIds = []) {
   }
   session = new quiz.Session(round.steps, { extra: mode !== 'today' });
   session.introduced = new Set();
+  // 回合結束頁要判斷「是不是這回合才達標」
+  session.metBefore = mv.dailyProgress(state, day).met;
   session.home = { write: 'write', words: 'words', drill: 'stats' }[mode] || 'today';
   go('practice');
 }
@@ -472,10 +532,7 @@ function renderQuestion(step) {
     // 新字從 0 進到 1 級不算「升級」，回合結束頁只列複習中真正升級的字
     if (leveledUp && !wasNew) session.leveledUp.push(item.id);
 
-    const log = dayLog(day);
-    log.q += 1;
-    if (correct) log.correct += 1;
-    if (ms != null) log.ms += Math.round(ms);
+    countAnswer(day, correct, ms);
     session.record({ id: item.id, type: step.type, correct, ms, picked: picked?.label ?? typed });
     persist();
 
@@ -713,9 +770,7 @@ function renderWrite(step) {
     prog.write = track;
     if (leveledUp && !wasNew) session.leveledUp.push(item.id);
 
-    const log = dayLog(day);
-    log.q += 1;
-    if (correct) log.correct += 1;
+    countAnswer(day, correct);
     session.record({ id: item.id, type: 'F', correct, ms: null, grade: g });
     persist();
 
@@ -801,7 +856,47 @@ function finishRound() {
   const day = srs.today();
   dayLog(day).rounds += 1;
   session.unlockedUnits = srs.autoUnlock(data, state);
+  session.newTitles = mv.awardTitles(data.items, state, day);
   persist();
+}
+
+// 回合結束頁上方的卡片：今日目標、休息卡、解鎖、稱號
+function rewardCards() {
+  const day = srs.today();
+  const p = mv.dailyProgress(state, day);
+  const info = mv.streakInfo(state, day);
+  const cards = [];
+
+  if (p.met && !session.metBefore) {
+    cards.push(el('div', { class: 'reward' },
+      el('p', { class: 'reward-big' }, '🎯 今日目標達成！'),
+      el('p', {}, `🔥 連續第 ${info.current} 天${info.current >= info.best && info.current > 1 ? '，刷新最長紀錄' : ''}`),
+      info.cardDays.includes(day)
+        ? el('p', {}, `🎫 連續 ${mv.CARD_EVERY} 天，送你 1 張休息卡（目前 ${info.cards} 張）`)
+        : null,
+    ));
+  } else if (!p.met) {
+    cards.push(el('p', { class: 'goal-left' }, `今日 ${p.done}／${p.goal} 題，再 ${p.left} 題就達標。`));
+  }
+
+  if (session.unlockedUnits?.length) {
+    const fresh = data.items.filter((it) => session.unlockedUnits.includes(it.unit));
+    cards.push(el('div', { class: 'reward' },
+      el('p', { class: 'reward-big', lang: 'ja' }, `🎉 解鎖了 ${session.unlockedUnits.map(unitLabel).join('、')}`),
+      el('p', { class: 'reward-kana', lang: 'ja' }, fresh.map((it) => it.kana).join('　')),
+      el('p', { class: 'muted' }, '新的字會從下一次練習開始出現。'),
+    ));
+  }
+
+  if (session.newTitles?.length) {
+    const t = mv.TITLES.find((x) => x.id === session.newTitles.at(-1));
+    const { next, remaining } = mv.titleInfo(data.items, state);
+    cards.push(el('div', { class: 'reward' },
+      el('p', { class: 'reward-big' }, `🏅 升級為「${t.name}」`),
+      el('p', { class: 'muted' }, t.desc, next ? `。下一個：「${next.name}」，再記住 ${remaining} 個字。` : '。所有稱號都拿到了！'),
+    ));
+  }
+  return cards;
 }
 
 function renderSummary() {
@@ -831,9 +926,7 @@ function renderSummary() {
         s.total ? `正確率 ${Math.round(s.accuracy * 100)}%（${s.correct} / ${s.total}）` : '',
         s.avgMs != null ? `・平均 ${(s.avgMs / 1000).toFixed(1)} 秒` : ''),
     ),
-    s.unlockedUnits.length
-      ? el('p', { class: 'unlock-banner', lang: 'ja' }, `解鎖了：${s.unlockedUnits.map(unitLabel).join('、')}`)
-      : null,
+    ...rewardCards(),
     // 只有單字題的回合（單字閱讀）沒有等級可升，不顯示這一段
     session.results.some((r) => !r.word)
       ? el('section', { class: 'section' },
@@ -899,9 +992,7 @@ function renderWordQuestion(step) {
     // 答錯：把單字裡最弱的假名排進下一回合
     const focus = correct ? null : wq.addFocus(state, word, index);
 
-    const log = dayLog(day);
-    log.q += 1;
-    if (correct) log.correct += 1;
+    countAnswer(day, correct);
     session.record({ id: word.word, word: true, type: step.type, correct, ms: null });
     persist();
 
@@ -1167,8 +1258,63 @@ function renderStats() {
       gridSlot,
       gridLegend(),
     ),
+    milestoneSection(),
+    calendarSection(),
     confusionSection(),
     dailyChart(),
+  );
+}
+
+function milestoneSection() {
+  const have = state.milestones || {};
+  const md = (d) => `${Number(d.slice(5, 7))}/${Number(d.slice(8))}`;
+  return el('section', { class: 'section' },
+    el('h2', {}, '稱號'),
+    el('ol', { class: 'milestones' }, mv.TITLES.slice(1).map((t) => el('li', { class: have[t.id] ? 'is-got' : '' },
+      el('span', { class: 'ms-mark', 'aria-hidden': 'true' }, have[t.id] ? '🏅' : '・'),
+      el('span', { class: 'ms-name' }, t.name),
+      el('span', { class: 'ms-desc muted' }, have[t.id] ? `${md(have[t.id])} 取得` : t.desc),
+    ))),
+  );
+}
+
+// 打卡月曆：最近 5 週（週日開頭），達標實心、有練沒達標空心、用休息卡標「休」
+const CALENDAR_WEEKS = 5;
+function calendarSection() {
+  const day = srs.today();
+  const goal = state.settings.dailyGoal;
+  const info = mv.streakInfo(state, day);
+  const rest = new Set(info.restDays);
+  const [y, m, d] = day.split('-').map(Number);
+  const end = srs.addDays(day, 6 - new Date(y, m - 1, d).getDay());
+  const start = srs.addDays(end, -CALENDAR_WEEKS * 7 + 1);
+
+  const cells = [];
+  for (let i = 0; i < CALENDAR_WEEKS * 7; i++) {
+    const dd = srs.addDays(start, i);
+    const log = state.log[dd];
+    let cls = 'cal-day';
+    let label = '沒練習';
+    if (dd > day) { cls += ' is-future'; label = ''; }
+    else if (mv.metGoal(log, goal)) { cls += ' is-met'; label = `達標 ${log.q} 題`; }
+    else if (rest.has(dd)) { cls += ' is-rest'; label = '用休息卡'; }
+    else if (log?.q) { cls += ' is-some'; label = `${log.q} 題，沒達標`; }
+    if (dd === day) cls += ' is-today';
+    cells.push(el('span', { class: cls, title: label ? `${Number(dd.slice(5, 7))}/${Number(dd.slice(8))} ${label}` : null },
+      el('span', { class: 'cal-num' }, Number(dd.slice(8))),
+      el('i', { 'aria-hidden': 'true' }, rest.has(dd) ? '休' : '')));
+  }
+
+  return el('section', { class: 'section' },
+    el('h2', {}, '打卡月曆'),
+    el('p', { class: 'muted' }, `連續 ${info.current} 天・最長 ${info.best} 天・休息卡 ${info.cards} 張`),
+    el('div', { class: 'cal-head', 'aria-hidden': 'true' }, [...WEEKDAYS].map((w) => el('span', {}, w))),
+    el('div', { class: 'calendar' }, cells),
+    el('div', { class: 'grid-legend cal-legend' },
+      el('span', {}, el('i', { class: 'cal-dot is-met' }), `達標（${goal} 題）`),
+      el('span', {}, el('i', { class: 'cal-dot is-some' }), '有練沒達標'),
+      el('span', {}, el('i', { class: 'cal-dot is-rest' }, '休'), '用休息卡'),
+    ),
   );
 }
 
@@ -1421,6 +1567,8 @@ function renderSettings() {
       el('h2', {}, '練習量'),
       select('newPerDay', [3, 5, 8, 10], '每日新字上限'),
       select('roundSize', [20, 30, 50], '每回合題數'),
+      select('dailyGoal', [10, 20, 30, 50], '每日目標題數'),
+      el('p', { class: 'muted' }, '一天答滿目標題數才算進連續天數。調高目標不會影響以前已經達標的日子。'),
     ),
     el('section', { class: 'section' },
       el('h2', {}, '解鎖'),

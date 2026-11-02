@@ -9,6 +9,7 @@ import * as srs from '../js/srs.js';
 import * as quiz from '../js/quiz.js';
 import * as write from '../js/write.js';
 import * as wq from '../js/words.js';
+import * as mv from '../js/motivation.js';
 import { freshState } from '../js/storage.js';
 
 const data = JSON.parse(readFileSync(new URL('../data/kana-data.json', import.meta.url), 'utf8'));
@@ -561,4 +562,77 @@ test('答題紀錄：applyAnswer 累計作答與答對次數', () => {
   t = srs.applyAnswer(t, { correct: false, fast: false, ms: 3000 }, '2026-10-28').track;
   assert.equal(t.n, 2);
   assert.equal(t.ok, 1);
+});
+
+// ---------- 激勵制度 ----------
+
+// days：從 start 起每天的題數陣列
+function logState(start, days, goal = 20) {
+  const s = stateWith(['hira-a']);
+  s.settings.dailyGoal = goal;
+  days.forEach((q, i) => { if (q) s.log[srs.addDays(start, i)] = { q, correct: q }; });
+  return s;
+}
+
+test('連續天數：要達到每日目標才算，今天還沒達標不算斷', () => {
+  const s = logState('2026-11-01', [20, 25, 5, 30, 20, 0]);
+  // 11/3 只練 5 題（沒卡）→ 斷；11/4、11/5 達標；今天 11/6 還沒練
+  const info = mv.streakInfo(s, '2026-11-06');
+  assert.equal(info.current, 2);
+  assert.equal(info.best, 2);
+  assert.equal(info.todayMet, false);
+  s.log['2026-11-06'] = { q: 20, correct: 20 };
+  assert.equal(mv.streakInfo(s, '2026-11-06').current, 3);
+});
+
+test('連續 7 天得 1 張休息卡，沒達標的日子自動用掉，連續天數不中斷', () => {
+  const s = logState('2026-10-01', [20, 20, 20, 20, 20, 20, 20, 3, 20]);
+  const info = mv.streakInfo(s, '2026-10-09');
+  assert.deepEqual(info.cardDays, ['2026-10-07']);
+  assert.deepEqual(info.restDays, ['2026-10-08']);
+  assert.equal(info.cards, 0);
+  assert.equal(info.current, 8, '休息的那天不加天數');
+  assert.equal(mv.restDaysEndingYesterday(mv.streakInfo(s, '2026-10-09'), '2026-10-09'), 1);
+});
+
+test('休息卡最多存 2 張，用完再漏練就歸零但保留最長紀錄', () => {
+  const s = logState('2026-09-01', [...Array(28).fill(20), 0, 0, 0, 20]);
+  const before = mv.streakInfo(s, '2026-09-28');
+  assert.equal(before.cards, 2, '28 天應得 4 張但最多 2 張');
+  const info = mv.streakInfo(s, '2026-10-02');
+  assert.deepEqual(info.restDays, ['2026-09-29', '2026-09-30']);
+  assert.equal(info.current, 1);
+  assert.equal(info.best, 28);
+});
+
+test('答題當下記的 met 不受之後調高目標影響', () => {
+  const s = logState('2026-11-01', [20, 20], 20);
+  s.log['2026-11-01'].met = true;
+  s.settings.dailyGoal = 50;
+  assert.equal(mv.streakInfo(s, '2026-11-02').current, 1);
+  assert.equal(mv.dailyProgress(s, '2026-11-02').left, 30);
+});
+
+test('稱號依序取得，掉級也不收回', () => {
+  const s = stateWith(allUnits);
+  const remember = (pred) => data.items.filter((it) => srs.hasReading(it) && pred(it))
+    .forEach((it) => { s.items[it.id] = { read: { level: 3 } }; });
+
+  assert.equal(mv.titleInfo(data.items, s).title.name, '入門');
+  assert.equal(mv.titleInfo(data.items, s).remaining, 10);
+
+  // 片假名先記住 10 個也不能跳過平假名的稱號
+  remember((it) => it.script === 'kata' && it.type === 'seion');
+  assert.deepEqual(mv.awardTitles(data.items, s, '2026-11-01'), []);
+
+  remember((it) => it.script === 'hira' && it.type === 'seion');
+  assert.deepEqual(mv.awardTitles(data.items, s, '2026-11-02'), ['hira10', 'hira', 'kata10', 'seion']);
+  const info = mv.titleInfo(data.items, s);
+  assert.equal(info.title.name, '雙假名通');
+  assert.equal(info.next.name, '濁音達人');
+  assert.equal(info.remaining, 50);
+
+  s.items['h-a'].read.level = 1;
+  assert.equal(mv.titleInfo(data.items, s).title.name, '雙假名通');
+  assert.equal(s.milestones.hira, '2026-11-02');
 });

@@ -8,6 +8,7 @@ const memory = {};
 export const DEFAULT_SETTINGS = {
   newPerDay: 5,
   roundSize: 30,
+  dailyGoal: 20,        // 每日目標題數；達標的日子才算進連續天數
   syncScripts: false,
   ttsRate: 0.8,
   writeMode: 'paper',   // 書寫題：paper 紙筆、screen 螢幕手寫

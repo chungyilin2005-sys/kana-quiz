@@ -162,18 +162,6 @@ export function newQuotaLeft(state, day) {
   return Math.max(0, state.settings.newPerDay - used);
 }
 
-// 連續練習天數：從今天（今天還沒練就從昨天）往回數
-export function streakDays(state, day) {
-  const practiced = (d) => (state.log[d]?.q ?? 0) > 0;
-  let d = practiced(day) ? day : addDays(day, -1);
-  let n = 0;
-  while (practiced(d)) {
-    n += 1;
-    d = addDays(d, -1);
-  }
-  return n;
-}
-
 // ---------- 書寫軌 ----------
 
 // 學過的字隔天就開放書寫：認讀 1 級以上，而且不是今天才第一次學的字。

@@ -6,6 +6,7 @@
 
 - 階段一～四全部完成並上線：<https://chungyilin2005-sys.github.io/kana-quiz/>
 - 階段四（單字閱讀、長音 normalize、統計頁、混淆專練）等使用者手機實測回饋
+- 激勵制度（SPEC 沒有，使用者另外要求）：每日目標、連續天數＋休息卡、稱號、打卡月曆，等使用者手機實測回饋
 - repo：<https://github.com/chungyilin2005-sys/kana-quiz>，部署方式為 GitHub Pages（main 分支、根目錄）
 
 ## 工作流程
@@ -20,6 +21,7 @@
 
 - `js/srs.js`、`js/quiz.js` 是純函式（不碰 DOM、localStorage），測試直接 import；畫面邏輯都在 `js/app.js`。
 - `js/words.js` 也是純函式：單字斷字轉拼音、長音 normalize（`normalizeWordRomaji`）、單字選項、單字回合、混淆字組與混淆專練。它和 `quiz.js` 互相 import（只在函式裡用，沒有循環初始化問題）。
+- `js/motivation.js` 也是純函式：每日目標（`dailyProgress`）、連續天數與休息卡（`streakInfo`）、稱號（`TITLES`、`awardTitles`、`titleInfo`）。
 - `js/write.js` 的 `parseKanjiVG`、`strokeFile`、`hasStrokeData` 也是純函式，可以直接測；筆順動畫和 `WritingPad` 才碰 DOM。
 - `app.js` 用 `el()` 建 DOM、`mount()` 掛到畫面（會濾掉 null）；`replaceChildren` 不會濾 null，傳入前要自己 filter。
 - 狀態存在 localStorage 的 `kanaQuiz:state`，結構見 `js/storage.js` 的 `freshState()`。
@@ -49,6 +51,12 @@
 - `applyAnswer` 會累計 `n`（作答次數）、`ok`（答對次數），統計頁點格子的「答題紀錄」顯示這兩個數字和上次反應時間（舊資料沒有就不顯示）。
 - 統計頁 50 音表：認讀等級用單一藍色由淡到深（`color-mix`），右下小點大小與深淺表示書寫等級；未解鎖的格子是虛線框。濁音、拗音分頁平假名與片假名各一張表；促音、長音不列。每日練習量用 div 畫長條圖（沒有用 Chart.js），點或滑過長條顯示當天題數。
 - 下拉重新整理只在書寫題畫面擋（`html.no-overscroll`，`setPage` 會移除），其他畫面照常可以下拉。
+
+- 激勵制度：每日目標預設 20 題（設定可改 10／20／30／50），今日練習、加練、書寫、單字題都算題數。答到目標題數的當下在 `log[日].met` 記 true；判斷達標用 `met` 或「題數 ≥ 目前目標」，所以調高目標不影響以前已達標的日子。
+- 連續天數只算達標的日子；今天還沒達標不算斷。每連續達標 7 天送 1 張休息卡，最多 2 張；沒達標的日子在連續中且有卡就自動用掉（那天不加天數），沒卡就歸零。休息卡不另存，由 `streakInfo` 從 `log` 第一天模擬到今天算出來。
+- 稱號依「記住」字數（read ≥ 3）依序取得：入門 → 平假名見習（平假名 10 字）→ 平假名通（平假名清音 46 字）→ 片假名見習（片假名 10 字）→ 雙假名通（清音全部）→ 濁音達人（濁音＋半濁音）→ 50 音大師（拗音）。要前一個拿到才檢查下一個；取得日記在 `state.milestones[id]`，字掉級也不收回。首頁載入與回合結束時呼叫 `awardTitles`。
+- 回合結束頁的獎勵卡：這回合才達標（`session.metBefore` 記開始時是否已達標）顯示今日目標＋連續天數＋當天送的休息卡；解鎖新單位列出新字；升稱號列出下一個稱號。原本的 `unlock-banner` 已移除。
+- 統計頁的打卡月曆：最近 5 週、週日開頭；達標實心、有練沒達標空心、用休息卡虛線框加「休」。
 
 ## 測試注意
 

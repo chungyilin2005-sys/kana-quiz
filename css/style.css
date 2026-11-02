@@ -379,16 +379,19 @@ body.in-practice .site-credit { display: none; }
 .result-head { text-align: center; margin: 12px 0 20px; }
 .result-head h1 { font-size: 1.3rem; margin: 0 0 6px; }
 
-.unlock-banner {
-  margin: 0 0 20px;
+/* 回合結束頁的獎勵卡 */
+.reward {
+  margin: 0 0 14px;
   padding: 12px 16px;
   border: 2px solid var(--blue);
   border-radius: var(--radius);
   text-align: center;
-  font-weight: 700;
-  color: var(--blue);
   background: var(--paper-raised);
 }
+.reward p { margin: 4px 0; }
+.reward-big { font-weight: 700; font-size: 1.1rem; color: var(--blue); }
+.reward-kana { font-size: 1.5rem; letter-spacing: .05em; }
+.goal-left { margin: 0 0 14px; text-align: center; color: var(--ink-soft); }
 
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
 
@@ -896,3 +899,64 @@ html.no-overscroll, html.no-overscroll body { overscroll-behavior: none; }
   .stroke-ink path { animation: none; stroke-dashoffset: 0; }
   .stroke-nums text { animation: none; opacity: 1; }
 }
+
+/* 首頁：稱號與今日目標 */
+.goal-panel {
+  border: 1.5px solid var(--grid);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+  padding: 12px 14px;
+  margin-bottom: 14px;
+}
+.goal-title { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin: 0 0 8px; font-size: .9rem; }
+.title-badge {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--blue-ink);
+  background: var(--blue);
+  border-radius: 999px;
+  padding: 2px 12px;
+}
+.goal-row { display: flex; align-items: center; gap: 10px; }
+.goal-row .meter { flex: 1; margin: 0; }
+.goal-label { font-size: .85rem; color: var(--ink-soft); white-space: nowrap; }
+.goal-num { font-size: .9rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.goal-row.is-met .goal-num { color: var(--blue); font-weight: 700; }
+.goal-panel .level-help { margin-top: 6px; }
+.streak-note { margin: 0 0 14px; padding: 10px 14px; border-left: 3px solid var(--blue); background: var(--paper-raised); font-size: .92rem; }
+
+/* 統計頁：稱號 */
+.milestones { list-style: none; margin: 0; padding: 0; }
+.milestones li { display: flex; align-items: baseline; gap: 8px; padding: 7px 0; border-bottom: 1px dashed var(--grid); }
+.milestones li:not(.is-got) .ms-name { color: var(--ink-soft); }
+.ms-mark { width: 1.4em; text-align: center; flex: none; }
+.ms-name { font-weight: 700; flex: none; }
+.ms-desc { font-size: .85rem; margin-left: auto; text-align: right; }
+
+/* 統計頁：打卡月曆 */
+.cal-head, .calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; max-width: 420px; }
+.cal-head span { text-align: center; font-size: .78rem; color: var(--ink-soft); padding-bottom: 2px; }
+.cal-day {
+  position: relative;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: .8rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-soft);
+}
+.cal-day i { position: absolute; font-style: normal; font-size: .7rem; bottom: 0; right: 0; }
+.cal-day.is-future { opacity: .35; }
+.cal-day.is-met { background: var(--blue); color: var(--blue-ink); font-weight: 700; }
+.cal-day.is-some { border: 2px solid var(--blue); color: var(--ink); }
+.cal-day.is-rest { border: 2px dashed var(--grid); color: var(--ink); }
+.cal-day.is-rest i { color: var(--blue); font-weight: 700; }
+.cal-day.is-today { outline: 2px solid var(--shu); outline-offset: 1px; }
+.cal-legend { margin-top: 10px; gap: 6px 14px; }
+.cal-legend > span { display: inline-flex; align-items: center; gap: 4px; }
+.cal-dot { display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; border-radius: 50%; font-style: normal; font-size: .6rem; }
+.cal-dot.is-met { background: var(--blue); }
+.cal-dot.is-some { border: 2px solid var(--blue); }
+.cal-dot.is-rest { border: 1.5px dashed var(--grid); color: var(--blue); }
