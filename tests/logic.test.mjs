@@ -636,3 +636,25 @@ test('稱號依序取得，掉級也不收回', () => {
   assert.equal(mv.titleInfo(data.items, s).title.name, '雙假名通');
   assert.equal(s.milestones.hira, '2026-11-02');
 });
+
+test('學習週報：週一到週日的題數、達標天數、新學的字、取得的稱號', () => {
+  assert.equal(mv.mondayOf('2026-11-02'), '2026-11-02');
+  assert.equal(mv.mondayOf('2026-11-08'), '2026-11-02');
+  assert.equal(mv.mondayOf('2026-11-01'), '2026-10-26');
+
+  const s = logState('2026-10-26', [10, 0, 0, 0, 0, 0, 0, 20, 5, 30]);
+  s.items['h-a'] = { read: { level: 3, since: '2026-11-03' } };
+  s.items['h-i'] = { read: { level: 1, since: '2026-10-20' } };
+  s.milestones = { hira10: '2026-11-04' };
+  const r = mv.weeklyReport(data.items, s, '2026-11-02', '2026-11-04');
+  assert.equal(r.sunday, '2026-11-08');
+  assert.deepEqual(r.days.map((d) => d.q), [20, 5, 30, 0, 0, 0, 0]);
+  assert.equal(r.days[3].future, true);
+  assert.equal(r.q, 55);
+  assert.equal(r.lastWeekQ, 10);
+  assert.equal(r.activeDays, 3);
+  assert.equal(r.metDays, 2);
+  assert.deepEqual(r.newItems, ['h-a']);
+  assert.deepEqual(r.titles, ['hira10']);
+  assert.equal(r.remembered, 1);
+});

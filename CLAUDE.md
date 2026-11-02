@@ -6,7 +6,7 @@
 
 - 階段一～四全部完成並上線：<https://chungyilin2005-sys.github.io/kana-quiz/>
 - 階段四（單字閱讀、長音 normalize、統計頁、混淆專練）等使用者手機實測回饋
-- 激勵制度（SPEC 沒有，使用者另外要求）：每日目標、連續天數＋休息卡、稱號、打卡月曆，等使用者手機實測回饋
+- 激勵制度（SPEC 沒有，使用者另外要求）：每日目標、連續天數＋休息卡、稱號、打卡日曆、學習週報，等使用者手機實測回饋
 - repo：<https://github.com/chungyilin2005-sys/kana-quiz>，部署方式為 GitHub Pages（main 分支、根目錄）
 
 ## 工作流程
@@ -21,7 +21,7 @@
 
 - `js/srs.js`、`js/quiz.js` 是純函式（不碰 DOM、localStorage），測試直接 import；畫面邏輯都在 `js/app.js`。
 - `js/words.js` 也是純函式：單字斷字轉拼音、長音 normalize（`normalizeWordRomaji`）、單字選項、單字回合、混淆字組與混淆專練。它和 `quiz.js` 互相 import（只在函式裡用，沒有循環初始化問題）。
-- `js/motivation.js` 也是純函式：每日目標（`dailyProgress`）、連續天數與休息卡（`streakInfo`）、稱號（`TITLES`、`awardTitles`、`titleInfo`）。
+- `js/motivation.js` 也是純函式：每日目標（`dailyProgress`）、連續天數與休息卡（`streakInfo`）、稱號（`TITLES`、`awardTitles`、`titleInfo`）、學習週報（`mondayOf`、`weeklyReport`）。
 - `js/write.js` 的 `parseKanjiVG`、`strokeFile`、`hasStrokeData` 也是純函式，可以直接測；筆順動畫和 `WritingPad` 才碰 DOM。
 - `app.js` 用 `el()` 建 DOM、`mount()` 掛到畫面（會濾掉 null）；`replaceChildren` 不會濾 null，傳入前要自己 filter。
 - 狀態存在 localStorage 的 `kanaQuiz:state`，結構見 `js/storage.js` 的 `freshState()`。
@@ -56,7 +56,8 @@
 - 連續天數只算達標的日子；今天還沒達標不算斷。每連續達標 7 天送 1 張休息卡，最多 2 張；沒達標的日子在連續中且有卡就自動用掉（那天不加天數），沒卡就歸零。休息卡不另存，由 `streakInfo` 從 `log` 第一天模擬到今天算出來。
 - 稱號依「記住」字數（read ≥ 3）依序取得：入門 → 平假名見習（平假名 10 字）→ 平假名通（平假名清音 46 字）→ 片假名見習（片假名 10 字）→ 雙假名通（清音全部）→ 濁音達人（濁音＋半濁音）→ 50 音大師（拗音）。要前一個拿到才檢查下一個；取得日記在 `state.milestones[id]`，字掉級也不收回。首頁載入與回合結束時呼叫 `awardTitles`。
 - 回合結束頁的獎勵卡：這回合才達標（`session.metBefore` 記開始時是否已達標）顯示今日目標＋連續天數＋當天送的休息卡；解鎖新單位列出新字；升稱號列出下一個稱號。原本的 `unlock-banner` 已移除。
-- 統計頁的打卡月曆：最近 5 週、週日開頭；達標實心、有練沒達標空心、用休息卡虛線框加「休」。
+- 打卡日曆放在首頁最上面，和稱號、今日目標同一張卡片（版面與格子樣式參考使用者的另一個網站 vocab-quiz 首頁，但顏色維持本站的藍色）：最近 5 週、週一開頭、圓角方格；達標塗滿、有練沒達標淡色、用休息卡淡色虛線框加「休」、沒練只有外框、未來的日子隱藏。統計頁不再放日曆。vocab-quiz 的「每 7 天自動休 1 天」規則沒有搬過來，本站用休息卡。
+- 學習週報（#report，首頁卡片的按鈕進入）是給使用者自己看的，不做給老師的格式、複製文字或姓名。週一到週日，可以往前翻；顯示題數（和前一週比）、達標天數、正確率、每天題數長條、這週新學的字（看 `read.since`）、這週取得的稱號、目前記住字數。
 
 ## 測試注意
 

@@ -110,3 +110,54 @@ export function titleInfo(items, state) {
     remaining: next ? titleRemaining(next, items, state) : 0,
   };
 }
+
+// ---------- 學習週報 ----------
+
+// 這一天所在那週的週一
+export function mondayOf(day) {
+  const [y, m, d] = day.split('-').map(Number);
+  return addDays(day, -((new Date(y, m - 1, d).getDay() + 6) % 7));
+}
+
+// 一週（週一到週日）的練習摘要。today 之後的日子不算；新學的字看 read.since（第一次學的日子）
+export function weeklyReport(items, state, monday, today) {
+  const goal = state.settings.dailyGoal;
+  const info = streakInfo(state, today);
+  const rest = new Set(info.restDays);
+  const days = Array.from({ length: 7 }, (_, i) => {
+    const day = addDays(monday, i);
+    const log = state.log[day];
+    return {
+      day,
+      future: day > today,
+      q: log?.q ?? 0,
+      correct: log?.correct ?? 0,
+      met: metGoal(log, goal),
+      rest: rest.has(day),
+    };
+  });
+  const sunday = addDays(monday, 6);
+  const inWeek = (d) => !!d && d >= monday && d <= sunday;
+  const sum = (key) => days.reduce((a, x) => a + x[key], 0);
+  const lastWeek = Array.from({ length: 7 }, (_, i) => state.log[addDays(monday, i - 7)]?.q ?? 0)
+    .reduce((a, b) => a + b, 0);
+  const learnable = items.filter(hasReading);
+  const q = sum('q');
+
+  return {
+    monday,
+    sunday,
+    days,
+    q,
+    correct: sum('correct'),
+    accuracy: q ? sum('correct') / q : null,
+    lastWeekQ: lastWeek,
+    activeDays: days.filter((x) => x.q > 0).length,
+    metDays: days.filter((x) => x.met).length,
+    restDays: days.filter((x) => x.rest).length,
+    newItems: learnable.filter((it) => inWeek(state.items[it.id]?.read?.since)).map((it) => it.id),
+    titles: TITLES.filter((t) => inWeek(state.milestones?.[t.id])).map((t) => t.id),
+    remembered: learnable.filter((it) => readLevel(state, it.id) >= UNLOCK_LEVEL).length,
+    total: learnable.length,
+  };
+}

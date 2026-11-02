@@ -43,6 +43,7 @@ let index;
 let state;
 let session = null;
 let keyHandler = null;
+let reportWeek = 0;     // 學習週報：0 本週、-1 上週…
 
 const view = document.getElementById('view');
 
@@ -173,6 +174,7 @@ function route() {
   if (name === 'write') return renderWritePage();
   if (name === 'words') return renderWordsPage();
   if (name === 'stats') return renderStats();
+  if (name === 'report') return renderReport();
   return renderToday();
 }
 
@@ -225,8 +227,8 @@ function renderToday() {
     ),
     backupReminder(day),
     streakNotice(streak, day),
-    goalPanel(day),
-    el('div', { class: 'tally' },
+    todayCard(day, streak),
+    el('div', { class: 'tally tally-2' },
       el('div', {},
         el('span', { class: 'num' }, due + writeDue),
         el('span', { class: 'label' }, '待複習'),
@@ -235,11 +237,6 @@ function renderToday() {
       el('div', {},
         el('span', { class: 'num' }, newToday),
         el('span', { class: 'label' }, '今日新字'),
-      ),
-      el('div', {},
-        el('span', { class: 'num' }, streak.current),
-        el('span', { class: 'label' }, '連續天數'),
-        el('span', { class: 'sub' }, `最長 ${streak.best}・休息卡 ${streak.cards}`),
       ),
     ),
     !hasWork && learned ? el('p', { class: 'done-note' }, '今天的練習都完成了，明天再來！') : null,
@@ -256,26 +253,75 @@ function titleName(id) {
   return mv.TITLES.find((t) => t.id === id).name;
 }
 
-// 稱號＋今日目標
-function goalPanel(day) {
+// 首頁上方的卡片：稱號、今日目標、連續天數、打卡日曆（版面參考 vocab-quiz 首頁）
+function todayCard(day, info) {
   const { title, next, remaining } = mv.titleInfo(data.items, state);
   const p = mv.dailyProgress(state, day);
   const pct = Math.min(100, (p.done / p.goal) * 100);
-  return el('div', { class: 'goal-panel' },
+  return el('section', { class: 'goal-panel' },
     el('p', { class: 'goal-title' },
       el('span', { class: 'title-badge' }, title.name),
       el('span', { class: 'muted' }, next ? `再記住 ${remaining} 個字升級為「${next.name}」` : '所有稱號都拿到了！')),
-    el('div', { class: p.met ? 'goal-row is-met' : 'goal-row' },
-      el('span', { class: 'goal-label' }, '今日目標'),
-      el('div', { class: 'meter', role: 'progressbar', 'aria-valuemin': 0, 'aria-valuemax': p.goal, 'aria-valuenow': Math.min(p.done, p.goal) },
-        el('span', { style: `width:${pct}%` })),
-      el('span', { class: 'goal-num' }, p.met ? `✓ ${p.done} 題` : `${p.done}／${p.goal} 題`),
+    el('div', { class: 'goal-today' },
+      el('div', { class: 'goal-big' }, el('b', {}, p.done), el('small', {}, `／${p.goal} 題`)),
+      el('div', { class: 'goal-info' },
+        el('p', { class: p.met ? 'goal-line is-met' : 'goal-line' },
+          p.met ? '✓ 今天已達成目標' : p.done ? `今天再 ${p.left} 題就達標` : `今天的目標：${p.goal} 題`),
+        el('div', { class: 'meter', role: 'progressbar', 'aria-label': '今日進度', 'aria-valuemin': 0, 'aria-valuemax': p.goal, 'aria-valuenow': Math.min(p.done, p.goal) },
+          el('span', { style: `width:${pct}%` })),
+        el('p', { class: 'goal-streak' }, '連續達標 ', el('b', {}, info.current), ' 天',
+          info.best > info.current ? `・最長 ${info.best} 天` : '', `・休息卡 ${info.cards} 張`),
+      ),
+    ),
+    calendar(day, info),
+    el('div', { class: 'btn-row goal-actions' },
+      el('button', { class: 'btn', onclick: () => { reportWeek = 0; go('report'); } }, '學習週報'),
     ),
     el('details', { class: 'level-help' },
       el('summary', {}, '連續天數和休息卡怎麼算？'),
       el('p', {}, `一天答滿 ${p.goal} 題（今日練習、加練、書寫、單字都算）才算達標，連續達標的天數就是連續天數。題數可以在設定裡改。`),
       el('p', {}, `每連續達標 ${mv.CARD_EVERY} 天送 1 張休息卡，最多存 ${mv.MAX_CARDS} 張。哪天沒達標會自動用掉一張，連續天數就不會斷（那天不加天數）。`),
       el('p', {}, '稱號看的是「記住」的字數（認讀 3 級以上），拿到之後就不會收回。'),
+    ),
+  );
+}
+
+// 打卡日曆：最近 5 週、週一開頭。達標塗滿、有練沒達標淡色、用休息卡標「休」，未來的日子不顯示
+const CALENDAR_WEEKS = 5;
+function calendar(day, info) {
+  const goal = state.settings.dailyGoal;
+  const rest = new Set(info.restDays);
+  const start = srs.addDays(mv.mondayOf(day), -(CALENDAR_WEEKS - 1) * 7);
+  const md = (d) => `${Number(d.slice(5, 7))}/${Number(d.slice(8))}`;
+
+  const cells = [];
+  for (let i = 0; i < CALENDAR_WEEKS * 7; i++) {
+    const dd = srs.addDays(start, i);
+    const log = state.log[dd];
+    let cls = 'cal-day';
+    let label = '沒練習';
+    if (dd > day) { cls += ' is-future'; label = null; }
+    else if (mv.metGoal(log, goal)) { cls += ' is-met'; label = `達標 ${log.q} 題`; }
+    else if (rest.has(dd)) { cls += ' is-rest'; label = `${log?.q ?? 0} 題，用了休息卡`; }
+    else if (log?.q) { cls += ' is-some'; label = `${log.q} 題，沒達標`; }
+    if (dd === day) cls += ' is-today';
+    cells.push(el('span', {
+      class: cls,
+      title: label && `${md(dd)}：${label}`,
+      'aria-label': label && `${md(dd)} ${label}`,
+      'aria-hidden': label ? null : 'true',
+    }, Number(dd.slice(8)), rest.has(dd) ? el('i', { 'aria-hidden': 'true' }, '休') : null));
+  }
+
+  return el('div', {},
+    el('div', { class: 'calendar', 'aria-label': `最近 ${CALENDAR_WEEKS} 週的練習日曆` },
+      [...'一二三四五六日'].map((w) => el('span', { class: 'cal-head', 'aria-hidden': 'true' }, w)),
+      cells),
+    el('p', { class: 'cal-legend' },
+      el('span', {}, el('i', { class: 'is-met' }), `達成 ${goal} 題`),
+      el('span', {}, el('i', { class: 'is-some' }), '有練習'),
+      el('span', {}, el('i', { class: 'is-rest' }), '用休息卡'),
+      el('span', {}, el('i'), '沒練習'),
     ),
   );
 }
@@ -1200,6 +1246,69 @@ function renderWordsPage() {
   };
 }
 
+// ---------- 學習週報 ----------
+
+function renderReport() {
+  setPage('today');
+  const day = srs.today();
+  const monday = srs.addDays(mv.mondayOf(day), reportWeek * 7);
+  const r = mv.weeklyReport(data.items, state, monday, day);
+  const info = mv.streakInfo(state, day);
+  const md = (d) => `${Number(d.slice(5, 7))}/${Number(d.slice(8))}`;
+  const max = Math.max(state.settings.dailyGoal, ...r.days.map((x) => x.q));
+  const diff = r.q - r.lastWeekQ;
+  const weekName = reportWeek === 0 ? '本週' : reportWeek === -1 ? '上週' : `${-reportWeek} 週前`;
+  const shift = (n) => { reportWeek += n; renderReport(); };
+
+  mount(
+    el('header', { class: 'masthead' },
+      el('h1', {}, '學習週報'),
+      el('button', { class: 'btn btn-small', onclick: () => go('today') }, '回首頁'),
+    ),
+    el('div', { class: 'week-nav' },
+      el('button', { class: 'btn btn-small', 'aria-label': '前一週', onclick: () => shift(-1) }, '‹'),
+      el('p', {}, el('b', {}, weekName), el('span', { class: 'muted' }, `${md(r.monday)}（一）～${md(r.sunday)}（日）`)),
+      el('button', { class: 'btn btn-small', 'aria-label': '下一週', disabled: reportWeek >= 0, onclick: () => shift(1) }, '›'),
+    ),
+    el('div', { class: 'tally' },
+      el('div', {}, el('span', { class: 'num' }, r.q), el('span', { class: 'label' }, '題數'),
+        el('span', { class: 'sub' }, diff === 0 ? '和前一週一樣' : `比前一週${diff > 0 ? '多' : '少'} ${Math.abs(diff)} 題`)),
+      el('div', {}, el('span', { class: 'num' }, r.metDays, el('small', {}, '／7')), el('span', { class: 'label' }, '達標天數'),
+        el('span', { class: 'sub' }, `有練 ${r.activeDays} 天${r.restDays ? `・休息卡 ${r.restDays}` : ''}`)),
+      el('div', {}, el('span', { class: 'num' }, r.accuracy == null ? '–' : `${Math.round(r.accuracy * 100)}%`), el('span', { class: 'label' }, '正確率'),
+        el('span', { class: 'sub' }, `答對 ${r.correct} 題`)),
+    ),
+    el('section', { class: 'section' },
+      el('h2', {}, '每天的題數'),
+      el('ol', { class: 'week-bars' }, r.days.map((x, i) => el('li', {
+        class: [x.met ? 'is-met' : '', x.rest ? 'is-rest' : '', x.future ? 'is-future' : '', x.day === day ? 'is-today' : ''].filter(Boolean).join(' '),
+        'aria-label': `星期${'一二三四五六日'[i]} ${x.q} 題${x.met ? '，達標' : ''}${x.rest ? '，用了休息卡' : ''}`,
+      },
+      el('span', { class: 'wb-num', 'aria-hidden': 'true' }, x.future ? '' : x.q),
+      el('span', { class: 'wb-track', 'aria-hidden': 'true' }, el('span', { style: `height:${(x.q / max) * 100}%` })),
+      el('span', { class: 'wb-day', 'aria-hidden': 'true' }, '一二三四五六日'[i], x.rest ? '・休' : '')))),
+      el('p', { class: 'muted' }, `深色的是達標（${state.settings.dailyGoal} 題）的日子。`),
+    ),
+    el('section', { class: 'section' },
+      el('h2', {}, `新學的字（${r.newItems.length}）`),
+      r.newItems.length
+        ? el('div', { class: 'chips' }, r.newItems.map((id) => {
+          const item = index.byId.get(id);
+          return el('button', { class: 'chip', lang: 'ja', onclick: () => showItemCard(item) }, item.kana, el('small', {}, item.romaji));
+        }))
+        : el('p', { class: 'muted' }, '這週沒有新學的字。'),
+    ),
+    el('section', { class: 'section' },
+      el('h2', {}, '整體進度'),
+      el('ul', { class: 'help-list' },
+        el('li', {}, `目前記住 ${r.remembered}／${r.total} 個字，稱號是「${mv.titleInfo(data.items, state).title.name}」。`),
+        r.titles.length ? el('li', {}, `這週取得稱號：${r.titles.map(titleName).join('、')}。`) : null,
+        reportWeek === 0 ? el('li', {}, `連續達標 ${info.current} 天（最長 ${info.best} 天），休息卡 ${info.cards} 張。`) : null,
+      ),
+    ),
+  );
+}
+
 // ---------- 統計頁 ----------
 
 const STATS_TABS = [
@@ -1259,7 +1368,6 @@ function renderStats() {
       gridLegend(),
     ),
     milestoneSection(),
-    calendarSection(),
     confusionSection(),
     dailyChart(),
   );
@@ -1275,46 +1383,6 @@ function milestoneSection() {
       el('span', { class: 'ms-name' }, t.name),
       el('span', { class: 'ms-desc muted' }, have[t.id] ? `${md(have[t.id])} 取得` : t.desc),
     ))),
-  );
-}
-
-// 打卡月曆：最近 5 週（週日開頭），達標實心、有練沒達標空心、用休息卡標「休」
-const CALENDAR_WEEKS = 5;
-function calendarSection() {
-  const day = srs.today();
-  const goal = state.settings.dailyGoal;
-  const info = mv.streakInfo(state, day);
-  const rest = new Set(info.restDays);
-  const [y, m, d] = day.split('-').map(Number);
-  const end = srs.addDays(day, 6 - new Date(y, m - 1, d).getDay());
-  const start = srs.addDays(end, -CALENDAR_WEEKS * 7 + 1);
-
-  const cells = [];
-  for (let i = 0; i < CALENDAR_WEEKS * 7; i++) {
-    const dd = srs.addDays(start, i);
-    const log = state.log[dd];
-    let cls = 'cal-day';
-    let label = '沒練習';
-    if (dd > day) { cls += ' is-future'; label = ''; }
-    else if (mv.metGoal(log, goal)) { cls += ' is-met'; label = `達標 ${log.q} 題`; }
-    else if (rest.has(dd)) { cls += ' is-rest'; label = '用休息卡'; }
-    else if (log?.q) { cls += ' is-some'; label = `${log.q} 題，沒達標`; }
-    if (dd === day) cls += ' is-today';
-    cells.push(el('span', { class: cls, title: label ? `${Number(dd.slice(5, 7))}/${Number(dd.slice(8))} ${label}` : null },
-      el('span', { class: 'cal-num' }, Number(dd.slice(8))),
-      el('i', { 'aria-hidden': 'true' }, rest.has(dd) ? '休' : '')));
-  }
-
-  return el('section', { class: 'section' },
-    el('h2', {}, '打卡月曆'),
-    el('p', { class: 'muted' }, `連續 ${info.current} 天・最長 ${info.best} 天・休息卡 ${info.cards} 張`),
-    el('div', { class: 'cal-head', 'aria-hidden': 'true' }, [...WEEKDAYS].map((w) => el('span', {}, w))),
-    el('div', { class: 'calendar' }, cells),
-    el('div', { class: 'grid-legend cal-legend' },
-      el('span', {}, el('i', { class: 'cal-dot is-met' }), `達標（${goal} 題）`),
-      el('span', {}, el('i', { class: 'cal-dot is-some' }), '有練沒達標'),
-      el('span', {}, el('i', { class: 'cal-dot is-rest' }, '休'), '用休息卡'),
-    ),
   );
 }
 
